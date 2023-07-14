@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Texas Tree Quiz</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
+
+      <style>
+
+
+
+.container2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  border: 1px solid black; /* Adjust border properties as desired */
+  padding: 30px; /* Adjust padding as desired */
+}
+
+.image-container {
+  flex-basis: auto;
+  overflow: auto;
+  max-height: 500px; /* Adjust the maximum height as needed */
+  max-width: 500px;
+  align-items: center;
+  justify-content: center;
+}
+
+.small-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.button-stack {
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adjust the desired spacing between buttons */
+  
+
+}
+
+.button-stack button {
+  flex-grow: 1;
+  width: 100%;
+  min-width: 500px;
+}
+
+  </style>
+    
+
+    <head>
+        <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm.png" />
+      </head>
+
+  </head>
+  <body>
+    <header class="hero is-light">
+        <div class="hero-body">
+          <div class="container">
+            <h1 class="title has-text-centered">
+                Texas trees, flowers, grasses, and more. 
+            </h1>
+          </div>
+        </div>
+      </header>
+
+      <div class="hero-foot has-background-dark py-4"></div>
+      <div class="mt-3"></div>
+
+      <div class="container "></div>
+        <div class="columns">
+            <div class="column is-2"></div>
+            <div class="column is-3">
+                <div class="field">
+                    <input id="switchRoundedDefault_trees" type="checkbox" name="switchRoundedDefault_trees" class="switch is-rounded is-centered" checked="checked">
+                    <label for="switchRoundedDefault_trees">Trees</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_leaves" type="checkbox" name="switchRoundedDefault_leaves" class="switch is-rounded is-centered" checked="checked">
+                    <label for="switchRoundedDefault_leaves">Leaf</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_flowers" type="checkbox" name="switchRoundedDefault_flowers" class="switch is-rounded is-centered" checked="checked">
+                    <label for="switchRoundedDefault_flowers">Flower</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_barks" type="checkbox" name="switchRoundedDefault_barks" class="switch is-rounded is-centered" checked="checked">
+                    <label for="switchRoundedDefault_barks">Bark</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_fruits" type="checkbox" name="switchRoundedDefault_fruits" class="switch is-rounded is-centered" checked="checked">
+                    <label for="switchRoundedDefault_fruits">Fruit</label>
+                </div>
+            </div> 
+            
+            <div class="column is-3"> 
+                <div class="field">
+                    <input id="switchRoundedDefault_wildflowers" type="checkbox" name="switchRoundedDefault_wildflowers" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_wildflowers">Wildflowers</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_grasses" type="checkbox" name="switchRoundedDefault_grasses" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_grasses">Grasses</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_aquaticplants" type="checkbox" name="switchRoundedDefault_aquaticplants" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_aquaticplants">Aquatic</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_vines" type="checkbox" name="switchRoundedDefault_vines" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_vines">Vines</label>
+                </div>
+
+            </div>     
+
+            <div class="column is-3"> 
+                <div class="field">
+                    <input id="switchRoundedDefault_herbs" type="checkbox" name="switchRoundedDefault_herbs" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_herbs">Herbs</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_poisonousplants" type="checkbox" name="switchRoundedDefault_poisonousplants" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_poisonousplants">Poisonous</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_invasiveplants" type="checkbox" name="switchRoundedDefault_invasiveplants" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_invasiveplants">Invasive</label>
+                </div>
+
+                <div class="field">
+                    <input id="switchRoundedDefault_cacti" type="checkbox" name="switchRoundedDefault_cacti" class="switch is-rounded is-centered" checked="">
+                    <label for="switchRoundedDefault_cacti">Cacti</label>
+                </div>
+            </div> 
+            <div class="column is-1"></div>      
+        </div>
+    </div> 
+    
+
+      <div class="hero-foot has-background-dark py-4"></div>
+
+      <section class="section">
+        <div class="container2">
+          <div class="image-container">
+          <img src="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm.jpg" alt="Single Image" class="small-image">
+          </div>
+          <div class="button-stack">
+            <button id="Button_1" class="button is-light is-fullwidth is-large is-responsive" >Save changes</button>
+            <button id="Button_2" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
+            <button id="Button_3" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
+            <button id="Button_4" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
+          </div>
+        </div>
+            
+            <!-- <div class="columns ">
+              <div class="column is-1"></div> 
+              <div class="column is-4">
+                <figure class="is-flex">
+                    <img id="Plant_Image" class="my-custom-image" src="" alt="Plant_Image" >
+                </figure>
+              </div>
+              <div class="column is-5">
+                <div class="buttons is-responsive is-flex-direction-column">
+                  <button id="Button_1" class="button is-light is-fullwidth is-large is-responsive" ></button>
+                  <button id="Button_2" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
+                  <button id="Button_3" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
+                  <button id="Button_4" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
+                </div>
+              </div>
+              <div class="column is-2"></div> 
+            </div> -->
+      </section>
+
+  <div class="hero-foot has-background-dark py-4"></div>
+
+  <footer class="footer is-light">
+    <div class="content has-text-centered">
+      <p>
+        Plant Identification Learning Tool.
+      </p>
+      <p>
+        texastreequiz.com
+      </p>
+    </div>
+  </footer>
+
+  
+<script src="../static/script.js"></script>
+  </body>
+</html>
