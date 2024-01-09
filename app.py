@@ -3,6 +3,8 @@ from flask import render_template
 import mysql.connector
 import logging
 
+#it worked, try again, try again, try try again
+
 app = Flask(__name__, '/static')
 
 @app.route('/')
