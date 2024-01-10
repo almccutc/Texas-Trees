@@ -13,22 +13,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker
-        # Assuming Docker is already installed on the GitHub Actions runner
-        run: echo "Docker is already installed"
-
-      - name: Build and push Docker image to GHCR
+      - name: Set up SSH
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker build -t ghcr.io/almccutc/texas-trees:latest .
-          docker push ghcr.io/almccutc/texas-trees:latest
+          echo "$PRIVATE_KEY" > key.pem
+          chmod 600 key.pem
+          eval "$(ssh-agent -s)"
+          ssh-add key.pem
+          ssh-keyscan -H $HOSTNAME >> ~/.ssh/known_hosts
 
-      - name: SSH into EC2 and pull Docker image
+      - name: Pull Docker image on EC2
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -o StrictHostKeyChecking=no ec2-user@3.135.164.135 "docker pull ghcr.io/almccutc/texas-trees:latest"
+          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker pull ghcr.io/almccutc/texas-trees:latest"
 
-      - name: SSH into EC2 and restart Docker container
+      - name: Restart Docker container on EC2
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -o StrictHostKeyChecking=no ec2-user@3.135.164.135 "docker stop texas-trees || true"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -o StrictHostKeyChecking=no ec2-user@3.135.164.135 "docker rm texas-trees || true"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -o StrictHostKeyChecking=no ec2-user@3.135.164.135 "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
+          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker stop texas-trees || true"
+          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker rm texas-trees || true"
+          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
