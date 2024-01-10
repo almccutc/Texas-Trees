@@ -14,11 +14,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo usermod -aG docker $USER
-          newgrp docker
+        # Assuming Docker is already installed on the GitHub Actions runner
+        run: echo "Docker is already installed"
 
       - name: Build and push Docker image to GHCR
         run: |
