@@ -17,6 +17,8 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.AWS_PRIVATE_KEY }}
+          HOSTNAME : ${{ secrets.HOSTNAME  }}
+          USER_NAME : ${{ secrets.USER_NAME  }}
 
       - name: Pull Docker image on EC2
         run: |
@@ -24,6 +26,6 @@ jobs:
 
       - name: Restart Docker container on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker stop texas-trees || true"
-          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker rm texas-trees || true"
-          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker stop texas-trees || true"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker rm texas-trees || true"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
