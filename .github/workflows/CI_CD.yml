@@ -24,6 +24,6 @@ jobs:
 
       - name: Restart Docker container on EC2
         run: |
-          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker stop texas-trees || true"
+          ssh -vvv -o StrictHostKeyChecking=no {{ secrets.USER_NAME }}@{{ secrets.HOSTNAME }} "docker stop texas-trees || true"
           ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker rm texas-trees || true"
           ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
