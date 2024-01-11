@@ -13,27 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create SSH directory
-        run: mkdir -p ~/.ssh  
-
-      - name: Debug Private Key
-        run: |
-          echo "secrets.AWS_PRIVATE_KEY content: $secrets.AWS_PRIVATE_KEY" 
-
       - name: Set up SSH
-        run: |
-          echo "$secrets.AWS_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H $HOSTNAME >> ~/.ssh/known_hosts
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.AWS_PRIVATE_KEY }}
 
       - name: Pull Docker image on EC2
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker pull ghcr.io/almccutc/texas-trees:latest"
+          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker pull ghcr.io/almccutc/texas-trees:latest"
 
       - name: Restart Docker container on EC2
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker stop texas-trees || true"
-          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker rm texas-trees || true"
-          ssh -i key.pem -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
+          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker stop texas-trees || true"
+          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker rm texas-trees || true"
+          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker run -d -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
