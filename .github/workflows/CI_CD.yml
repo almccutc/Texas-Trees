@@ -22,10 +22,10 @@ jobs:
 
       - name: Set up SSH
         run: |
-          echo "$secrets.AWS_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "$secrets.AWS_PRIVATE_KEY" > key.pem
+          chmod 600 key.pem
           eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
+          ssh-add key.pem
           ssh-keyscan -H $HOSTNAME >> ~/.ssh/known_hosts
 
       - name: Pull Docker image on EC2
