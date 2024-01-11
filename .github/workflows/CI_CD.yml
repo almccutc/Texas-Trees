@@ -18,11 +18,11 @@ jobs:
 
       - name: Debug Private Key
         run: |
-          echo "AWS_PRIVATE_KEY content: $AWS_PRIVATE_KEY" 
+          echo "secrets.AWS_PRIVATE_KEY content: $secrets.AWS_PRIVATE_KEY" 
 
       - name: Set up SSH
         run: |
-          echo "$AWS_PRIVATE_KEY" > ~/.ssh/id_rsa
+          echo "$secrets.AWS_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
