@@ -16,6 +16,9 @@ jobs:
       - name: Create SSH directory
         run: mkdir -p ~/.ssh  
 
+      - name: Debug Private Key
+        run: echo "$AWS_PRIVATE_KEY"  
+
       - name: Set up SSH
         run: |
           echo "$AWS_PRIVATE_KEY" > ~/.ssh/id_rsa
