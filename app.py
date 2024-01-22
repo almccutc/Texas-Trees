@@ -1,6 +1,6 @@
 from flask import Flask, jsonify # calls the Flask component from within the flask package
 from flask import render_template
-import mysql.connector
+#import mysql.connector
 import logging
 
 #it worked, try again, try again, try try again##

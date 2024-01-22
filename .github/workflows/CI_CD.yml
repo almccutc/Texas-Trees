@@ -1,29 +1,35 @@
-name: Deploy to EC2
+name: Deploy to ECR
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
+
 
 jobs:
-  deploy:
+  build:
+    
+    name: Build Image
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.AWS_PRIVATE_KEY }}
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Pull Docker image on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME "docker pull ghcr.io/almccutc/texas-trees:latest"
-
-      - name: Restart Docker container on EC2
-        run: |
-          ssh -vvv -o StrictHostKeyChecking=no {{ secrets.USER_NAME }}@{{ secrets.HOSTNAME }} "docker stop texas-trees || true"
-          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker rm texas-trees || true"
-          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.USER_NAME }}@${{ secrets.HOSTNAME }} "docker run -p 80:5000 ghcr.io/almccutc/texas-trees:latest"
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
+        ECR_REPOSITORY: ttq-repository
+        IMAGE_TAG: latest
+      run: |
+        docker build -t 564592088447.dkr.ecr.us-east-2.amazonaws.com/ttq-repository:latest .
+        docker push 564592088447.dkr.ecr.us-east-2.amazonaws.com/ttq-repository:latest
