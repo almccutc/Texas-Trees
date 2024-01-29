@@ -1,6 +1,10 @@
 # Use the official Python image as the base image
 FROM python:3.11
 
+# -- to install python package psycopg2 (for postgres) -- #
+RUN apt-get update
+RUN apt-get install -y postgresql libpq-dev postgresql-client postgresql-client-common gcc
+
 # add user (change to whatever you want)
 # prevents running sudo commands
 RUN useradd -r -s /bin/bash aubrey-mccutchan
@@ -20,18 +24,19 @@ ENV FLASK_ENV=production
 ARG AWS_ACCESS_KEY_ID
 ARG AWS_SECRET_ACCESS_KEY
 ARG AWS_DEFAULT_REGION
-ARG MYSQL_HOST
-ARG MYSQL_USER
-ARG MYSQL_PASSWORD
-ARG MYSQL_DB
+# -- AWS RDS vars -- #
+ARG POSTGRES_USER
+ARG POSTGRES_PW
+ARG POSTGRES_URL
+ARG POSTGRES_DB
 
 ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
 ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
-ENV MYSQL_HOST $MYSQL_HOST
-ENV MYSQL_USER $MYSQL_USER
-ENV MYSQL_PASSWORD $MYSQL_PASSWORD
-ENV MYSQL_DB $MYSQL_DB
+ENV POSTGRES_USER $POSTGRES_USER
+ENV POSTGRES_PW $POSTGRES_PW
+ENV POSTGRES_URL $POSTGRES_URL
+ENV POSTGRES_DB $POSTGRES_DB
 
 # # Install necessary dependencies using Homebrew
 # RUN brew update 

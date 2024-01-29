@@ -9,10 +9,10 @@ services:
         - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
         - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
         - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-        - MYSQL_HOST=${MYSQL_HOST}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - MYSQL_DB=${MYSQL_DB}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PW=${POSTGRES_PW}
+        - POSTGRES_HOST=${POSTGRES_HOST}
+        - POSTGRES_DB=${POSTGRES_DB}
     container_name: texas-tree-quiz
     ports:
       - 5000:5000
@@ -20,8 +20,10 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DB=${MYSQL_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PW=${POSTGRES_PW}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      
+    # bridge - connect to docker container from localhost  
     network_mode: bridge

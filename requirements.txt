@@ -1,5 +1,7 @@
 Flask==2.3.2
 gunicorn
-mysqlclient
-#libmysqlclient-dev
-#SQLAlchemy
+flask-sqlalchemy
+flask-migrate
+psycopg2
+boto3
+python-dotenv

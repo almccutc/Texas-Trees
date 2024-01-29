@@ -1,9 +1,15 @@
+import os
+
 from flask import Flask, jsonify # calls the Flask component from within the flask package
 from flask import render_template
-#import mysql.connector
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from dotenv import load_dotenv
+load_dotenv()
+
 import logging
 
-#it worked, try again, try again, try try again##
+#
 
 app = Flask(__name__, '/static')
 
@@ -11,16 +17,45 @@ app = Flask(__name__, '/static')
 def render_webpage():
     return render_template('index.html')  
 
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f'postgresql+psycopg2://{os.getenv("POSTGRES_USER")}:' +
+    f'{os.getenv("POSTGRES_PW")}@' +
+    f'{os.getenv("POSTGRES_HOST")}/' +
+    f'{os.getenv("POSTGRES_DB")}'
+)
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
+class Transaction(db.Model):
+    __tablename__ = 'trees'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String())
+    last_name = db.Column(db.String())
+    amount = db.Column(db.Float)
+
+    def __init__(self, first_name: str, last_name: str, amount: float) -> None:
+        self.first_name = first_name
+        self.last_name = last_name
+        self.amount = amount
+
+    def __repr__(self) -> str:
+        return f'{self.first_name} {self.last_name} spent {self.amount}'
+
+@app.route('/list_db')
+def list_db() -> str:
+    transactions = Transaction.query.all()
+    if transactions:
+        return '\n'.join([str(transaction) for transaction in transactions])
+    else:
+        return 'No transactions, yet!'
+
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
-
-    # Set up MySQL connection
-    db = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='',
-    database='texastreequiz'
-)
 
     plants = []
 
