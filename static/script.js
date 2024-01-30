@@ -34,7 +34,7 @@ var plant_image_url;
 
 // Function to fetch plant names and update buttons and image
 function fetchPlantNameList() {
-  fetch('/get_plant_name_list')
+  fetch('/get_plant_name_list') 
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;
