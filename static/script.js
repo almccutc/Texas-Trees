@@ -29,9 +29,6 @@ switchElement.checked = false;
 var plant_names;
 var plant_image_url;
 
-// Fetch plant names and update buttons and image on page load
-// fetchPlantNameList();
-
 // Function to fetch plant names and update buttons and image
 function fetchPlantNameList() {
   fetch('/get_plant_name_list') 

@@ -65,4 +65,4 @@ def get_plant_name_list():
     return jsonify(plant_names=plant_names, plant_image_url=plant_image_url)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000) 
