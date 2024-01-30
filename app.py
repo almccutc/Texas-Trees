@@ -5,7 +5,11 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import random
 
+from secrets_manager import get_secret
+
 app = Flask(__name__, static_url_path='/static')
+
+db_config = get_secret('ttq-rds-secret', region_name='us-east-2')
 
 load_dotenv()
 
