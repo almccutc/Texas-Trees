@@ -1,21 +1,13 @@
 import os
-
-from flask import Flask, jsonify # calls the Flask component from within the flask package
-from flask import render_template
+from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+import random
+
+app = Flask(__name__, static_url_path='/static')
+
 load_dotenv()
-
-import logging
-
-#
-
-app = Flask(__name__, '/static')
-
-@app.route('/')
-def render_webpage():
-    return render_template('index.html')  
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'postgresql+psycopg2://{os.getenv("POSTGRES_USER")}:' +
@@ -25,65 +17,52 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 )
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class Transaction(db.Model):
+class Plants(db.Model):
     __tablename__ = 'trees'
 
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String())
-    last_name = db.Column(db.String())
-    amount = db.Column(db.Float)
+    plant_id = db.Column(db.Integer, primary_key=True)
+    plant_name = db.Column(db.String())
+    image_type = db.Column(db.String())
+    image_url = db.Column(db.String())
 
-    def __init__(self, first_name: str, last_name: str, amount: float) -> None:
-        self.first_name = first_name
-        self.last_name = last_name
-        self.amount = amount
+    def __init__(self, plant_name: str, image_type: str, image_url: str) -> None:
+        self.plant_name = plant_name
+        self.image_type = image_type
+        self.image_url = image_url
 
-    def __repr__(self) -> str:
-        return f'{self.first_name} {self.last_name} spent {self.amount}'
+@app.route('/')
+def render_webpage():
+    all_plant_data = [(plant.plant_name, plant.image_url) for plant in Plants.query.all()]
+    
+    # Randomly select 4 plant data tuples
+    selected_plant_data = random.sample(all_plant_data, 4)
 
-@app.route('/list_db')
-def list_db() -> str:
-    transactions = Transaction.query.all()
-    if transactions:
-        return '\n'.join([str(transaction) for transaction in transactions])
-    else:
-        return 'No transactions, yet!'
+    # Extract plant names and image URLs from selected data
+    selected_plant_names = [plant_data[0] for plant_data in selected_plant_data]
+    selected_plant_image_urls = [plant_data[1] for plant_data in selected_plant_data]
+
+    return render_template('index.html', plant_names=selected_plant_names, plant_image_url=selected_plant_image_urls)
 
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
-
     plants = []
 
     for _ in range(4):
-        cursor = db.cursor()
         # Execute the query to retrieve a random plant
-        cursor.execute("SELECT plant_name, plant_url FROM trees ORDER BY RAND() LIMIT 1")
+        random_plant = Plants.query.order_by(db.func.random()).first()
         
-        # Fetch the result
-        result = cursor.fetchone()
-
         # Store the result in the 'plants' list
-        plants.append(result)
-
-    # Close the database connection
-    db.close()
-
-    logging.info(plants)
-    # print(plants)
+        plants.append((random_plant.plant_name, random_plant.image_url))
 
     # Generate options for the plant identification
     plant_names = [item[0] for item in plants]
-    image_url = [item[1] for item in plants]
+    plant_image_url = [item[1] for item in plants]
 
-    print(plant_names)
-    print(image_url)
-
-    return jsonify(plant_names=plant_names, image_url=image_url)
+    return jsonify(plant_names=plant_names, plant_image_url=plant_image_url)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

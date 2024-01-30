@@ -54,7 +54,7 @@
     
 
     <head>
-        <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm.png" />
+        <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
       </head>
 
   </head>
@@ -156,33 +156,14 @@
       <section class="section">
         <div class="container2">
           <div class="image-container">
-          <img src="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm.jpg" alt="Single Image" class="small-image">
+            <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
           </div>
           <div class="button-stack">
-            <button id="Button_1" class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" >It worked</button>
-            <button id="Button_2" class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" >It worked</button>
-            <button id="Button_3" class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" >It worked</button>
-            <button id="Button_4" class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" >It worked</button>
+            {% for plant_name in plant_names %}
+              <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded">{{ plant_name }}</button>
+            {% endfor %}
           </div>
-        </div>
-            
-            <!-- <div class="columns ">
-              <div class="column is-1"></div> 
-              <div class="column is-4">
-                <figure class="is-flex">
-                    <img id="Plant_Image" class="my-custom-image" src="" alt="Plant_Image" >
-                </figure>
-              </div>
-              <div class="column is-5">
-                <div class="buttons is-responsive is-flex-direction-column">
-                  <button id="Button_1" class="button is-light is-fullwidth is-large is-responsive" ></button>
-                  <button id="Button_2" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
-                  <button id="Button_3" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
-                  <button id="Button_4" class="button is-light is-fullwidth is-large is-responsive">Save changes</button>
-                </div>
-              </div>
-              <div class="column is-2"></div> 
-            </div> -->
+        </div>     
       </section>
 
   <div class="hero-foot has-background-dark py-4"></div>
