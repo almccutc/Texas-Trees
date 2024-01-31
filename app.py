@@ -9,20 +9,30 @@ from secrets_manager import get_secret
 
 app = Flask(__name__, static_url_path='/static')
 
-db_config = get_secret('ttq-rds-secret-y', region_name='us-east-2')
+db_config = get_secret()
+print(type(db_config))
+
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f'postgresql+psycopg2://{db_config["POSTGRES_USER"]}:' +
+    f'{db_config["POSTGRES_PW"]}@' +
+    f'{db_config["POSTGRES_HOST"]}/' +
+    f'{db_config["POSTGRES_DB"]}'
+)
 
 load_dotenv()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f'postgresql+psycopg2://{os.getenv("POSTGRES_USER")}:' +
-    f'{os.getenv("POSTGRES_PW")}@' +
-    f'{os.getenv("POSTGRES_HOST")}/' +
-    f'{os.getenv("POSTGRES_DB")}'
-)
+# app.config['SQLALCHEMY_DATABASE_URI'] = (
+#     f'postgresql+psycopg2://{os.getenv("POSTGRES_USER")}:' +
+#     f'{os.getenv("POSTGRES_PW")}@' +
+#     f'{os.getenv("POSTGRES_HOST")}/' +
+#     f'{os.getenv("POSTGRES_DB")}'
+# )
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
 
 
 class Plants(db.Model):

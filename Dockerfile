@@ -38,13 +38,6 @@ ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
 # ENV POSTGRES_URL $POSTGRES_URL
 # ENV POSTGRES_DB $POSTGRES_DB
 
-# # Install necessary dependencies using Homebrew
-# RUN brew update 
-# #&& \
-# #    brew upgrade && \
-# #    brew install mysql-client && \
-# #    brew install mysql-connector-c
-
 # Avoid cache purge by adding requirements first
 ADD ./requirements.txt ./requirements.txt
 
