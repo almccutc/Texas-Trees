@@ -1,4 +1,4 @@
-import os
+# import os
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,7 +10,7 @@ from secrets_manager import get_secret
 app = Flask(__name__, static_url_path='/static')
 
 db_config = get_secret()
-# print(type(db_config))
+print((db_config))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'postgresql+psycopg2://{db_config["POSTGRES_USER"]}:' +
