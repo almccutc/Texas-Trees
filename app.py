@@ -2,7 +2,7 @@
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import random
 
 from secrets_manager import get_secret
@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'{db_config["POSTGRES_DB"]}'
 )
 
-load_dotenv()
+# load_dotenv()
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = (
 #     f'postgresql+psycopg2://{os.getenv("POSTGRES_USER")}:' +
