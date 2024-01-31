@@ -2,8 +2,8 @@
 FROM python:3.11
 
 # # -- to install python package psycopg2 (for postgres) -- #
-# RUN apt-get update
-# RUN apt-get install -y postgresql libpq-dev postgresql-client postgresql-client-common gcc
+RUN apt-get update
+RUN apt-get install -y postgresql libpq-dev postgresql-client postgresql-client-common gcc
 
 # add user (change to whatever you want)
 # prevents running sudo commands
