@@ -1,9 +1,9 @@
 # Use the official Python image as the base image
 FROM python:3.11
 
-# -- to install python package psycopg2 (for postgres) -- #
-RUN apt-get update
-RUN apt-get install -y postgresql libpq-dev postgresql-client postgresql-client-common gcc
+# # -- to install python package psycopg2 (for postgres) -- #
+# RUN apt-get update
+# RUN apt-get install -y postgresql libpq-dev postgresql-client postgresql-client-common gcc
 
 # add user (change to whatever you want)
 # prevents running sudo commands
@@ -49,4 +49,4 @@ COPY . /app
 WORKDIR /app
 
 # start web server
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app", "--workers=5", "--reload" ]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app", "--workers=5"]
