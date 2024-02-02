@@ -1,8 +1,7 @@
-# import os
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-# from dotenv import load_dotenv
+
 import random
 
 from secrets_manager import get_secret
@@ -10,7 +9,7 @@ from secrets_manager import get_secret
 app = Flask(__name__, static_url_path='/static')
 
 db_config = get_secret()
-print((db_config))
+# print((db_config))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'postgresql+psycopg2://{db_config["POSTGRES_USER"]}:' +
@@ -19,21 +18,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'{db_config["POSTGRES_DB"]}'
 )
 
-# load_dotenv()
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = (
-#     f'postgresql+psycopg2://{os.getenv("POSTGRES_USER")}:' +
-#     f'{os.getenv("POSTGRES_PW")}@' +
-#     f'{os.getenv("POSTGRES_HOST")}/' +
-#     f'{os.getenv("POSTGRES_DB")}'
-# )
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-
 
 class Plants(db.Model):
     __tablename__ = 'trees'

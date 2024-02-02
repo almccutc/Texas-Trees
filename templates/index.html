@@ -4,61 +4,81 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <meta name="author" content="Your Name"> -->
-  <meta name="description" content="A quiz about Texas trees">
-  <meta name="keywords" content="Texas, trees, quiz, nature">
+  <meta name="description" content="A quiz about Texas trees and plants.">
+  <meta name="keywords" content="Texas, trees, quiz, plants, nature, live oak.">
   <title>Texas Tree Quiz</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
+  <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
+</head>
 
-      <style>
+<style>
+  .container2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    border: 1px solid black; /* Adjust border properties as desired */
+    padding: 30px; /* Adjust padding as desired */
+  }
 
+  .image-container {
+    flex-basis: auto;
+    overflow: auto;
+    max-height: 500px; /* Adjust the maximum height as needed */
+    max-width: 500px;
+    align-items: center;
+    justify-content: center;
+  }
 
+  .small-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
 
-.container2 {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  border: 1px solid black; /* Adjust border properties as desired */
-  padding: 30px; /* Adjust padding as desired */
-}
+  .button-stack {
 
-.image-container {
-  flex-basis: auto;
-  overflow: auto;
-  max-height: 500px; /* Adjust the maximum height as needed */
-  max-width: 500px;
-  align-items: center;
-  justify-content: center;
-}
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adjust the desired spacing between buttons */
+  }
 
-.small-image {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
+  .button-stack button {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 500px;
+  }
 
-.button-stack {
+  /* Add these styles for correct and incorrect answers */
+  .button[data-is-correct="true"] {
+      position: relative;
+  }
 
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* Adjust the desired spacing between buttons */
-  
+  .button[data-is-correct="true"]:after {
+      content: '\2713'; /* Unicode character for check mark */
+      color: #00cc00; /* Green color */
+      font-size: 45px;
+      font-weight: bold;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+  }
 
-}
+  .button[data-is-correct="false"]:after {
+      content: '\2717'; /* Unicode character for multiplication sign (x) */
+      color: #ff0000; /* Red color */
+      font-size: 45px;
+      font-weight: bold;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+  }
 
-.button-stack button {
-  flex-grow: 1;
-  width: 100%;
-  min-width: 500px;
-}
-
-  </style>
+</style>
     
-
-    <head>
-        <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
-      </head>
 
   </head>
   <body>
@@ -75,7 +95,6 @@
       <div class="hero-foot has-background-dark py-4"></div>
       <div class="mt-3"></div>
 
-      <div class="container "></div>
         <div class="columns">
             <div class="column is-2"></div>
             <div class="column is-3">
@@ -157,16 +176,21 @@
       <div class="hero-foot has-background-dark py-4"></div>
 
       <section class="section">
-        <div class="container2">
-          <div class="image-container">
-            <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
-          </div>
-          <div class="button-stack">
-            {% for plant_name in plant_names %}
-              <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded">{{ plant_name }}</button>
-            {% endfor %}
-          </div>
-        </div>     
+        <div class="container2" id="container2">
+            <div class="image-container">
+                <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
+            </div>
+            <div class="button-stack">
+                {% for plant_name in plant_names %}
+                    <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" data-is-correct="{{ plant_name == correct_plant_name }}">
+                        {{ plant_name }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="box" id = "counterBox" style="display: flex; align-items: center; justify-content: center;">
+          <span id="resultText">Correct: 0/0</span>
+        </div>
       </section>
 
   <div class="hero-foot has-background-dark py-4"></div>

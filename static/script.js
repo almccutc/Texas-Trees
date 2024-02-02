@@ -25,73 +25,97 @@ switchElement.checked = false;
 switchElement = document.getElementById("switchRoundedDefault_cacti");
 switchElement.checked = false;
 
-// Declare plant_names and image_urls in a broader scope
+// Declare plant_names, plant_image_urls, selectedIndex, and correctPlantIndex 
 var plant_names;
-var plant_image_url;
+var plant_image_urls;
+var selectedIndex;
+var correctPlantName;
+var correctPlantIndex = 0; // Initialize correctPlantIndex with 0
+var correctCount = 0; 
+var totalCount = 0;
+
+// Event listeners for the 4 buttons
+for (let i = 0; i < 4; i++) {
+  var myButton = document.querySelector(".button-stack button:nth-child(" + (i + 1) + ")");
+  
+  if (myButton) {
+    myButton.addEventListener("click", function(index) {
+      return function() {
+        // Determine the index of the selected button
+        var selectedIndex = index;
+
+        // Call the checkSelectedAnswer function with the selected index and correct index
+        checkSelectedAnswer(selectedIndex, correctPlantIndex);
+
+        // Fetch new plant names and update buttons for the next round
+        fetchPlantNameList(selectedIndex);
+      };
+    }(i));
+  }
+}
 
 // Function to fetch plant names and update buttons and image
-function fetchPlantNameList() {
+function fetchPlantNameList(selectedIndex) {
   fetch('/get_plant_name_list') 
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;
       plant_image_urls = data.plant_image_url;
 
-      // Shuffle the plant names and get the first 4
-      var random_plant_names = plant_names.sort(() => Math.random() - 0.5).slice(0, 4);
+      // Create an array of indices
+      var indices = Array.from({ length: plant_names.length }, (_, index) => index);
 
-      // Randomly select one plant name from the four
-      var selectedPlantName = random_plant_names[Math.floor(Math.random() * 4)];
-
-      // Find the index of the selected plant name
-      var index = plant_names.indexOf(selectedPlantName);
-      console.log("index pn:", index);
+      // Randomly select one index from the four
+      var randomIndex = indices[Math.floor(Math.random() * 4)];
 
       // Update the buttons with new plant names
       for (var i = 0; i < 4; i++) {
         var myButton = document.querySelector(".button-stack button:nth-child(" + (i + 1) + ")");
-        myButton.innerHTML = random_plant_names[i];
+        myButton.innerHTML = plant_names[indices[i]];
       }
 
       // Update the image with the corresponding URL
       var imageElement = document.getElementById("selectedPlantImage");
-      imageElement.src = plant_image_urls[index];
-      
+      imageElement.src = plant_image_urls[randomIndex];
+
+      correctPlantIndex = randomIndex;
     });
 }
 
-// Add event listeners to the buttons
-for (var i = 0; i < 4; i++) {
-  var myButton = document.querySelector(".button-stack button:nth-child(" + (i + 1) + ")");
+// Function to determine if the selected answer was correct
+function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
+  var selectedButton = document.querySelector(".button-stack button:nth-child(" + (selectedIndex + 1) + ")");
+  totalCount = totalCount + 1; 
   
-  if (myButton) {
-    myButton.addEventListener("click", function() {
-      // Get the clicked button value (plant name)
-      var allButtons = document.querySelectorAll(".button-stack button");
-      allButtons.forEach(button => {
-        button.classList.remove("is-focused");
-      });
-      // var buttonValue = this.innerHTML;
+  if (selectedButton) {
+    var isCorrect = selectedIndex === correctPlantIndex;
 
-      // // Log the buttonValue to the console
-      // console.log("Button Value:", buttonValue);
+    // Set data-is-correct attribute based on correctness
+    selectedButton.setAttribute("data-is-correct", isCorrect ? "true" : "false");
 
-      // // Find the corresponding URL based on the clicked button's index
-      // var index = plant_names.indexOf(buttonValue);
-      // var imageUrl = plant_image_url[index];
+    // Add a class based on the data-is-correct attribute
+    if (isCorrect) {
+      selectedButton.classList.add("true");
+      correctCount = correctCount + 1;
+    } else {
+      selectedButton.classList.add("false");
+    }
 
-      // console.log("index", index);
-      // console.log("imageUrl", imageUrl);
-
-      // // Update the image with the new URL
-      // var imageElement = document.getElementById("selectedPlantImage");
-      // console.log("imageElement", imageElement);
-      // imageElement.src = plant_image_url; //
-
-      // Fetch new plant names and update buttons for the next round
-      fetchPlantNameList();
-    });
+    // Remove the class and set data-is-correct to "no-answer" after a 1-second timeout
+    setTimeout(function () {
+      selectedButton.classList.remove("true", "false");
+      selectedButton.setAttribute("data-is-correct", "no-answer");
+    }, 1000);
   }
-  
+
+  // Update the content of the result box
+  updateResultBox();
 }
 
+function updateResultBox() {
+  var resultBox = document.getElementById("counterBox");
+  var resultTextSpan = document.getElementById("resultText");
+
+  // Update the content of the result box
+  resultTextSpan.textContent = "Correct: " + correctCount + "/" + totalCount;
+}
