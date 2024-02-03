@@ -139,6 +139,18 @@
       transform: translateY(-50%);
   }
 
+  /* Add this to your existing CSS or create a new CSS file */
+.with-border {
+    border: 1px solid #000; /* Adjust the border width and color as needed */
+    padding: 10px; /* Add padding for space between the content and the border */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    border-top: none; /* Remove the top border */
+    box-shadow: none; 
+}
+
 </style>
     
 
@@ -260,9 +272,9 @@
           
           
         </div>
-        <div class="box" id = "counterBox" style="display: flex; align-items: center; justify-content: center;">
+        <div class="box with-border" id="counterBox">
           <span id="resultText">Correct: 0/0</span>
-        </div>
+        </div>      
       </section>
 
   <div class="hero-foot has-background-dark py-4"></div>
