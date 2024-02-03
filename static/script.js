@@ -61,6 +61,8 @@ function fetchPlantNameList(selectedIndex) {
     .then(data => {
       plant_names = data.plant_names;
       plant_image_urls = data.plant_image_url;
+      scientific_names = data.scientific_names;
+      plant_types = data.plant_types;
 
       // Create an array of indices
       var indices = Array.from({ length: plant_names.length }, (_, index) => index);
@@ -71,14 +73,16 @@ function fetchPlantNameList(selectedIndex) {
       // Update the buttons with new plant names
       for (var i = 0; i < 4; i++) {
         var myButton = document.querySelector(".button-stack button:nth-child(" + (i + 1) + ")");
-        myButton.innerHTML = plant_names[indices[i]];
+        myButton.querySelector('.common-name').innerHTML = plant_names[indices[i]];
+        myButton.querySelector('.scientific-name').innerHTML = scientific_names[indices[i]];
+        myButton.querySelector('.tree-type').innerHTML = plant_types[indices[i]];
       }
 
       // Update the image with the corresponding URL
       var imageElement = document.getElementById("selectedPlantImage");
       imageElement.src = plant_image_urls[randomIndex];
 
-      correctPlantIndex = randomIndex;
+      correctPlantIndex = indices.indexOf(randomIndex);
     });
 }
 

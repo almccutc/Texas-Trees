@@ -44,20 +44,50 @@
     gap: 15px; /* Adjust the desired spacing between buttons */
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 410px) {
   .button-stack button {
     flex-grow: 1;
     width: 100%;
-    min-width: 400px;
+    min-width: 290px;
+    min-height: 60px;
   }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 411px) {
   .button-stack button {
     flex-grow: 1;
     width: 100%;
     min-width: 500px;
+    min-height: 70px;
   }
+}
+
+.plant-info {
+    margin-top: 10px;
+}
+
+.additional-info {
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    /* align-items: center; Center the content vertically */
+}
+
+.common-name {
+    font-size: 1em;
+    /* font-weight: bold; */
+}
+
+.scientific-name {
+    font-size: 0.6em;
+    font-style: italic;
+}
+
+.tree-type {
+    font-size: 0.6em;
+}
+
+.interjunct {
+    font-size: 0.6em;
 }
 
 @media screen and (max-width: 768px) {
@@ -124,7 +154,7 @@
         </div>
       </header>
 
-      <div class="hero-foot has-background-dark py-4"></div>
+      <div class="hero-foot has-background-dark py-4 is is-fullwidth is-responsive"></div>
       <div class="mt-3"></div>
 
         <div class="columns">
@@ -213,12 +243,22 @@
                 <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
             </div>
             <div class="button-stack">
-                {% for plant_name in plant_names %}
-                    <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" data-is-correct="{{ plant_name == correct_plant_name }}">
-                        {{ plant_name }}
-                    </button>
-                {% endfor %}
-            </div>
+              {% for index in range(plant_names|length) %}
+                  <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" data-is-correct="{{ plant_names[index] == correct_plant_name }}">
+                      <div class="plant-info">
+                          <div class="common-name">{{ plant_names[index] }}</div>
+                          <div class="additional-info">
+                              <div class="scientific-name">{{ scientific_names[index] }}</div>
+                              <div class="interjunct">&nbsp;&middot;&nbsp;</div>
+                              <div class="tree-type">{{ plant_types[index] }}</div>
+                          </div>
+                      </div>
+                  </button>
+              {% endfor %}
+          </div>
+          
+          
+          
         </div>
         <div class="box" id = "counterBox" style="display: flex; align-items: center; justify-content: center;">
           <span id="resultText">Correct: 0/0</span>
