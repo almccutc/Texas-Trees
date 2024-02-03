@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <meta name="author" content="Your Name"> -->
     <meta name="description" content="A quiz about Texas trees and plants.">
     <meta name="keywords" content="Texas, trees, quiz, plants, nature, live oak.">
@@ -39,17 +39,48 @@
   }
 
   .button-stack {
-
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Adjust the desired spacing between buttons */
+    gap: 15px; /* Adjust the desired spacing between buttons */
   }
 
+  @media screen and (max-width: 768px) {
+  .button-stack button {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 400px;
+  }
+}
+
+@media screen and (min-width: 769px) {
   .button-stack button {
     flex-grow: 1;
     width: 100%;
     min-width: 500px;
   }
+}
+
+@media screen and (max-width: 768px) {
+  .selectedPlantImage {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 400px;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .selectedPlantImage {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 500px;
+  }
+}
+
+  /* .button-stack button {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 500px;
+  } */
 
   /* Add these styles for correct and incorrect answers */
   .button[data-is-correct="true"] {

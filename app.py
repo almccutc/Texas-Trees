@@ -1,10 +1,9 @@
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from secrets_manager import get_secret
 
 import random
-
-from secrets_manager import get_secret
 
 app = Flask(__name__, static_url_path='/static')
 
