@@ -38,13 +38,34 @@
     display: block;
   }
 
+@media screen and (max-width: 410px) {
   .button-stack {
     display: flex;
     flex-direction: column;
+    gap: 0px; /* Adjust the desired spacing between buttons */
+    margin-top: 5px; /* Adjust the desired margin to the left */
+  }
+}
+
+@media screen and (min-width: 411px) { 
+  .button-stack {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px; /* Adjust the desired margin to the left */
     gap: 15px; /* Adjust the desired spacing between buttons */
   }
+}
 
-  @media screen and (max-width: 410px) {
+
+  /* .button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Adjust the desired spacing between buttons */
+  /* margin-left: 15px; Adjust the desired margin to the left */
+  /* } */ 
+
+
+@media screen and (max-width: 410px) {
   .button-stack button {
     flex-grow: 1;
     width: 100%;
@@ -73,7 +94,7 @@
 }
 
 .common-name {
-    font-size: 1em;
+    font-size: 1.1em;
     /* font-weight: bold; */
 }
 
@@ -192,10 +213,10 @@
                     <label for="switchRoundedDefault_barks">Bark</label>
                 </div>
 
-                <div class="field">
+                <!-- <div class="field">
                     <input id="switchRoundedDefault_fruits" type="checkbox" name="switchRoundedDefault_fruits" class="switch is-rounded is-centered" checked="checked">
                     <label for="switchRoundedDefault_fruits">Fruit</label>
-                </div>
+                </div> -->
             </div> 
             
             <div class="column is-3"> 

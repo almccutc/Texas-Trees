@@ -41,29 +41,51 @@ class Plants(db.Model):
 
 @app.route('/')
 def render_webpage():
-    all_plant_data = [(plant.plant_name, plant.image_url, plant.scientific_name, plant.plant_type) for plant in Plants.query.all()]
-    
-    # Randomly select 4 plant data tuples
-    selected_plant_data = random.sample(all_plant_data, 4)
+    plants = []
+    unique_plant_names = set()
+
+    # Retrieve 4 unique plants
+    while len(plants) < 4:
+        # Execute the query to retrieve a random plant
+        random_plant = Plants.query.order_by(db.func.random()).first()
+
+        # Check if the plant name is unique
+        if random_plant.plant_name not in unique_plant_names:
+            # Append the unique plant to the list
+            plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type))
+            
+            # Add the plant name to the set of unique names
+            unique_plant_names.add(random_plant.plant_name)
 
     # Extract plant names and image URLs from selected data
-    selected_plant_names = [plant_data[0] for plant_data in selected_plant_data]
-    selected_plant_image_urls = [plant_data[1] for plant_data in selected_plant_data]
-    scientific_names = [plant_data[2] for plant_data in selected_plant_data]
-    plant_types = [plant_data[3] for plant_data in selected_plant_data]
+    plant_names = [item[0] for item in plants]
+    plant_image_url = [item[1] for item in plants]
+    scientific_names = [item[2] for item in plants]
+    plant_types = [item[3] for item in plants]
 
-    return render_template('index.html', plant_names=selected_plant_names, plant_image_url=selected_plant_image_urls, scientific_names=scientific_names, plant_types = plant_types)
+    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types)
 
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
-    plants = []
 
-    for _ in range(4):
+    plants = []
+    unique_plant_names = set()
+
+    # Retrieve 4 unique plants
+    while len(plants) < 4:
         # Execute the query to retrieve a random plant
         random_plant = Plants.query.order_by(db.func.random()).first()
-        
-        # Store the result in the 'plants' list
-        plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type))
+
+        # Check if the plant name is unique
+        if random_plant.plant_name not in unique_plant_names:
+            # Append the unique plant to the list
+            plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type))
+            
+            # Add the plant name to the set of unique names
+            unique_plant_names.add(random_plant.plant_name)
+
+    # Now, 'plants' contains 4 unique plants
+
 
     # Generate options for the plant identification
     plant_names = [item[0] for item in plants]

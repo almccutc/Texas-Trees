@@ -41,6 +41,7 @@ for (let i = 0; i < 4; i++) {
   if (myButton) {
     myButton.addEventListener("click", function(index) {
       return function() {
+
         // Determine the index of the selected button
         var selectedIndex = index;
 
@@ -49,6 +50,8 @@ for (let i = 0; i < 4; i++) {
 
         // Fetch new plant names and update buttons for the next round
         fetchPlantNameList(selectedIndex);
+
+        actionPerformed = true;
       };
     }(i));
   }
@@ -76,6 +79,12 @@ function fetchPlantNameList(selectedIndex) {
         myButton.querySelector('.common-name').innerHTML = plant_names[indices[i]];
         myButton.querySelector('.scientific-name').innerHTML = scientific_names[indices[i]];
         myButton.querySelector('.tree-type').innerHTML = plant_types[indices[i]];
+
+        // Unfocus the button
+        setTimeout(function () {
+          myButton.classList.remove('is-focused');
+        }, 1000);
+        
       }
 
       // Update the image with the corresponding URL
