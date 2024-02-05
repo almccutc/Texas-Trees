@@ -2,7 +2,7 @@
 var switchElement;
 
 switchElement = document.getElementById("switchRoundedDefault_wildflowers");
-switchElement.checked = false;
+switchElement.checked = true;
 
 switchElement = document.getElementById("switchRoundedDefault_grasses");
 switchElement.checked = false;
