@@ -22,8 +22,8 @@ switchElement.checked = false;
 switchElement = document.getElementById("switchRoundedDefault_vines");
 switchElement.checked = false;
 
-switchElement = document.getElementById("switchRoundedDefault_herbs");
-switchElement.checked = false;
+// switchElement = document.getElementById("switchRoundedDefault_herbs");
+// switchElement.checked = false;
 
 // switchElement = document.getElementById("switchRoundedDefault_poisonousplants");
 // switchElement.checked = false;
@@ -47,7 +47,7 @@ var switchState_wildflowers
 var switchState_grasses
 var switchState_aquaticplants
 var switchState_vines
-var switchState_herbs
+// var switchState_herbs
 var switchState_cacti
 
 // Add event listener to the tree switch
@@ -93,11 +93,11 @@ for (let i = 0; i < 4; i++) {
         switchState_grasses = document.getElementById("switchRoundedDefault_grasses").checked;
         switchState_aquaticplants = document.getElementById("switchRoundedDefault_aquaticplants").checked;
         switchState_vines = document.getElementById("switchRoundedDefault_vines").checked;
-        switchState_herbs = document.getElementById("switchRoundedDefault_herbs").checked;
+        // switchState_herbs = document.getElementById("switchRoundedDefault_herbs").checked;
         switchState_cacti = document.getElementById("switchRoundedDefault_cacti").checked;
         
         // Fetch new plant names and update buttons for the next round
-        fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_herbs, switchState_cacti);
+        fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
 
         actionPerformed = true;
       };
@@ -106,9 +106,9 @@ for (let i = 0; i < 4; i++) {
 }
 
 // Function to fetch plant names and update buttons and image
-function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_herbs, switchState_cacti) {
+function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
   console.log(switchState_wildflowers);
-  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_herbs=${switchState_herbs}&switchState_cacti=${switchState_cacti}`)
+  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}`)
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;

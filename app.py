@@ -46,7 +46,13 @@ class Flowers(BasePlant):
     __tablename__ = 'flower'
 
 class Vines(BasePlant):
-    __tablename__ = 'vines'    
+    __tablename__ = 'vines'   
+
+class Cacti(BasePlant):
+    __tablename__ = 'cacti' 
+
+class Grasses(BasePlant):
+    __tablename__ = 'grasses' 
         
 
 @app.route('/')
@@ -78,7 +84,7 @@ def render_webpage():
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
     plants = []
-    unique_plant_names = set()
+   
     switchState_trees = request.args.get('switchState_trees')
     switchState_wildflowers = request.args.get('switchState_wildflowers')
     switchState_grasses = request.args.get('switchState_grasses')
@@ -89,6 +95,8 @@ def get_plant_name_list():
 
     # Define the number of unique plants to retrieve from each table
     plants_per_table = 4
+
+    unique_plant_names = set()
 
     if switchState_trees == 'true':
         while len(unique_plant_names) < plants_per_table:
@@ -131,7 +139,37 @@ def get_plant_name_list():
                 plants.append((random_vine.plant_name, random_vine.image_url, random_vine.scientific_name, random_vine.plant_type))
                 
                 # Add the plant name to the set of unique names
-                unique_plant_names.add(random_vine.plant_name)            
+                unique_plant_names.add(random_vine.plant_name)
+
+    unique_plant_names = set()             
+
+    if switchState_cacti == 'true':
+        while len(unique_plant_names) < plants_per_table:
+            # Execute the query to retrieve a random plant from 'cactus'
+            random_cactus = Cacti.query.order_by(db.func.random()).first()
+
+            # Check if the plant name is unique
+            if random_cactus.plant_name not in unique_plant_names:
+                # Append the unique plant to the list
+                plants.append((random_cactus.plant_name, random_cactus.image_url, random_cactus.scientific_name, random_cactus.plant_type))
+                
+                # Add the plant name to the set of unique names
+                unique_plant_names.add(random_cactus.plant_name)        
+
+    unique_plant_names = set()             
+
+    if switchState_grasses == 'true':
+        while len(unique_plant_names) < plants_per_table:
+            # Execute the query to retrieve a random plant from 'grass'
+            random_grass = Grasses.query.order_by(db.func.random()).first()
+
+            # Check if the plant name is unique
+            if random_grass.plant_name not in unique_plant_names:
+                # Append the unique plant to the list
+                plants.append((random_grass.plant_name, random_grass.image_url, random_grass.scientific_name, random_grass.plant_type))
+                
+                # Add the plant name to the set of unique names
+                unique_plant_names.add(random_grass.plant_name)                                    
 
     # Selects 4 random plant choices for the quiz
     plants = random.sample(plants, 4)    
