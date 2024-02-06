@@ -44,6 +44,9 @@ class Trees(BasePlant):
 
 class Flowers(BasePlant):
     __tablename__ = 'flower'
+
+class Vines(BasePlant):
+    __tablename__ = 'vines'    
         
 
 @app.route('/')
@@ -114,6 +117,21 @@ def get_plant_name_list():
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_flower.plant_name)
+
+    unique_plant_names = set()    
+    
+    if switchState_vines == 'true':
+        while len(unique_plant_names) < plants_per_table:
+            # Execute the query to retrieve a random plant from 'vines'
+            random_vine = Vines.query.order_by(db.func.random()).first()
+
+            # Check if the plant name is unique
+            if random_vine.plant_name not in unique_plant_names:
+                # Append the unique plant to the list
+                plants.append((random_vine.plant_name, random_vine.image_url, random_vine.scientific_name, random_vine.plant_type))
+                
+                # Add the plant name to the set of unique names
+                unique_plant_names.add(random_vine.plant_name)            
 
     # Selects 4 random plant choices for the quiz
     plants = random.sample(plants, 4)    
