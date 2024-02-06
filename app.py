@@ -53,6 +53,9 @@ class Cacti(BasePlant):
 
 class Grasses(BasePlant):
     __tablename__ = 'grasses' 
+
+class Aquatic(BasePlant):
+    __tablename__ = 'aquatic_plants'     
         
 
 @app.route('/')
@@ -169,7 +172,22 @@ def get_plant_name_list():
                 plants.append((random_grass.plant_name, random_grass.image_url, random_grass.scientific_name, random_grass.plant_type))
                 
                 # Add the plant name to the set of unique names
-                unique_plant_names.add(random_grass.plant_name)                                    
+                unique_plant_names.add(random_grass.plant_name)  
+
+    unique_plant_names = set()             
+
+    if switchState_aquaticplants == 'true':
+        while len(unique_plant_names) < plants_per_table:
+            # Execute the query to retrieve a random plant from 'grass'
+            random_aquatic = Aquatic.query.order_by(db.func.random()).first()
+
+            # Check if the plant name is unique
+            if random_aquatic.plant_name not in unique_plant_names:
+                # Append the unique plant to the list
+                plants.append((random_aquatic.plant_name, random_aquatic.image_url, random_aquatic.scientific_name, random_aquatic.plant_type))
+                
+                # Add the plant name to the set of unique names
+                unique_plant_names.add(random_aquatic.plant_name)                                               
 
     # Selects 4 random plant choices for the quiz
     plants = random.sample(plants, 4)    
