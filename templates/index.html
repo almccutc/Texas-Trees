@@ -33,18 +33,19 @@
     justify-content: center;
   }
 
-  .small-image {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-
+/* for small screen (iphone, etc.) */ 
 @media screen and (max-width: 410px) {
   .button-stack {
     display: flex;
     flex-direction: column;
-    gap: 0px; /* Adjust the desired spacing between buttons */
+    gap: 10px; /* Adjust the desired spacing between buttons */
     margin-top: 5px; /* Adjust the desired margin to the left */
+  }
+  .button-stack button {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 290px;
+    min-height: 60px;
   }
 }
 
@@ -55,32 +56,33 @@
     margin-left: 10px; /* Adjust the desired margin to the left */
     gap: 15px; /* Adjust the desired spacing between buttons */
   }
-}
-
-
-  /* .button-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Adjust the desired spacing between buttons */
-  /* margin-left: 15px; Adjust the desired margin to the left */
-  /* } */ 
-
-
-@media screen and (max-width: 410px) {
   .button-stack button {
     flex-grow: 1;
     width: 100%;
-    min-width: 290px;
-    min-height: 60px;
+    max-width: 400px;
+    min-height: 70px;
   }
 }
 
-@media screen and (min-width: 411px) {
-  .button-stack button {
+/* for small screen (iphone, etc.) */
+@media screen and (max-width: 410px) { 
+  .small-image {
     flex-grow: 1;
     width: 100%;
-    min-width: 500px;
-    min-height: 70px;
+    max-width: 290px;
+    max-height: 290px;
+    margin-bottom: 0px;
+  }
+}
+
+/* for large screen (laptop, tablet) */
+@media screen and (min-width: 411px) {
+  .small-image {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 400px;
+    min-width: 300px
+    
   }
 }
 
@@ -95,7 +97,7 @@
 }
 
 .common-name {
-    font-size: 1.1em;
+    font-size: 1em;
     /* font-weight: bold; */
 }
 
@@ -110,23 +112,6 @@
 
 .interjunct {
     font-size: 0.6em;
-}
-
-@media screen and (max-width: 768px) {
-  .small-image {
-    flex-grow: 1;
-    width: 100%;
-    min-width: 400px;
-    margin-bottom: 5px;
-  }
-}
-
-@media screen and (min-width: 769px) {
-  .small-image {
-    flex-grow: 1;
-    width: 100%;
-    min-width: 300px;
-  }
 }
 
   /* .button-stack button {
