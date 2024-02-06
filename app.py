@@ -76,26 +76,33 @@ def render_webpage():
 def get_plant_name_list():
     plants = []
     unique_plant_names = set()
-    switchState = request.args.get('switchState')
+    switchState_trees = request.args.get('switchState_trees')
+    switchState_wildflowers = request.args.get('switchState_wildflowers')
+    switchState_grasses = request.args.get('switchState_grasses')
+    switchState_aquaticplants = request.args.get('switchState_aquaticplants')
+    switchState_vines = request.args.get('switchState_vines')
+    switchState_herbs = request.args.get('switchState_herbs')
+    switchState_cacti = request.args.get('switchState_cacti')
 
     # Define the number of unique plants to retrieve from each table
     plants_per_table = 4
 
-    while len(unique_plant_names) < plants_per_table:
+    if switchState_trees == 'true':
+        while len(unique_plant_names) < plants_per_table:
 
-        # Execute the query to retrieve a random plant from 'trees'
-        random_tree = Trees.query.order_by(db.func.random()).first()
-        # Check if the plant name is unique
-        if random_tree.plant_name not in unique_plant_names:
-            # Append the unique plant to the list
-            plants.append((random_tree.plant_name, random_tree.image_url, random_tree.scientific_name, random_tree.plant_type))
-            
-            # Add the plant name to the set of unique names
-            unique_plant_names.add(random_tree.plant_name)
+            # Execute the query to retrieve a random plant from 'trees'
+            random_tree = Trees.query.order_by(db.func.random()).first()
+            # Check if the plant name is unique
+            if random_tree.plant_name not in unique_plant_names:
+                # Append the unique plant to the list
+                plants.append((random_tree.plant_name, random_tree.image_url, random_tree.scientific_name, random_tree.plant_type))
+                
+                # Add the plant name to the set of unique names
+                unique_plant_names.add(random_tree.plant_name)
 
     unique_plant_names = set()    
     
-    if switchState == 'true':
+    if switchState_wildflowers == 'true':
         while len(unique_plant_names) < plants_per_table:
             # Execute the query to retrieve a random plant from 'flowers'
             random_flower = Flowers.query.order_by(db.func.random()).first()
