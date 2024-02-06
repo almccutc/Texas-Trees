@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from secrets_manager import get_secret
-
+from flask import request
 import random
 
 app = Flask(__name__, static_url_path='/static')
@@ -76,12 +76,15 @@ def render_webpage():
 def get_plant_name_list():
     plants = []
     unique_plant_names = set()
+    switchState = request.args.get('switchState')
 
-    # Retrieve 2 unique plants from each table (total of 4)
-    while len(plants) < 4:
+    # Define the number of unique plants to retrieve from each table
+    plants_per_table = 4
+
+    while len(unique_plant_names) < plants_per_table:
+
         # Execute the query to retrieve a random plant from 'trees'
         random_tree = Trees.query.order_by(db.func.random()).first()
-
         # Check if the plant name is unique
         if random_tree.plant_name not in unique_plant_names:
             # Append the unique plant to the list
@@ -90,16 +93,23 @@ def get_plant_name_list():
             # Add the plant name to the set of unique names
             unique_plant_names.add(random_tree.plant_name)
 
-        # Execute the query to retrieve a random plant from 'flowers'
-        random_flower = Flowers.query.order_by(db.func.random()).first()
+    unique_plant_names = set()    
+    
+    if switchState == 'true':
+        while len(unique_plant_names) < plants_per_table:
+            # Execute the query to retrieve a random plant from 'flowers'
+            random_flower = Flowers.query.order_by(db.func.random()).first()
 
-        # Check if the plant name is unique
-        if random_flower.plant_name not in unique_plant_names:
-            # Append the unique plant to the list
-            plants.append((random_flower.plant_name, random_flower.image_url, random_flower.scientific_name, random_flower.plant_type))
-            
-            # Add the plant name to the set of unique names
-            unique_plant_names.add(random_flower.plant_name)
+            # Check if the plant name is unique
+            if random_flower.plant_name not in unique_plant_names:
+                # Append the unique plant to the list
+                plants.append((random_flower.plant_name, random_flower.image_url, random_flower.scientific_name, random_flower.plant_type))
+                
+                # Add the plant name to the set of unique names
+                unique_plant_names.add(random_flower.plant_name)
+
+    # Selects 4 random plant choices for the quiz
+    plants = random.sample(plants, 4)    
 
     # Generate options for the plant identification
     plant_names = [item[0] for item in plants]

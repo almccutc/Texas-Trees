@@ -1,7 +1,7 @@
 // Declare switchElement in a broader scope
 var switchElement;
 
-switchElement = document.getElementById("switchRoundedDefault_wildflowers");
+switchElement = document.getElementById("switch_wildflowers");
 switchElement.checked = true;
 
 switchElement = document.getElementById("switchRoundedDefault_grasses");
@@ -33,6 +33,16 @@ var correctPlantName;
 var correctPlantIndex = 0; // Initialize correctPlantIndex with 0
 var correctCount = 0; 
 var totalCount = 0;
+var switchState
+
+// // Add an event listener to the checkbox
+// switch_wildflowers.addEventListener("change", function() {
+//   if (!this.checked) {
+//       // The checkbox is now unchecked (false)
+//       // Add your logic here
+//       // console.log("Checkbox is unchecked");
+//   }
+// });
 
 // Event listeners for the 4 buttons
 for (let i = 0; i < 4; i++) {
@@ -48,8 +58,10 @@ for (let i = 0; i < 4; i++) {
         // Call the checkSelectedAnswer function with the selected index and correct index
         checkSelectedAnswer(selectedIndex, correctPlantIndex);
 
+        switchState = document.getElementById("switch_wildflowers").checked;
+        
         // Fetch new plant names and update buttons for the next round
-        fetchPlantNameList(selectedIndex);
+        fetchPlantNameList(selectedIndex, switchState);
 
         actionPerformed = true;
       };
@@ -58,8 +70,9 @@ for (let i = 0; i < 4; i++) {
 }
 
 // Function to fetch plant names and update buttons and image
-function fetchPlantNameList(selectedIndex) {
-  fetch('/get_plant_name_list') 
+function fetchPlantNameList(selectedIndex, switchState) {
+  console.log(switchState);
+  fetch(`/get_plant_name_list?switchState=${switchState}`) 
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;
