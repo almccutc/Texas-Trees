@@ -99,6 +99,7 @@ def get_plant_name_list():
     switchState_herbs = request.args.get('switchState_herbs')
     switchState_cacti = request.args.get('switchState_cacti')
     randomIndex = request.args.get('randomIndex')
+    previousPlantName = request.args.get('previousPlantName')
 
     # Define the number of unique plants to retrieve from each table
     plants_per_table = 4
@@ -111,7 +112,7 @@ def get_plant_name_list():
             # Execute the query to retrieve a random plant from 'trees'
             random_tree = Trees.query.order_by(db.func.random()).first()
             # Check if the plant name is unique
-            if random_tree.plant_name not in unique_plant_names:
+            if random_tree.plant_name not in unique_plant_names and random_tree.plant_name != previousPlantName:
                 # Append the unique plant to the list
                 plants.append((random_tree.plant_name, random_tree.image_url, random_tree.scientific_name, random_tree.plant_type, random_tree.source))
                 
@@ -126,7 +127,7 @@ def get_plant_name_list():
             random_flower = Flowers.query.order_by(db.func.random()).first()
 
             # Check if the plant name is unique
-            if random_flower.plant_name not in unique_plant_names:
+            if random_flower.plant_name not in unique_plant_names and random_flower.plant_name != previousPlantName:
                 # Append the unique plant to the list
                 plants.append((random_flower.plant_name, random_flower.image_url, random_flower.scientific_name, random_flower.plant_type, random_flower.source))
                 
@@ -140,8 +141,9 @@ def get_plant_name_list():
             # Execute the query to retrieve a random plant from 'vines'
             random_vine = Vines.query.order_by(db.func.random()).first()
 
-            # Check if the plant name is unique
-            if random_vine.plant_name not in unique_plant_names:
+            # Check if the plant name is unique and not the same as the previous plant
+            print(previousPlantName)
+            if random_vine.plant_name not in unique_plant_names and random_vine.plant_name != previousPlantName:
                 # Append the unique plant to the list
                 plants.append((random_vine.plant_name, random_vine.image_url, random_vine.scientific_name, random_vine.plant_type, random_vine.source))
                 
@@ -156,7 +158,7 @@ def get_plant_name_list():
             random_cactus = Cacti.query.order_by(db.func.random()).first()
 
             # Check if the plant name is unique
-            if random_cactus.plant_name not in unique_plant_names:
+            if random_cactus.plant_name not in unique_plant_names and random_cactus.plant_name != previousPlantName:
                 # Append the unique plant to the list
                 plants.append((random_cactus.plant_name, random_cactus.image_url, random_cactus.scientific_name, random_cactus.plant_type, random_cactus.source))
                 
@@ -171,7 +173,7 @@ def get_plant_name_list():
             random_grass = Grasses.query.order_by(db.func.random()).first()
 
             # Check if the plant name is unique
-            if random_grass.plant_name not in unique_plant_names:
+            if random_grass.plant_name not in unique_plant_names and random_grass.plant_name != previousPlantName:
                 # Append the unique plant to the list
                 plants.append((random_grass.plant_name, random_grass.image_url, random_grass.scientific_name, random_grass.plant_type, random_grass.source))
                 
@@ -185,8 +187,9 @@ def get_plant_name_list():
             # Execute the query to retrieve a random plant from 'grass'
             random_aquatic = Aquatic.query.order_by(db.func.random()).first()
 
-            # Check if the plant name is unique
-            if random_aquatic.plant_name not in unique_plant_names:
+            # Check if the plant name is unique, previousPlantName
+            if random_aquatic.plant_name not in unique_plant_names and random_aquatic.plant_name != previousPlantName:
+
                 # Append the unique plant to the list
                 plants.append((random_aquatic.plant_name, random_aquatic.image_url, random_aquatic.scientific_name, random_aquatic.plant_type, random_aquatic.source))
                 
@@ -206,6 +209,14 @@ def get_plant_name_list():
     print(randomIndex)
 
     return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source = source, randomIndex = randomIndex)
+# # Route to retrieve the previous value of a variable or element
+# @app.route('/get_previous_value')
+# def get_previous_value():
+    
+#     previous_value = request.args.get('previous_value')
+
+#     # Return the previous value as JSON
+#     return jsonify(previous_value=previous_value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000) 

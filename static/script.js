@@ -50,6 +50,7 @@ var switchState_vines
 // var switchState_herbs
 var switchState_cacti
 var correctCheck = "true";
+var previousPlantName = "plant";
 
 // Add event listener to the tree switch
 document.getElementById("switchRoundedDefault_trees").addEventListener('change', function() {
@@ -88,7 +89,7 @@ for (let i = 0; i < 4; i++) {
         
         if (correctCheck == "true") {
           // Fetch new plant names and update buttons for the next round
-        fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
+        fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti, previousPlantName);
         } else {
           // Show the Next Button again 
           document.getElementById("quizNextButton").style.display = 'block';
@@ -101,7 +102,7 @@ for (let i = 0; i < 4; i++) {
 // Adds an event listener for the Next Image button
 document.getElementById("quizNextButton").addEventListener('click', function() {
     // Fetch new plant names and update buttons for the next round
-  fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
+  fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti, previousPlantName);
 
   // Hide the Next Button
   setTimeout(function() {
@@ -115,7 +116,8 @@ document.getElementById("quizNextButton").addEventListener('click', function() {
 function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
   // Randomly select one index from the four
   randomIndex = Math.floor(Math.random() * 4);
-  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}&randomIndex=${randomIndex}`)
+  console.log(previousPlantName);
+  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}&previousPlantName=${previousPlantName}`)
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;
@@ -148,6 +150,9 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildfl
       textElement.textContent = source[randomIndex];
 
       correctPlantIndex = indices.indexOf(randomIndex);
+
+      previousPlantName = plant_names[randomIndex];
+      console.log(previousPlantName);
       
     });
 }
