@@ -31,13 +31,15 @@ class BasePlant(db.Model):
     image_url = db.Column(db.String())
     scientific_name = db.Column(db.String())
     plant_type = db.Column(db.String())
+    source = db.Column(db.String())
 
-    def __init__(self, plant_name: str, image_type: str, image_url: str, scientific_name: str, plant_type: str) -> None:
+    def __init__(self, plant_name: str, image_type: str, image_url: str, scientific_name: str, plant_type: str, source: str) -> None:
         self.plant_name = plant_name
         self.image_type = image_type
         self.image_url = image_url
         self.scientific_name = scientific_name
         self.plant_type = plant_type
+        self.source = source
 
 class Trees(BasePlant):
     __tablename__ = 'trees'
@@ -71,7 +73,7 @@ def render_webpage():
         # Check if the plant name is unique
         if random_plant.plant_name not in unique_plant_names:
             # Append the unique plant to the list
-            plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type))
+            plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
             
             # Add the plant name to the set of unique names
             unique_plant_names.add(random_plant.plant_name)
@@ -81,8 +83,9 @@ def render_webpage():
     plant_image_url = [item[1] for item in plants]
     scientific_names = [item[2] for item in plants]
     plant_types = [item[3] for item in plants]
+    source = [item[4] for item in plants]
 
-    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types)
+    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source)
 
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
@@ -95,6 +98,7 @@ def get_plant_name_list():
     switchState_vines = request.args.get('switchState_vines')
     switchState_herbs = request.args.get('switchState_herbs')
     switchState_cacti = request.args.get('switchState_cacti')
+    randomIndex = request.args.get('randomIndex')
 
     # Define the number of unique plants to retrieve from each table
     plants_per_table = 4
@@ -109,7 +113,7 @@ def get_plant_name_list():
             # Check if the plant name is unique
             if random_tree.plant_name not in unique_plant_names:
                 # Append the unique plant to the list
-                plants.append((random_tree.plant_name, random_tree.image_url, random_tree.scientific_name, random_tree.plant_type))
+                plants.append((random_tree.plant_name, random_tree.image_url, random_tree.scientific_name, random_tree.plant_type, random_tree.source))
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_tree.plant_name)
@@ -124,7 +128,7 @@ def get_plant_name_list():
             # Check if the plant name is unique
             if random_flower.plant_name not in unique_plant_names:
                 # Append the unique plant to the list
-                plants.append((random_flower.plant_name, random_flower.image_url, random_flower.scientific_name, random_flower.plant_type))
+                plants.append((random_flower.plant_name, random_flower.image_url, random_flower.scientific_name, random_flower.plant_type, random_flower.source))
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_flower.plant_name)
@@ -139,7 +143,7 @@ def get_plant_name_list():
             # Check if the plant name is unique
             if random_vine.plant_name not in unique_plant_names:
                 # Append the unique plant to the list
-                plants.append((random_vine.plant_name, random_vine.image_url, random_vine.scientific_name, random_vine.plant_type))
+                plants.append((random_vine.plant_name, random_vine.image_url, random_vine.scientific_name, random_vine.plant_type, random_vine.source))
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_vine.plant_name)
@@ -154,7 +158,7 @@ def get_plant_name_list():
             # Check if the plant name is unique
             if random_cactus.plant_name not in unique_plant_names:
                 # Append the unique plant to the list
-                plants.append((random_cactus.plant_name, random_cactus.image_url, random_cactus.scientific_name, random_cactus.plant_type))
+                plants.append((random_cactus.plant_name, random_cactus.image_url, random_cactus.scientific_name, random_cactus.plant_type, random_cactus.source))
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_cactus.plant_name)        
@@ -169,7 +173,7 @@ def get_plant_name_list():
             # Check if the plant name is unique
             if random_grass.plant_name not in unique_plant_names:
                 # Append the unique plant to the list
-                plants.append((random_grass.plant_name, random_grass.image_url, random_grass.scientific_name, random_grass.plant_type))
+                plants.append((random_grass.plant_name, random_grass.image_url, random_grass.scientific_name, random_grass.plant_type, random_grass.source))
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_grass.plant_name)  
@@ -184,7 +188,7 @@ def get_plant_name_list():
             # Check if the plant name is unique
             if random_aquatic.plant_name not in unique_plant_names:
                 # Append the unique plant to the list
-                plants.append((random_aquatic.plant_name, random_aquatic.image_url, random_aquatic.scientific_name, random_aquatic.plant_type))
+                plants.append((random_aquatic.plant_name, random_aquatic.image_url, random_aquatic.scientific_name, random_aquatic.plant_type, random_aquatic.source))
                 
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_aquatic.plant_name)                                               
@@ -197,8 +201,11 @@ def get_plant_name_list():
     plant_image_url = [item[1] for item in plants]
     scientific_names = [item[2] for item in plants]
     plant_types = [item[3] for item in plants]
+    source = [item[4] for item in plants]
 
-    return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types)
+    print(randomIndex)
+
+    return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source = source, randomIndex = randomIndex)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000) 

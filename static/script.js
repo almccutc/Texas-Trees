@@ -108,19 +108,22 @@ for (let i = 0; i < 4; i++) {
 
 // Function to fetch plant names and update buttons and image
 function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
-  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}`)
+  // Randomly select one index from the four
+  randomIndex = Math.floor(Math.random() * 4);
+  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}&randomIndex=${randomIndex}`)
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;
       plant_image_urls = data.plant_image_url;
       scientific_names = data.scientific_names;
       plant_types = data.plant_types;
+      source = data.source;
 
       // Create an array of indices
       var indices = Array.from({ length: plant_names.length }, (_, index) => index);
 
       // Randomly select one index from the four
-      var randomIndex = indices[Math.floor(Math.random() * 4)];
+      // randomIndex = Math.floor(Math.random() * 4);
 
       // Update the buttons with new plant names
       for (var i = 0; i < 4; i++) {
@@ -138,6 +141,9 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildfl
       // Update the image with the corresponding URL
       var imageElement = document.getElementById("selectedPlantImage");
       imageElement.src = plant_image_urls[randomIndex];
+
+      var textElement = document.getElementById("modal-text");
+      textElement.textContent = source[randomIndex];
 
       correctPlantIndex = indices.indexOf(randomIndex);
     });
@@ -182,3 +188,46 @@ function updateResultBox() {
   // Update the content of the result box
   resultTextSpan.textContent = "Correct: " + correctCount + "/" + totalCount;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Functions to open and close a modal
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    if(e.key === "Escape") {
+      closeAllModals();
+    }
+  });
+});

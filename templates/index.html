@@ -37,10 +37,10 @@
 }
 
 .website {
-  margin-right: 20px; /* Adjust as needed for the desired separation */
+  margin-right: 15px; /* Adjust as needed for the desired separation */
 }
 .date {
-  margin-right: 20px; /* Adjust as needed for the desired separation */
+  margin-left: 15px; /* Adjust as needed for the desired separation */
 }
 
   .subfooter {
@@ -304,9 +304,12 @@
 
       <section class="section">
         <div class="container2" id="container2">
-            <div class="image-container">
+          <div class="image-container">
+            <a class="js-modal-trigger" data-target="modal-js-example">
+              <!-- Only the first image has an index of 0, images after this are updated by js file randomly -->
                 <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
-            </div>
+            </a>
+          </div>
             <div class="button-stack">
               {% for index in range(plant_names|length) %}
                   <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" data-is-correct="{{ plant_names[index] == correct_plant_name }}">
@@ -343,6 +346,18 @@
       
     </div>
   </footer>
+
+  <div id="modal-js-example" class="modal">
+    <div class="modal-background"></div>
+  
+    <div class="modal-content">
+      <div class="box">
+        <p id="modal-text">{{  source[0]  }}</p>
+      </div>
+    </div>
+  
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
   
 <script src="../static/script.js"></script>
   </body>
