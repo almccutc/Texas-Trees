@@ -30,7 +30,7 @@
   
   .footer {
     font-family: 'Merriweather', sans-serif;
-    font-size: 1.1rem; */
+    font-size: 1.1rem; 
     margin-bottom: 0;  
     padding-bottom: 10px; 
 }
@@ -38,8 +38,17 @@
   .subfooter {
       font-family: 'Caveat', sans-serif;
       font-size: 1.5rem; /* Corrected font-size declaration */
-      margin-bottom: 0px; 
+      margin-bottom: 0; 
       padding-bottom: 0px; 
+  }
+
+    #counterBox {
+    display: flex;
+    align-items: center; /* Align items vertically in the flex container */
+  }
+
+  #resultText {
+    margin-right: 20px; /* Add margin to the right of the span */
   }
 
   .container2 {
@@ -304,11 +313,10 @@
               {% endfor %}
           </div>
           
-          
-          
         </div>
         <div class="box with-border" id="counterBox">
-          <span id="resultText">Correct: 0/0</span>
+          <span id="resultText">Correct: 0/0 </span>
+          <input class="button is-primary is-medium" type="submit" value="Next Plant" id="quizNextButton">
         </div>      
       </section>
 

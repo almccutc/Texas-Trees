@@ -49,6 +49,7 @@ var switchState_aquaticplants
 var switchState_vines
 // var switchState_herbs
 var switchState_cacti
+var correctCheck
 
 // Add event listener to the tree switch
 document.getElementById("switchRoundedDefault_trees").addEventListener('change', function() {
@@ -62,17 +63,6 @@ document.getElementById("switchRoundedDefault_trees").addEventListener('change',
       document.getElementById("switchRoundedDefault_barks").checked = true;
   }
 });
-
-
-
-// // Add an event listener to the checkbox
-// switch_wildflowers.addEventListener("change", function() {
-//   if (!this.checked) {
-//       // The checkbox is now unchecked (false)
-//       // Add your logic here
-//       // console.log("Checkbox is unchecked");
-//   }
-// });
 
 // Event listeners for the 4 buttons
 for (let i = 0; i < 4; i++) {
@@ -96,18 +86,28 @@ for (let i = 0; i < 4; i++) {
         // switchState_herbs = document.getElementById("switchRoundedDefault_herbs").checked;
         switchState_cacti = document.getElementById("switchRoundedDefault_cacti").checked;
         
-        // Fetch new plant names and update buttons for the next round
+        if (correctCheck == "true") {
+          // Fetch new plant names and update buttons for the next round
         fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
-
-        actionPerformed = true;
+        } else {
+          document.getElementById("quizNextButton").classList.add('is-focused');
+        }
       };
     }(i));
   }
 }
 
+  // Add event listener to the tree switch
+  document.getElementById("quizNextButton").addEventListener('click', function() {
+    // Fetch new plant names and update buttons for the next round
+  fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
+  document.getElementById("quizNextButton").classList.remove('is-focused');
+  document.getElementById("quizNextButton").classList.remove('is-active');
+  document.getElementById("quizNextButton").classList.remove('is-hovered');
+  });
+
 // Function to fetch plant names and update buttons and image
 function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
-  console.log(switchState_wildflowers);
   fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}`)
     .then(response => response.json())
     .then(data => {
@@ -133,7 +133,6 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildfl
         setTimeout(function () {
           myButton.classList.remove('is-focused');
         }, 1000);
-        
       }
 
       // Update the image with the corresponding URL
@@ -159,8 +158,10 @@ function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
     if (isCorrect) {
       selectedButton.classList.add("true");
       correctCount = correctCount + 1;
+      correctCheck = "true"
     } else {
       selectedButton.classList.add("false");
+      correctCheck = "false"
     }
 
     // Remove the class and set data-is-correct to "no-answer" after a 1-second timeout
