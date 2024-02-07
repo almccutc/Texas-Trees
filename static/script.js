@@ -49,7 +49,7 @@ var switchState_aquaticplants
 var switchState_vines
 // var switchState_herbs
 var switchState_cacti
-var correctCheck
+var correctCheck = "true";
 
 // Add event listener to the tree switch
 document.getElementById("switchRoundedDefault_trees").addEventListener('change', function() {
@@ -90,21 +90,26 @@ for (let i = 0; i < 4; i++) {
           // Fetch new plant names and update buttons for the next round
         fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
         } else {
-          document.getElementById("quizNextButton").classList.add('is-focused');
+          // Show the Next Button again 
+          document.getElementById("quizNextButton").style.display = 'block';
         }
       };
     }(i));
   }
 }
 
-  // Add event listener to the tree switch
-  document.getElementById("quizNextButton").addEventListener('click', function() {
+// Adds an event listener for the Next Image button
+document.getElementById("quizNextButton").addEventListener('click', function() {
     // Fetch new plant names and update buttons for the next round
   fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti);
-  document.getElementById("quizNextButton").classList.remove('is-focused');
-  document.getElementById("quizNextButton").classList.remove('is-active');
-  document.getElementById("quizNextButton").classList.remove('is-hovered');
-  });
+
+  // Hide the Next Button
+  setTimeout(function() {
+    document.getElementById("quizNextButton").style.display = 'none';
+    totalCount = totalCount + 1;
+    }, 2000);
+});
+  
 
 // Function to fetch plant names and update buttons and image
 function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
@@ -121,9 +126,6 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildfl
 
       // Create an array of indices
       var indices = Array.from({ length: plant_names.length }, (_, index) => index);
-
-      // Randomly select one index from the four
-      // randomIndex = Math.floor(Math.random() * 4);
 
       // Update the buttons with new plant names
       for (var i = 0; i < 4; i++) {
@@ -146,14 +148,18 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildfl
       textElement.textContent = source[randomIndex];
 
       correctPlantIndex = indices.indexOf(randomIndex);
+      
     });
 }
 
 // Function to determine if the selected answer was correct
 function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
   var selectedButton = document.querySelector(".button-stack button:nth-child(" + (selectedIndex + 1) + ")");
-  totalCount = totalCount + 1; 
-  
+  if (correctCheck == "true") {
+    totalCount = totalCount + 1;
+  } else {
+    }
+   
   if (selectedButton) {
     var isCorrect = selectedIndex === correctPlantIndex;
 
@@ -174,7 +180,7 @@ function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
     setTimeout(function () {
       selectedButton.classList.remove("true", "false");
       selectedButton.setAttribute("data-is-correct", "no-answer");
-    }, 1000);
+    }, 1500);
   }
 
   // Update the content of the result box
@@ -205,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Add a click event on buttons to open a specific modal
+  // Add a click event on buttons to open a specific modal - using Bulma 
   (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
     const modal = $trigger.dataset.target;
     const $target = document.getElementById(modal);
