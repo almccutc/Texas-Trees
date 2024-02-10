@@ -11,7 +11,7 @@ switchElement = document.getElementById("switchRoundedDefault_barks");
 switchElement.checked = true;
 
 switchElement = document.getElementById("switch_wildflowers");
-switchElement.checked = true;
+switchElement.checked = false;
 
 switchElement = document.getElementById("switchRoundedDefault_grasses");
 switchElement.checked = false;
@@ -116,7 +116,6 @@ document.getElementById("quizNextButton").addEventListener('click', function() {
 function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
   // Randomly select one index from the four
   randomIndex = Math.floor(Math.random() * 4);
-  console.log(previousPlantName);
   fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}&previousPlantName=${previousPlantName}`)
     .then(response => response.json())
     .then(data => {
@@ -152,7 +151,8 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildfl
       correctPlantIndex = indices.indexOf(randomIndex);
 
       previousPlantName = plant_names[randomIndex];
-      console.log(previousPlantName);
+
+      collapseBox();
       
     });
 }
@@ -242,3 +242,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+function collapseBox() {
+  const expandableContainer = document.getElementById('expandable-container');
+  expandableContainer.innerHTML = ''; // Clear container
+  const expandButton = document.createElement('button');
+  expandButton.id = 'expand-button';
+  expandButton.classList.add('button', 'is-light');
+  expandButton.textContent = 'Directions';
+  expandableContainer.appendChild(expandButton);
+}
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const expandableContainer = document.getElementById('expandable-container');
+
+    expandableContainer.addEventListener('click', function(event) {
+      const target = event.target;
+
+      if (target.matches('#expand-button')) {
+        // Replace button with a box containing the expanded text
+        const expandedContent = document.createElement('div');
+        expandedContent.classList.add('box');
+        expandedContent.innerHTML = `
+          <p style="margin-bottom: 10px;" >Test your knowledge of plants by identifying them based on images. You'll see a plant image and four options; choose the correct species. Toggle switches to include specific plant categories like flowers or herbs. Click the image for photo credits. Hints coming soon. &nbsp; &nbsp;</p>
+          <button id="collapse-button" class="button is-light">Close</button>
+        `;
+        expandableContainer.innerHTML = ''; // Clear container
+        expandableContainer.appendChild(expandedContent);
+      } else if (target.matches('#collapse-button')) {
+        // Revert to the original button
+        const expandButton = document.createElement('button');
+        expandButton.id = 'expand-button';
+        expandButton.classList.add('button', 'is-light');
+        expandButton.textContent = 'Directions';
+        expandableContainer.innerHTML = ''; // Clear container
+        expandableContainer.appendChild(expandButton);
+      }
+    });
+  });
+
+
+
+

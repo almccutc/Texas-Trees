@@ -1,178 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <meta name="author" content="Your Name"> -->
-    <meta name="description" content="A quiz about Texas trees and plants.">
-    <meta name="keywords" content="Texas, trees, quiz, plants, nature, live oak.">
-    <title>Texas Tree Quiz</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
-    <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
-    <link rel="icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" type="image/png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
-  </head>
-  
-
-<style>
-
-  /* Style for the container */
-  .page-container {
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- <meta name="author" content="Your Name"> -->
+      <meta name="description" content="A quiz about Texas trees and plants.">
+      <meta name="keywords" content="Texas, trees, quiz, plants, nature, live oak.">
+      <title>Texas Tree Quiz</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+      <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
+      <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
+      <link rel="icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" type="image/png">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
+   </head>
+   <style>
+      /* Style for the container */
+      .page-container {
       margin: 0 10px; /* Set left and right margins to 10 units */
-    }
-
-  .title {
-            font-family: 'Merriweather', sans-serif; /* Specify the font-family */
-            font-size: 2.5em;
-        }
-
-  .subtitle {
+      }
+      .title {
+      font-family: 'Merriweather', sans-serif; /* Specify the font-family */
+      font-size: 2.5em;
+      }
+      .subtitle {
       font-family: 'Caveat', sans-serif; /* Specify the font-family */
       font-size: 1.9em;
-  }   
-  
-  .footer {
-    font-family: 'Merriweather', sans-serif;
-    font-size: 1.1rem; 
-    margin-bottom: 0;  
-    padding-bottom: 10px; 
-    justify-content: space-between;
-}
-
-.website {
-  margin-right: 10px; /* Adjust as needed for the desired separation */
-}
-.date {
-  margin-left: 10px; /* Adjust as needed for the desired separation */
-}
-
-  .subfooter {
+      }   
+      .footer {
+      font-family: 'Merriweather', sans-serif;
+      font-size: 1.1rem; 
+      margin-bottom: 0;
+      margin-top: 0;   
+      padding-bottom: 10px; 
+      justify-content: space-between;
+      }
+      .website {
+      margin-right: 10px; /* Adjust as needed for the desired separation */
+      }
+      .date {
+      margin-left: 10px; /* Adjust as needed for the desired separation */
+      }
+      .subfooter {
       font-family: 'Caveat', sans-serif;
       font-size: 1.5rem; /* Corrected font-size declaration */
       margin-bottom: 0; 
       padding-bottom: 0px; 
-  }
-
-    #counterBox {
-    display: flex;
-    align-items: center; /* Align items vertically in the flex container */
-  }
-
-  #resultText {
-    margin-right: 20px; /* Add margin to the right of the span */
-  }
-
-  .container2 {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    justify-content: center;
-    border: 1px solid black; /* Adjust border properties as desired */
-    padding: 30px; /* Adjust padding as desired */
-  }
-
-  .image-container {
-    flex-basis: auto;
-    overflow: auto;
-    max-height: 500px; /* Adjust the maximum height as needed */
-    max-width: 500px;
-    align-items: center;
-    justify-content: center;
-  }
-
-/* for small screen (iphone, etc.) */ 
-@media screen and (max-width: 410px) {
-  .button-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Adjust the desired spacing between buttons */
-    margin-top: 5px; /* Adjust the desired margin to the left */
-  }
-  .button-stack button {
-    flex-grow: 1;
-    width: 100%;
-    min-width: 290px;
-    min-height: 60px;
-  }
-}
-
-@media screen and (min-width: 411px) { 
-  .button-stack {
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px; /* Adjust the desired margin to the left */
-    gap: 15px; /* Adjust the desired spacing between buttons */
-  }
-  .button-stack button {
-    flex-grow: 1;
-    width: 100%;
-    min-width: 400px;
-    min-height: 70px;
-  }
-}
-
-/* for small screen (iphone, etc.) */
-@media screen and (max-width: 410px) { 
-  .small-image {
-    flex-grow: 1;
-    width: 100%;
-    width: 290px;
-    height: 290px; 
-    background-size: cover; 
-    background-position: center; 
-    margin-bottom: 0px;
-  }
-}
-
-/* for large screen (laptop, tablet) */
-@media screen and (min-width: 411px) {
-  .small-image {
-    flex-grow: 1;
-    /* width: 100%; */
-    width: 400px;
-    height: 400px; 
-    background-size: cover; 
-    background-position: center; 
-  }
-}
-
-
-.plant-info {
-    margin-top: 10px;
-}
-
-.additional-info {
-    display: flex;
-    justify-content: center; /* Center the content horizontally */
-    /* align-items: center; Center the content vertically */
-}
-
-.common-name {
-    font-size: 1em;
-    /* font-weight: bold; */
-}
-
-.scientific-name {
-    font-size: 0.6em;
-    font-style: italic;
-}
-
-.tree-type {
-    font-size: 0.6em;
-}
-
-.interjunct {
-    font-size: 0.6em;
-}
-
-  /* Add these styles for correct and incorrect answers */
-  .button[data-is-correct="true"] {
+      }
+      #counterBox {
+      display: flex;
+      align-items: center; /* Align items vertically in the flex container */
+      flex-grow: 1; /* Allows the content box to grow and take up remaining space */
+      width:100%;
+      }
+      .with-border-counterBox {
+      border: 1px solid #000; /* Adjust the border width and color as needed */
+      padding: 10px; /* Add padding for space between the content and the border */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0;
+      border-bottom: none; /* Remove the top border */
+      border-left: none;
+      border-right:none;
+      box-shadow: none; 
+      }
+      #resultText {
+      margin-right: 20px; /* Add margin to the right of the span */
+      }
+      .subcontainer3 {
+      display: flex;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: flex-start; /* Align items to the start of the container */
+      /* width: fit-content; */
+      width: 100%;
+      /* margin-bottom: 20px; */
+      }
+      .subcontainer-directions {
+      display: flex;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: flex-start; /* Align items to the start of the container */
+      flex-grow: 1;
+      width: 100%;
+      margin-bottom: 15px;
+      padding-left: 40px; /* Adjust the left padding as needed */
+      padding-right: 40px; /* Adjust the right padding as needed */
+      }
+      .expanded-content {
+      display: flex;
+      align-items: center; /* Align items vertically in the flex container */
+      margin-top: 0px; /* Add any additional styling as needed */
+      margin-bottom: 0px;
+      flex-grow: 1;
+      width: 100%;
+      }
+      .box {
+      display: flex;
+      align-items: center;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      flex-grow: 1;
+      width: 100%;}
+      /* for small screen (iphone, etc.) */ 
+      @media screen and (max-width: 410px) {
+      .container2 {
+      display: flex;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: center; /* Adjust as needed */
+      margin-top: 10px;
+      }
+      .subcontainer2 {
+      display: flex;
+      justify-content: center; /* Adjust as needed */
+      margin-bottom: 20px;
+      flex-wrap: wrap; 
+      align-items: stretch; 
+      }
+      .button-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px; /* Adjust the desired spacing between buttons */
+      margin-top: 5px; /* Adjust the desired margin to the left */
+      }
+      .button-stack button {
+      flex-grow: 1;
+      width: 100%;
+      min-width: 378px;
+      min-height: 60px;
+      }
+      .small-image {
+      flex-grow: 1;
+      width: 100%;
+      width: 378px;
+      height: 378px; 
+      background-size: cover; 
+      background-position: center; 
+      }
+      }
+      /* Tablet or laptop size */
+      @media screen and (min-width: 411px) { 
+      .container2 {
+      display: flex;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: center; /* Adjust as needed */
+      border: 1px solid black;
+      margin: 40px; /* remove for mobile
+      padding: 40px;
+      /* width: fit-content; */
+      }
+      .subcontainer2 {
+      display: flex;
+      justify-content: center; /* Adjust as needed */
+      margin-bottom: 20px;
+      flex-wrap: wrap; 
+      align-items: stretch; 
+      margin-top: 20px;
+      }
+      .button-stack {
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px; /* Adjust the desired margin to the left */
+      gap: 15px; /* Adjust the desired spacing between buttons */
+      }
+      .button-stack button {
+      flex-grow: 1;
+      width: 100%;
+      min-width: 400px;
+      min-height: 70px;
+      }
+      .small-image {
+      flex-grow: 1;
+      width: 100%;
+      width: 400px;
+      height: 400px; 
+      background-size: cover; 
+      background-position: center; 
+      }
+      }
+      .plant-info {
+      margin-top: 10px;
+      }
+      .additional-info {
+      display: flex;
+      justify-content: center; /* Center the content horizontally */
+      /* align-items: center; Center the content vertically */
+      }
+      .common-name {
+      font-size: 1em;
+      /* font-weight: bold; */
+      }
+      .scientific-name {
+      font-size: 0.6em;
+      font-style: italic;
+      }
+      .tree-type {
+      font-size: 0.6em;
+      }
+      .interjunct {
+      font-size: 0.6em;
+      }
+      /* Add these styles for correct and incorrect answers */
+      .button[data-is-correct="true"] {
       position: relative;
-  }
-
-  .button[data-is-correct="true"]:after {
+      }
+      .button[data-is-correct="true"]:after {
       content: '\2713'; /* Unicode character for check mark */
       color: #00cc00; /* Green color */
       font-size: 45px;
@@ -181,9 +215,8 @@
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
-  }
-
-  .button[data-is-correct="false"]:after {
+      }
+      .button[data-is-correct="false"]:after {
       content: '\2717'; /* Unicode character for multiplication sign (x) */
       color: #ff0000; /* Red color */
       font-size: 45px;
@@ -192,178 +225,152 @@
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
-  }
-
-  /* Add this to your existing CSS or create a new CSS file */
-.with-border {
-    border: 1px solid #000; /* Adjust the border width and color as needed */
-    padding: 10px; /* Add padding for space between the content and the border */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0;
-    border-top: none; /* Remove the top border */
-    box-shadow: none; 
-}
-
-</style>
-    
-
-  </head>
-  <body>
-    <header class="hero is-light">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title has-text-centered">
-                Texas Tree Quiz 
-            </h1>
-            <h1 class="subtitle has-text-centered">
-              Trees, flowers, and more!
-          </h1>
-          </div>
-        </div>
+      }
+   </style>
+   </head>
+   <body>
+      <header class="hero is-light">
+         <div class="hero-body">
+            <div class="container">
+               <h1 class="title has-text-centered">
+                  Texas Tree Quiz 
+               </h1>
+               <h1 class="subtitle has-text-centered">
+                  Trees, flowers, and more!
+               </h1>
+            </div>
+         </div>
       </header>
-
       <div class="hero-foot has-background-dark py-4 is is-fullwidth is-responsive"></div>
       <div class="mt-3"></div>
-
-        <div class="columns">
-            <div class="column is-2"></div>
-            <div class="column is-3">
-                <div class="field">
-                    <input id="switchRoundedDefault_trees" type="checkbox" name="switchRoundedDefault_trees" class="switch is-rounded is-centered" checked="checked">
-                    <label for="switchRoundedDefault_trees">Trees</label>
-                </div>
-
-                <div class="field">
-                    <input id="switchRoundedDefault_leaves" type="checkbox" name="switchRoundedDefault_leaves" class="switch is-rounded is-centered" checked="checked">
-                    <label for="switchRoundedDefault_leaves">Leaf</label>
-                </div>
-
-                <!-- <div class="field">
-                    <input id="switchRoundedDefault_flowers" type="checkbox" name="switchRoundedDefault_flowers" class="switch is-rounded is-centered" checked="checked">
-                    <label for="switchRoundedDefault_flowers">Flower</label>
-                </div> -->
-
-                <div class="field">
-                    <input id="switchRoundedDefault_barks" type="checkbox" name="switchRoundedDefault_barks" class="switch is-rounded is-centered" checked="checked">
-                    <label for="switchRoundedDefault_barks">Bark</label>
-                </div>
-
-                <!-- <div class="field">
-                    <input id="switchRoundedDefault_fruits" type="checkbox" name="switchRoundedDefault_fruits" class="switch is-rounded is-centered" checked="checked">
-                    <label for="switchRoundedDefault_fruits">Fruit</label>
-                </div> -->
-            </div> 
-            
-            <div class="column is-3"> 
-                <div class="field">
-                    <input id="switch_wildflowers" type="checkbox" name="switch_wildflowers" class="switch is-rounded is-centered" checked="">
-                    <label for="switch_wildflowers">Wildflowers</label>
-                </div>
-
-                <div class="field">
-                    <input id="switchRoundedDefault_grasses" type="checkbox" name="switchRoundedDefault_grasses" class="switch is-rounded is-centered" checked="">
-                    <label for="switchRoundedDefault_grasses">Grasses</label>
-                </div>
-
-                <div class="field">
-                    <input id="switchRoundedDefault_aquaticplants" type="checkbox" name="switchRoundedDefault_aquaticplants" class="switch is-rounded is-centered" checked="">
-                    <label for="switchRoundedDefault_aquaticplants">Aquatic</label>
-                </div>
-            </div>     
-
-            <div class="column is-3"> 
-
-                <div class="field">
-                  <input id="switchRoundedDefault_cacti" type="checkbox" name="switchRoundedDefault_cacti" class="switch is-rounded is-centered" checked="">
-                  <label for="switchRoundedDefault_cacti">Cacti</label>
-                </div>
-
-                <!-- <div class="field">
-                    <input id="switchRoundedDefault_herbs" type="checkbox" name="switchRoundedDefault_herbs" class="switch is-rounded is-centered" checked="">
-                    <label for="switchRoundedDefault_herbs">Herbs</label>
-                </div> -->
-
-                <!-- <div class="field">
-                    <input id="switchRoundedDefault_poisonousplants" type="checkbox" name="switchRoundedDefault_poisonousplants" class="switch is-rounded is-centered" checked="">
-                    <label for="switchRoundedDefault_poisonousplants">Poisonous</label>
-                </div>
-
-                <div class="field">
-                    <input id="switchRoundedDefault_invasiveplants" type="checkbox" name="switchRoundedDefault_invasiveplants" class="switch is-rounded is-centered" checked="">
-                    <label for="switchRoundedDefault_invasiveplants">Invasive</label>
-                </div> -->
-
-                <div class="field">
-                  <input id="switchRoundedDefault_vines" type="checkbox" name="switchRoundedDefault_vines" class="switch is-rounded is-centered" checked="">
-                  <label for="switchRoundedDefault_vines">Vines</label>
-              </div>
-            </div> 
-            <div class="column is-1"></div>      
-        </div>
-    </div> 
-    
-
+      <div class="subcontainer-directions" id="subcontainer-directions">
+         <div class="expandable-container" id="expandable-container">
+            <button id="expand-button" class="button is-light is-fullwidth">&nbsp;&nbsp;&nbsp;Directions&nbsp;&nbsp;&nbsp;</button>
+            <div id="expanded-content" class="expanded-content is-hidden">
+               <!-- JS will insert the directions here. -->
+            </div>
+         </div>
+      </div>
+      <div class="columns">
+         <div class="column is-2"></div>
+         <div class="column is-3">
+            <div class="field">
+               <input id="switchRoundedDefault_trees" type="checkbox" name="switchRoundedDefault_trees" class="switch is-rounded is-centered" checked="checked">
+               <label for="switchRoundedDefault_trees">Trees</label>
+            </div>
+            <div class="field">
+               <input id="switchRoundedDefault_leaves" type="checkbox" name="switchRoundedDefault_leaves" class="switch is-rounded is-centered" checked="checked">
+               <label for="switchRoundedDefault_leaves">Leaf</label>
+            </div>
+            <!-- <div class="field">
+               <input id="switchRoundedDefault_flowers" type="checkbox" name="switchRoundedDefault_flowers" class="switch is-rounded is-centered" checked="checked">
+               <label for="switchRoundedDefault_flowers">Flower</label>
+               </div> -->
+            <div class="field">
+               <input id="switchRoundedDefault_barks" type="checkbox" name="switchRoundedDefault_barks" class="switch is-rounded is-centered" checked="checked">
+               <label for="switchRoundedDefault_barks">Bark</label>
+            </div>
+            <!-- <div class="field">
+               <input id="switchRoundedDefault_fruits" type="checkbox" name="switchRoundedDefault_fruits" class="switch is-rounded is-centered" checked="checked">
+               <label for="switchRoundedDefault_fruits">Fruit</label>
+               </div> -->
+         </div>
+         <div class="column is-3">
+            <div class="field">
+               <input id="switch_wildflowers" type="checkbox" name="switch_wildflowers" class="switch is-rounded is-centered" checked="">
+               <label for="switch_wildflowers">Wildflowers</label>
+            </div>
+            <div class="field">
+               <input id="switchRoundedDefault_grasses" type="checkbox" name="switchRoundedDefault_grasses" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_grasses">Grasses</label>
+            </div>
+            <div class="field">
+               <input id="switchRoundedDefault_aquaticplants" type="checkbox" name="switchRoundedDefault_aquaticplants" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_aquaticplants">Aquatic</label>
+            </div>
+         </div>
+         <div class="column is-3">
+            <div class="field">
+               <input id="switchRoundedDefault_cacti" type="checkbox" name="switchRoundedDefault_cacti" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_cacti">Cacti</label>
+            </div>
+            <!-- <div class="field">
+               <input id="switchRoundedDefault_herbs" type="checkbox" name="switchRoundedDefault_herbs" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_herbs">Herbs</label>
+               </div> -->
+            <!-- <div class="field">
+               <input id="switchRoundedDefault_poisonousplants" type="checkbox" name="switchRoundedDefault_poisonousplants" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_poisonousplants">Poisonous</label>
+               </div>
+               
+               <div class="field">
+               <input id="switchRoundedDefault_invasiveplants" type="checkbox" name="switchRoundedDefault_invasiveplants" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_invasiveplants">Invasive</label>
+               </div> -->
+            <div class="field">
+               <input id="switchRoundedDefault_vines" type="checkbox" name="switchRoundedDefault_vines" class="switch is-rounded is-centered" checked="">
+               <label for="switchRoundedDefault_vines">Vines</label>
+            </div>
+         </div>
+         <div class="column is-1"></div>
+      </div>
+      </div> 
       <div class="hero-foot has-background-dark py-4"></div>
-
-      <section class="section">
-        <div class="container2" id="container2">
-          <div class="image-container">
+      <div class = "container2" id = "container2">
+         <div class="subcontainer2" id="subcontainer2">
             <a class="js-modal-trigger" data-target="modal-js-example">
-              <!-- Only the first image has an index of 0, images after this are updated by js file randomly -->
-                <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
+               <!-- Only the first image has an index of 0, images after this are updated by js file randomly -->
+               <img id="selectedPlantImage" src="{{ plant_image_url[0] }}" alt="Single Image" class="small-image">
             </a>
-          </div>
             <div class="button-stack">
-              {% for index in range(plant_names|length) %}
-                  <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" data-is-correct="{{ plant_names[index] == correct_plant_name }}">
-                      <div class="plant-info">
-                          <div class="common-name">{{ plant_names[index] }}</div>
-                          <div class="additional-info">
-                              <div class="scientific-name">{{ scientific_names[index] }}</div>
-                              <div class="interjunct">&nbsp;&middot;&nbsp;</div>
-                              <div class="tree-type">{{ plant_types[index] }}</div>
-                          </div>
-                      </div>
-                  </button>
-              {% endfor %}
-          </div>
-          
-        </div>
-        <div class="box with-border" id="counterBox">
-          <span id="resultText">Correct: 0/0 </span>
-          <input class="button is-primary is-medium" type="submit" value="Next Plant" id="quizNextButton" style="display: none;">
-        </div>      
-      </section>
-
-  <div class="hero-foot has-background-dark py-4"></div>
-
-  <footer class="footer is-light">
-    <div class="content has-text-centered">
-      <div class="subfooter">
-        Plant Identification Learning Tool
+               {% for index in range(plant_names|length) %}
+               <button class="button is-primary is-light is-fullwidth is-large is-responsive is-outlined is-rounded" data-is-correct="{{ plant_names[index] == correct_plant_name }}">
+                  <div class="plant-info">
+                     <div class="common-name">{{ plant_names[index] }}</div>
+                     <div class="additional-info">
+                        <div class="scientific-name">{{ scientific_names[index] }}</div>
+                        <div class="interjunct">&nbsp;&middot;&nbsp;</div>
+                        <div class="tree-type">{{ plant_types[index] }}</div>
+                     </div>
+                  </div>
+               </button>
+               {% endfor %}
+            </div>
+         </div>
+         <div class="subcontainer3" id="subcontainer3">
+            <!-- <div id="expandable-container">
+               <button id="expand-button" class="button is-info is-light">&nbsp;&nbsp;&nbsp;Directions&nbsp;&nbsp;&nbsp;</button>
+                   <div id="expanded-content" class="expanded-content is-hidden">
+                     Test your knowledge of plants by identifying them based on images. You'll see a plant image and four options; choose the correct species. Toggle switches to include specific plant categories like flowers or herbs. Click the image for hints and photo credits.
+                   </div>
+               </div> -->
+            <div class="box with-border-counterBox" id="counterBox">
+               <span id="resultText">Correct: 0/0 </span>
+               <input class="button is-primary is-medium" type="submit" value="Next Plant" id="quizNextButton" style="display: none;">
+            </div>
+         </div>
       </div>
-      <div class="footer">
-        <span class="website">texastreequiz.com</span>
-        <span class="date">Feb 2024. &copy;</span>
+      <div class="hero-foot has-background-dark py-4"></div>
+      <footer class="footer is-light">
+         <div class="content has-text-centered">
+            <div class="subfooter">
+               Plant Identification Learning Tool
+            </div>
+            <div class="footer">
+               <span class="website">texastreequiz.com</span>
+               <span class="date">Feb 2024. &copy;</span>
+            </div>
+         </div>
+      </footer>
+      <div id="modal-js-example" class="modal">
+         <div class="modal-background"></div>
+         <div class="modal-content">
+            <div class="box">
+               <p id="modal-text">{{  source[0]  }}</p>
+            </div>
+         </div>
+         <button class="modal-close is-large" aria-label="close"></button>
       </div>
-      
-    </div>
-  </footer>
-
-  <div id="modal-js-example" class="modal">
-    <div class="modal-background"></div>
-  
-    <div class="modal-content">
-      <div class="box">
-        <p id="modal-text">{{  source[0]  }}</p>
-      </div>
-    </div>
-  
-    <button class="modal-close is-large" aria-label="close"></button>
-  </div>
-  
-<script src="../static/script.js"></script>
-  </body>
+      <script src="../static/script.js"></script>
+   </body>
 </html>
