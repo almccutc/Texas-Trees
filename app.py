@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from secrets_manager import get_secret
 from flask import request
 import random
+from sqlalchemy import func
+from sqlalchemy import not_
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -63,7 +65,15 @@ class Aquatic(BasePlant):
 @app.route('/')
 def render_webpage():
     plants = []
+    unique_species = []
     unique_plant_names = set()
+
+    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Trees.plant_name)))).scalar())
+    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Flowers.plant_name)))).scalar())
+    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Vines.plant_name)))).scalar())
+    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Cacti.plant_name)))).scalar())
+    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Grasses.plant_name)))).scalar())
+    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Aquatic.plant_name)))).scalar())
 
     # Retrieve 4 unique plants
     while len(plants) < 4:
@@ -85,7 +95,7 @@ def render_webpage():
     plant_types = [item[3] for item in plants]
     source = [item[4] for item in plants]
 
-    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source)
+    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source, unique_species = unique_species)
 
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
@@ -110,7 +120,7 @@ def get_plant_name_list():
         while len(unique_plant_names) < plants_per_table:
 
             # Execute the query to retrieve a random plant from 'trees'
-            random_tree = Trees.query.order_by(db.func.random()).first()
+            random_tree = Trees.query.filter(not_(Trees.image_type == 'bark')).order_by(db.func.random()).first()
             # Check if the plant name is unique
             if random_tree.plant_name not in unique_plant_names and random_tree.plant_name != previousPlantName:
                 # Append the unique plant to the list
