@@ -8,7 +8,7 @@ switchElement = document.getElementById("switchRoundedDefault_leaves");
 switchElement.checked = true;
 
 switchElement = document.getElementById("switchRoundedDefault_barks");
-switchElement.checked = true;
+switchElement.checked = false;
 
 switchElement = document.getElementById("switch_wildflowers");
 switchElement.checked = false;
@@ -43,6 +43,8 @@ var correctPlantIndex = 0; // Initialize correctPlantIndex with 0
 var correctCount = 0; 
 var totalCount = 0;
 var switchState_trees
+var switchState_leaves
+var switchState_barks
 var switchState_wildflowers
 var switchState_grasses
 var switchState_aquaticplants
@@ -57,11 +59,11 @@ document.getElementById("switchRoundedDefault_trees").addEventListener('change',
   // If the tree switch is unchecked, uncheck the bark and leaf switches
   if (!this.checked) {
       document.getElementById("switchRoundedDefault_leaves").checked = false;
-      document.getElementById("switchRoundedDefault_barks").checked = false;
+      // document.getElementById("switchRoundedDefault_barks").checked = false;
   } else {
       // If the tree switch is checked again, check the bark and leaf switches
       document.getElementById("switchRoundedDefault_leaves").checked = true;
-      document.getElementById("switchRoundedDefault_barks").checked = true;
+      // document.getElementById("switchRoundedDefault_barks").checked = true;
   }
 });
 
@@ -80,6 +82,8 @@ for (let i = 0; i < 4; i++) {
         checkSelectedAnswer(selectedIndex, correctPlantIndex);
 
         switchState_trees = document.getElementById("switchRoundedDefault_trees").checked;
+        switchState_leaves = document.getElementById("switchRoundedDefault_leaves").checked;
+        switchState_barks = document.getElementById("switchRoundedDefault_barks").checked;
         switchState_wildflowers = document.getElementById("switch_wildflowers").checked;
         switchState_grasses = document.getElementById("switchRoundedDefault_grasses").checked;
         switchState_aquaticplants = document.getElementById("switchRoundedDefault_aquaticplants").checked;
@@ -102,7 +106,7 @@ for (let i = 0; i < 4; i++) {
 // Adds an event listener for the Next Image button
 document.getElementById("quizNextButton").addEventListener('click', function() {
     // Fetch new plant names and update buttons for the next round
-  fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti, previousPlantName);
+  fetchPlantNameList(selectedIndex, switchState_trees, switchState_leaves, switchState_barks, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti, previousPlantName);
 
   // Hide the Next Button
   setTimeout(function() {
@@ -249,7 +253,7 @@ function collapseBox() {
   const expandButton = document.createElement('button');
   expandButton.id = 'expand-button';
   expandButton.classList.add('button', 'is-light');
-  expandButton.textContent = 'Directions';
+  expandButton.textContent = 'Instructions & Info';
   expandableContainer.appendChild(expandButton);
 }
 
@@ -275,7 +279,7 @@ function collapseBox() {
         const expandButton = document.createElement('button');
         expandButton.id = 'expand-button';
         expandButton.classList.add('button', 'is-light');
-        expandButton.textContent = 'Directions';
+        expandButton.textContent = 'Instructions & Info';
         expandableContainer.innerHTML = ''; // Clear container
         expandableContainer.appendChild(expandButton);
       }
