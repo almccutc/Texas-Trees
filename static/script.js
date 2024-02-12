@@ -10,7 +10,7 @@ switchElement.checked = true;
 switchElement = document.getElementById("switchRoundedDefault_barks");
 switchElement.checked = false;
 
-switchElement = document.getElementById("switch_wildflowers");
+switchElement = document.getElementById("switchState_wildflowers");
 switchElement.checked = false;
 
 switchElement = document.getElementById("switchRoundedDefault_grasses");
@@ -84,7 +84,7 @@ for (let i = 0; i < 4; i++) {
         switchState_trees = document.getElementById("switchRoundedDefault_trees").checked;
         switchState_leaves = document.getElementById("switchRoundedDefault_leaves").checked;
         switchState_barks = document.getElementById("switchRoundedDefault_barks").checked;
-        switchState_wildflowers = document.getElementById("switch_wildflowers").checked;
+        switchState_wildflowers = document.getElementById("switchState_wildflowers").checked;
         switchState_grasses = document.getElementById("switchRoundedDefault_grasses").checked;
         switchState_aquaticplants = document.getElementById("switchRoundedDefault_aquaticplants").checked;
         switchState_vines = document.getElementById("switchRoundedDefault_vines").checked;
@@ -93,7 +93,7 @@ for (let i = 0; i < 4; i++) {
         
         if (correctCheck == "true") {
           // Fetch new plant names and update buttons for the next round
-        fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti, previousPlantName);
+        fetchPlantNameList(selectedIndex, switchState_trees, switchState_leaves, switchState_barks, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti, previousPlantName);
         } else {
           // Show the Next Button again 
           document.getElementById("quizNextButton").style.display = 'block';
@@ -117,10 +117,10 @@ document.getElementById("quizNextButton").addEventListener('click', function() {
   
 
 // Function to fetch plant names and update buttons and image
-function fetchPlantNameList(selectedIndex, switchState_trees, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
+function fetchPlantNameList(selectedIndex, switchState_trees, switchState_leaves, switchState_barks, switchState_wildflowers, switchState_grasses, switchState_aquaticplants, switchState_vines, switchState_cacti) {
   // Randomly select one index from the four
   randomIndex = Math.floor(Math.random() * 4);
-  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}&previousPlantName=${previousPlantName}`)
+  fetch(`/get_plant_name_list?switchState_trees=${switchState_trees}&switchState_leaves=${switchState_leaves}&switchState_barks=${switchState_barks}&switchState_wildflowers=${switchState_wildflowers}&switchState_grasses=${switchState_grasses}&switchState_aquaticplants=${switchState_aquaticplants}&switchState_vines=${switchState_vines}&switchState_cacti=${switchState_cacti}&previousPlantName=${previousPlantName}`)
     .then(response => response.json())
     .then(data => {
       plant_names = data.plant_names;
