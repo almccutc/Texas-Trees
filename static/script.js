@@ -53,6 +53,189 @@ var switchState_vines
 var switchState_cacti
 var correctCheck = "true";
 var previousPlantName = "plant";
+var map;
+var countyLayers = [];
+var selectedOption = null;
+
+document.addEventListener("DOMContentLoaded", function() {
+  map = L.map('map').setView([31.0000, -100.0000], 5.5);
+
+
+  var texasBounds = L.latLngBounds(
+      L.latLng(25.8371, -106.6466),
+      L.latLng(36.5007, -93.5083)
+  );
+
+  map.setMaxBounds(texasBounds);
+  map.on('drag', function() {
+      map.panInsideBounds(texasBounds, { animate: false });
+  });
+  map.on('dragend', function() {
+      if (!texasBounds.contains(map.getCenter())) {
+          map.panInsideBounds(texasBounds);
+      }
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Add the outline of Texas to the map using ArcGIS REST Services
+  var texasOutlineLayer = L.esri.featureLayer({
+      url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_States_Generalized/FeatureServer/0',
+      where: "STATE_NAME = 'Texas'",
+      style: function () {
+        return {
+          color: '#006400', // Outline color
+          weight: 2,        // Outline weight
+          fillOpacity: 0    // Set fillOpacity to 0 to prevent filling the state
+      };
+      }
+  }).addTo(map);
+
+  // Add a reset button to reset the map to its initial view
+  document.getElementById("resetButton").addEventListener("click", function() {
+    map.setView([31.0000, -100.0000], 5.5);
+});
+
+  // Add error handling
+  texasOutlineLayer.on('error', function(error) {
+      console.error('Error loading Texas outline layer:', error);
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('search-input');
+  const dropdownMenu = document.getElementById('dropdown-menu');
+  const selectedOptionsContainer = document.getElementById('selected-options-container');
+
+  // Function to toggle dropdown menu visibility
+  function toggleDropdown() {
+      dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Add event listener to input box to toggle dropdown menu
+  searchInput.addEventListener('click', function () {
+      toggleDropdown();
+  });
+
+  // Add event listener to input box to focus and show dropdown menu
+  searchInput.addEventListener('focus', function () {
+      toggleDropdown();
+  });
+
+  // Add event listener to input box for dynamic filtering
+  searchInput.addEventListener('input', function () {
+      const inputValue = searchInput.value.toLowerCase();
+      const dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
+
+      dropdownItems.forEach(item => {
+          const itemText = item.textContent.toLowerCase();
+          if (itemText.includes(inputValue)) {
+              item.style.display = 'block';
+          } else {
+              item.style.display = 'none';
+          }
+      });
+
+      // Toggle dropdown menu visibility
+      const hasVisibleItems = [...dropdownItems].some(item => item.style.display !== 'none');
+      dropdownMenu.style.display = hasVisibleItems ? 'block' : 'none';
+  });
+
+  // Add event listener to close dropdown when item is clicked
+dropdownMenu.addEventListener('click', function (event) {
+  if (event.target.classList.contains('dropdown-item')) {
+    if (selectedOption) {
+      selectedOption.remove();
+  }
+      countyLayers.forEach(function (countyLayer) {
+        map.removeLayer(countyLayer);
+    });
+      selectedOption = document.createElement('button');
+      selectedOption.classList.add('button', 'is-success', 'is-light', 'selected-option');
+      selectedOption.style.marginLeft = '5px';
+      selectedOption.textContent = event.target.textContent;
+      var selected_plant = event.target.textContent;
+
+      fetch(`/get_county_names?selected_plant=${selected_plant}`)
+      .then(response => response.json())
+      .then(data => {
+        countyNames = data.countyNames;
+
+          // Create a where clause to select only the counties in the countyNames array
+          var whereClause = "STATE_NAME = 'Texas' AND (";
+          countyNames.forEach(function (countyName, index) {
+              whereClause += "NAME = '" + countyName + " County'";
+              if (index !== countyNames.length - 1) {
+                  whereClause += " OR ";
+              }
+          });
+          whereClause += ")";
+
+          // Create the feature layer with the where clause
+          var countyLayer = L.esri.featureLayer({
+              url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Counties/FeatureServer/0',
+              where: whereClause,
+              style: function () {
+                  return {
+                      color: '#006400',
+                      weight: 1,
+                      // fillOpacity: 0.1
+                  };
+              }
+          });
+
+          countyLayers.push(countyLayer);
+
+          // Check if map is a valid Leaflet map object
+          if (typeof map !== 'undefined') {
+              countyLayer.addTo(map); // Add the layer to the map
+          } else {
+              console.error('Leaflet map object is not defined.');
+          }
+
+      });
+
+      // map.addLayers(countyLayers);
+      
+
+
+      // Create delete button and remove the selected option/county layers
+      const deleteButton = document.createElement('button');
+      deleteButton.classList.add('delete', 'is-small');
+      deleteButton.addEventListener('click', function () {
+          selectedOption.remove(); 
+          countyLayers.forEach(function (countyLayer) {
+            map.removeLayer(countyLayer);
+        });
+      });
+
+      // Append non-breaking space between text and delete symbol
+      selectedOption.appendChild(document.createTextNode('\u00A0')); // Unicode for non-breaking space
+      
+      // Append delete button to selected option
+      selectedOption.appendChild(deleteButton);
+
+      // Append selected option to container
+      selectedOptionsContainer.appendChild(selectedOption);
+
+      dropdownMenu.style.display = 'none';
+      event.preventDefault();
+      event.stopPropagation();
+  }
+});
+
+
+  // Add event listener to close dropdown when clicking outside of it
+  document.body.addEventListener('click', function (event) {
+      if (!dropdownMenu.contains(event.target) && event.target !== searchInput) {
+          dropdownMenu.style.display = 'none';
+      }
+  });
+});
+
 
 // Add event listener to the tree switch
 document.getElementById("switchRoundedDefault_trees").addEventListener('change', function() {
@@ -241,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add a keyboard event to close all modals
   document.addEventListener('keydown', (event) => {
-    if(e.key === "Escape") {
+    if(event.key === "Escape") {
       closeAllModals();
     }
   });

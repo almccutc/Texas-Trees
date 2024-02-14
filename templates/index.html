@@ -13,9 +13,53 @@
       <link rel="icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" type="image/png">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
+
+          <!-- Load Leaflet from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
+    <script src="https://unpkg.com/esri-leaflet-vector@4.2.3/dist/esri-leaflet-vector.js"></script>
    </head>
    <style>
-      /* Style for the container */
+
+    .selected-option{
+      margin-left: 5 px;
+    }
+
+      .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
+
+.dropdown-menu.active {
+    display: block;
+}
+
+.dropdown-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f9f9f9;
+}
+
+      
       .page-container {
       margin: 0 10px; /* Set left and right margins to 10 units */
       }
@@ -33,6 +77,7 @@
       margin-bottom: 0;
       margin-top: 0;   
       padding-bottom: 10px; 
+      padding-top: 10px;
       justify-content: space-between;
       }
       .website {
@@ -54,16 +99,13 @@
       width:100%;
       }
       .with-border-counterBox {
-      border: 1px solid #000; /* Adjust the border width and color as needed */
       padding: 10px; /* Add padding for space between the content and the border */
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 0;
-      border-bottom: none; /* Remove the top border */
-      border-left: none;
-      border-right:none;
       box-shadow: none; 
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
       }
       #resultText {
       margin-right: 20px; /* Add margin to the right of the span */
@@ -88,6 +130,50 @@
       padding-left: 40px; /* Adjust the left padding as needed */
       padding-right: 40px; /* Adjust the right padding as needed */
       }
+
+      .subcontainer-selection {
+      display: flex;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: flex-start; /* Align items to the start of the container */
+      flex-grow: 1;
+      width: 100%;
+      margin-bottom: 20px;
+      /* padding-left: 40px; 
+      padding-right: 40px;  */
+      }
+
+      .subsubcontainer-selection {
+      display: flex;
+      flex-direction: row; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: flex-start; /* Align items to the start of the container */
+      flex-grow: 1;
+      /* width: 100%;
+      margin-bottom: 20px; */
+      /* padding-left: 40px; 
+      padding-right: 40px;  */
+      }
+
+      .subsubcontainer-map {
+      display: flex;
+      flex-direction: column; /* Change to row if you want elements side by side */
+      align-items: center; /* Adjust as needed */
+      justify-content: flex-start; /* Align items to the start of the container */
+      flex-grow: 1;
+      /* width: 100%;
+      margin-bottom: 20px; */
+      /* padding-left: 40px; 
+      padding-right: 40px;  */
+      }
+
+      .control{
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         margin-top: 10px;
+         margin-bottom: 10px;
+      }
       .expanded-content {
       display: flex;
       align-items: center; /* Align items vertically in the flex container */
@@ -105,6 +191,23 @@
 
       /* for small screen (iphone, etc.) */ 
       @media screen and (max-width: 410px) {
+         #map {
+         height: 378px;
+         width: 378px;
+         z-index: 1;
+         padding: 10px;
+         }
+         .subcontainer-map {
+         display: flex;
+         flex-direction: row; /* Change to row if you want elements side by side */
+         align-items: center; /* Adjust as needed */
+         justify-content: center; /* Align items to the start of the container */
+         flex-wrap: wrap;
+         flex-grow: 1;
+         width: 100%;
+         margin-top: 15px;
+         margin-bottom: 15px;
+         }
           .container2 {
           display: flex;
           flex-direction: column; /* Change to row if you want elements side by side */
@@ -148,6 +251,24 @@
       }
       /* Tablet or laptop size */
       @media screen and (min-width: 411px) { 
+         #map {
+         height: 450px;
+         width: 800px;
+         z-index: 1;
+        }
+         .subcontainer-map {
+         display: flex;
+         flex-direction: row; /* Change to row if you want elements side by side */
+         align-items: center; /* Adjust as needed */
+         justify-content: center; /* Align items to the start of the container */
+         flex-wrap: wrap;
+         flex-grow: 1;
+         width: 100%;
+         margin-top: 15px;
+         margin-bottom: 15px;
+         padding-left: 40px; /* Adjust the left padding as needed */
+         padding-right: 40px; /* Adjust the right padding as needed */
+         }
           .container2 {
           display: flex;
           flex-direction: column; /* Change to row if you want elements side by side */
@@ -164,6 +285,7 @@
           flex-direction: row; /* Change to row if you want elements side by side */
           flex-grow: 1;
           width: 100%;}
+          
           .subcontainer2 {
           display: flex;
           justify-content: center; /* Adjust as needed */
@@ -329,6 +451,7 @@
       </div>
       </div> 
       <div class="hero-foot has-background-dark py-4"></div>
+    </div>
       <div class = "container2" id = "container2">
          <div class="subcontainer2" id="subcontainer2">
             <a class="js-modal-trigger" data-target="modal-js-example">
@@ -362,7 +485,41 @@
                <input class="button is-primary is-medium" type="submit" value="Next Plant" id="quizNextButton" style="display: none;">
             </div>
          </div>
+      
+      <div class="subcontainer-map" id="subcontainer-map">
+        <div class="subcontainer-selection" id="subcontainer-selection">
+         <div class="control">
+
+            <label class="radio">
+               <input type="radio" name="foobar" checked>
+               Select species to view geographic distribution
+            </label>
+            <!-- <label class="radio">
+              <input type="radio" name="foobar">
+              Select county to narrow quiz species choices
+            </label> -->
+
+         </div>
+            <div class="subsubcontainer-selection" id="subsubcontainer-selection">
+               <div class="dropdown">
+                  <input id="search-input" class="input" type="text" placeholder="Type here to search">
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                     <div class="dropdown-content" id="dropdown-content">
+                           {% for option in plant_options %}
+                           <a href="#" class="dropdown-item">{{ option }}</a>
+                           {% endfor %}
+                     </div>
+                  </div>
+               </div>
+               <div id="selected-options-container"></div>
+            </div>   
+        </div>
+        <div class="subsubcontainer-map" id="subsubcontainer-map">
+            <div id="map"></div>
+            <button class="button is-light is-small" id="resetButton">Reset Map</button>
       </div>
+   </div>
+   </div>
       <div class="hero-foot has-background-dark py-4"></div>
       <footer class="footer is-light">
          <div class="content has-text-centered">
