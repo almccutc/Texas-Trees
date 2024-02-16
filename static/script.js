@@ -80,6 +80,10 @@ document.addEventListener("DOMContentLoaded", function() {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
+//   L.tileLayer({
+//     attribution: 'Data from <a href="https://plants.usda.gov/home">USDA PLANTS Database</a>'
+// }).addTo(map);
+
   // Add the outline of Texas to the map using ArcGIS REST Services
   var texasOutlineLayer = L.esri.featureLayer({
       url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_States_Generalized/FeatureServer/0',

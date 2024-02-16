@@ -61,7 +61,9 @@ class Grasses(BasePlant):
     __tablename__ = 'grasses' 
 
 class Aquatic(BasePlant):
-    __tablename__ = 'aquatic_plants'     
+    __tablename__ = 'aquatic_plants'  
+
+tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]       
         
 
 @app.route('/')
@@ -70,12 +72,8 @@ def render_webpage():
     unique_species = []
     unique_plant_names = set()
 
-    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Trees.plant_name)))).scalar())
-    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Flowers.plant_name)))).scalar())
-    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Vines.plant_name)))).scalar())
-    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Cacti.plant_name)))).scalar())
-    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Grasses.plant_name)))).scalar())
-    unique_species.append(db.session.query(func.count(func.distinct(func.lower(Aquatic.plant_name)))).scalar())
+    unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
+
 
     # Retrieve 4 unique plants
     while len(plants) < 4:
@@ -105,7 +103,7 @@ def render_webpage():
         for plant in plants:
             plant_options.add(plant.plant_name)
 
-    plant_options = sorted(plant_options, key=lambda x: x[0])       
+    plant_options = sorted(plant_options, key=lambda x: x.split()[0][0].lower())    
 
     return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source, unique_species = unique_species, plant_options=plant_options)
 
@@ -125,7 +123,7 @@ def get_plant_name_list():
     randomIndex = request.args.get('randomIndex')
     previousPlantName = request.args.get('previousPlantName')
 
-    # Define the number of unique plants to retrieve from each table
+    # The number of unique plants to retrieve from each table (to prevent to duplicates)
     plants_per_table = 4
 
     unique_plant_names = set()
@@ -247,7 +245,6 @@ def get_plant_name_list():
     # Selects 4 random plant choices for the quiz
     plants = random.sample(plants, 4)    
 
-    # Generate options for the plant identification
     plant_names = [item[0] for item in plants]
     plant_image_url = [item[1] for item in plants]
     scientific_names = [item[2] for item in plants]
@@ -257,22 +254,18 @@ def get_plant_name_list():
     print(randomIndex)
 
     return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source = source, randomIndex = randomIndex)
-# # Route to retrieve the previous value of a variable or element
 
 @app.route('/get_county_names')
 def get_county_names():
     selected_plant = request.args.get('selected_plant')
     selected_plant = [selected_plant]
-
-    plant_classes = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]
-
     countyNames = []
 
     # Checks each plant class for the selected plant that also county data, extracts both
-    for plant_class in plant_classes:
-        plants_with_counties = db.session.query(plant_class).filter(
-            plant_class.location_counties != None, 
-            plant_class.plant_name.in_(selected_plant)
+    for table in tables:
+        plants_with_counties = db.session.query(table).filter(
+            table.location_counties != None, 
+            table.plant_name.in_(selected_plant)
         ).all()
         countyNames.extend([(plant.location_counties) for plant in plants_with_counties])
     countyNames = [county.strip() for counties in countyNames for county in counties.split(',')]

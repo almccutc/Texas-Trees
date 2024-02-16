@@ -22,6 +22,7 @@
     <script src="https://unpkg.com/esri-leaflet-vector@4.2.3/dist/esri-leaflet-vector.js"></script>
    </head>
    <style>
+ 
 
     .selected-option{
       margin-left: 5 px;
@@ -47,6 +48,8 @@
 .dropdown-content {
     display: flex;
     flex-direction: column;
+    max-height: 200px; /* Set maximum height for the dropdown content */
+    overflow-y: auto;
 }
 
 .dropdown-item {
@@ -191,6 +194,10 @@
 
       /* for small screen (iphone, etc.) */ 
       @media screen and (max-width: 410px) {
+         .columns{
+         margin-left: 3px;
+         }  
+
          #map {
          height: 378px;
          width: 378px;
