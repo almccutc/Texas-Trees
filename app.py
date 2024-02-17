@@ -98,8 +98,8 @@ def render_webpage():
     plant_options = set()
 
     # Fetch unique plant names from each table
-    for TableClass in [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]:
-        plants = TableClass.query.filter(TableClass.location_counties != None, TableClass.location_counties != '').all()
+    for TableClass in tables:
+        plants = TableClass.query.filter(TableClass.location_counties != '').all()
         for plant in plants:
             plant_options.add(plant.plant_name)
 
@@ -124,123 +124,50 @@ def get_plant_name_list():
     previousPlantName = request.args.get('previousPlantName')
 
     # The number of unique plants to retrieve from each table (to prevent to duplicates)
-    plants_per_table = 4
-
-    unique_plant_names = set()
-
-    if switchState_trees == 'true':
-        # Loop until you have enough unique plants
+    plants_per_table = 4   
+    unique_plant_names = set()                     
+    
+    def get_random_plants(query, unique_plant_names, plants_per_table, plants, previous_plant_name, extra_filter=None):
+        unique_plant_names = set()
         while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'trees'
-            random_plant = Trees.query.filter((Trees.image_type == 'close_fullsize')).order_by(db.func.random()).first()
-            # Check if the plant is found and meets the conditions
-            if random_plant.plant_name not in unique_plant_names and random_plant.plant_name != previousPlantName:
+            # Execute the query to retrieve a random plant
+            if extra_filter:
+                random_plant = query.filter(extra_filter).order_by(db.func.random()).first()
+            else:
+                random_plant = query.order_by(db.func.random()).first()
+
+            # Check if the plant name is unique and not the same as the previous plant
+            if random_plant and random_plant.plant_name not in unique_plant_names and random_plant.plant_name not in previous_plant_name:
                 # Append the unique plant to the list
                 plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_plant.plant_name)
 
+        return plants
+    
+    if switchState_trees == 'true':
+        get_random_plants(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
+
     if switchState_leaves == 'true':
-        # Loop until you have enough unique plants
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'trees'
-            random_plant = Trees.query.filter((Trees.image_type == 'leaf')).order_by(db.func.random()).first()
-            # Check if the plant is found and meets the conditions
-            if random_plant.plant_name not in unique_plant_names and random_plant.plant_name != previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_plant.plant_name)     
-
+        get_random_plants(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'leaf'))    
+    
     if switchState_barks == 'true':
-        # Loop until you have enough unique plants
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'trees'
-            random_plant = Trees.query.filter((Trees.image_type == 'bark')).order_by(db.func.random()).first()
-            # Check if the plant is found and meets the conditions
-            if random_plant.plant_name not in unique_plant_names and random_plant.plant_name != previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_plant.plant_name)                         
+        get_random_plants(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'bark'))
 
-
-    unique_plant_names = set()    
-    
     if switchState_wildflowers == 'true':
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'flowers'
-            random_flower = Flowers.query.order_by(db.func.random()).first()
+        get_random_plants(Flowers.query, unique_plant_names, plants_per_table, plants, previousPlantName)
 
-            # Check if the plant name is unique
-            if random_flower.plant_name not in unique_plant_names and random_flower.plant_name != previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_flower.plant_name, random_flower.image_url, random_flower.scientific_name, random_flower.plant_type, random_flower.source))
-                
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_flower.plant_name)
-
-    unique_plant_names = set()    
-    
     if switchState_vines == 'true':
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'vines'
-            random_vine = Vines.query.order_by(db.func.random()).first()
-
-            # Check if the plant name is unique and not the same as the previous plant
-            print(previousPlantName)
-            if random_vine.plant_name not in unique_plant_names and random_vine.plant_name != previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_vine.plant_name, random_vine.image_url, random_vine.scientific_name, random_vine.plant_type, random_vine.source))
-                
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_vine.plant_name)
-
-    unique_plant_names = set()             
+        get_random_plants(Vines.query, unique_plant_names, plants_per_table, plants, previousPlantName)
 
     if switchState_cacti == 'true':
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'cactus'
-            random_cactus = Cacti.query.order_by(db.func.random()).first()
-
-            # Check if the plant name is unique
-            if random_cactus.plant_name not in unique_plant_names and random_cactus.plant_name != previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_cactus.plant_name, random_cactus.image_url, random_cactus.scientific_name, random_cactus.plant_type, random_cactus.source))
-                
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_cactus.plant_name)        
-
-    unique_plant_names = set()             
+        get_random_plants(Cacti.query, unique_plant_names, plants_per_table, plants, previousPlantName)                
 
     if switchState_grasses == 'true':
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'grass'
-            random_grass = Grasses.query.order_by(db.func.random()).first()
-
-            # Check if the plant name is unique
-            if random_grass.plant_name not in unique_plant_names and random_grass.plant_name != previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_grass.plant_name, random_grass.image_url, random_grass.scientific_name, random_grass.plant_type, random_grass.source))
-                
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_grass.plant_name)  
-
-    unique_plant_names = set()             
+        get_random_plants(Grasses.query, unique_plant_names, plants_per_table, plants, previousPlantName)           
 
     if switchState_aquaticplants == 'true':
-        while len(unique_plant_names) < plants_per_table:
-            # Execute the query to retrieve a random plant from 'grass'
-            random_aquatic = Aquatic.query.order_by(db.func.random()).first()
-
-            # Check if the plant name is unique, previousPlantName
-            if random_aquatic.plant_name not in unique_plant_names and random_aquatic.plant_name != previousPlantName:
-
-                # Append the unique plant to the list
-                plants.append((random_aquatic.plant_name, random_aquatic.image_url, random_aquatic.scientific_name, random_aquatic.plant_type, random_aquatic.source))
-                
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_aquatic.plant_name)                                               
+        get_random_plants(Aquatic.query, unique_plant_names, plants_per_table, plants, previousPlantName)                                           
 
     # Selects 4 random plant choices for the quiz
     plants = random.sample(plants, 4)    
@@ -250,8 +177,6 @@ def get_plant_name_list():
     scientific_names = [item[2] for item in plants]
     plant_types = [item[3] for item in plants]
     source = [item[4] for item in plants]
-
-    print(randomIndex)
 
     return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source = source, randomIndex = randomIndex)
 

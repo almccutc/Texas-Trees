@@ -41,6 +41,7 @@ var selectedIndex;
 var correctPlantName;
 var correctPlantIndex = 0; // Initialize correctPlantIndex with 0
 var correctCount = 0; 
+var uniquePlantCount = 0;
 var totalCount = 0;
 var switchState_trees
 var switchState_leaves
@@ -52,7 +53,7 @@ var switchState_vines
 // var switchState_herbs
 var switchState_cacti
 var correctCheck = "true";
-var previousPlantName = "plant";
+var previousPlantName = ["plant"];
 var map;
 var countyLayers = [];
 var selectedOption = null;
@@ -341,7 +342,17 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_leaves
 
       correctPlantIndex = indices.indexOf(randomIndex);
 
-      previousPlantName = plant_names[randomIndex];
+      previousPlantName_single = plant_names[randomIndex];
+
+      // Add the current previousPlantName to the array
+      previousPlantName.push(previousPlantName_single);
+
+      uniquePlantCount = uniquePlantCount + 1
+
+      if (uniquePlantCount > 0) {
+    // Remove the first item from previousPlantName
+      previousPlantName.shift();
+      }
 
       collapseBox();
       
@@ -456,7 +467,7 @@ function collapseBox() {
         const expandedContent = document.createElement('div');
         expandedContent.classList.add('box');
         expandedContent.innerHTML = `
-          <p style="margin-bottom: 10px;" >Test your knowledge of plants by identifying them based on images. You'll see a plant image and four options; choose the correct species. Toggle switches to include specific plant categories like flowers or herbs. Click the image for photo credits. Hints coming soon. &nbsp; &nbsp;</p>
+          <p style="margin-bottom: 10px;" >Test your knowledge of plants by identifying them based on images. You'll see a plant image and four options; choose the correct species. Toggle switches to include specific plant categories like tree leaves or wildflowers. Click the image for photo credits. Hints coming soon. &nbsp; &nbsp;</p>
           <button id="collapse-button" class="button is-light">Close</button>
         `;
         expandableContainer.innerHTML = ''; // Clear container
