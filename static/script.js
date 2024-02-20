@@ -242,18 +242,18 @@ dropdownMenu.addEventListener('click', function (event) {
 });
 
 
-// Add event listener to the tree switch
-document.getElementById("switchRoundedDefault_trees").addEventListener('change', function() {
-  // If the tree switch is unchecked, uncheck the bark and leaf switches
-  if (!this.checked) {
-      document.getElementById("switchRoundedDefault_leaves").checked = false;
-      // document.getElementById("switchRoundedDefault_barks").checked = false;
-  } else {
-      // If the tree switch is checked again, check the bark and leaf switches
-      document.getElementById("switchRoundedDefault_leaves").checked = true;
-      // document.getElementById("switchRoundedDefault_barks").checked = true;
-  }
-});
+// // Add event listener to the tree switch
+// document.getElementById("switchRoundedDefault_trees").addEventListener('change', function() {
+//   // If the tree switch is unchecked, uncheck the bark and leaf switches
+//   if (!this.checked) {
+//       document.getElementById("switchRoundedDefault_leaves").checked = false;
+//       // document.getElementById("switchRoundedDefault_barks").checked = false;
+//   } else {
+//       // If the tree switch is checked again, check the bark and leaf switches
+//       document.getElementById("switchRoundedDefault_leaves").checked = true;
+//       // document.getElementById("switchRoundedDefault_barks").checked = true;
+//   }
+// });
 
 // Event listeners for the 4 buttons
 for (let i = 0; i < 4; i++) {
@@ -349,7 +349,7 @@ function fetchPlantNameList(selectedIndex, switchState_trees, switchState_leaves
 
       uniquePlantCount = uniquePlantCount + 1
 
-      if (uniquePlantCount > 0) {
+      if (uniquePlantCount > 1) {
     // Remove the first item from previousPlantName
       previousPlantName.shift();
       }

@@ -97,7 +97,7 @@ def render_webpage():
 
     plant_options = set()
 
-    # Fetch unique plant names from each table
+    # Fetch unique plant names from each table that has county data
     for TableClass in tables:
         plants = TableClass.query.filter(TableClass.location_counties != '').all()
         for plant in plants:
@@ -127,13 +127,15 @@ def get_plant_name_list():
     plants_per_table = 4   
     unique_plant_names = set()                     
     
-    def get_random_plants(query, unique_plant_names, plants_per_table, plants, previous_plant_name, extra_filter=None):
+    def get_random_plants(query, unique_plant_names, plants_per_table, plants, previous_plant_name, extra_filter='None'):
         unique_plant_names = set()
         while len(unique_plant_names) < plants_per_table:
             # Execute the query to retrieve a random plant
-            if extra_filter:
+            if extra_filter != 'None':
+                print("yes")
                 random_plant = query.filter(extra_filter).order_by(db.func.random()).first()
             else:
+                print("no")
                 random_plant = query.order_by(db.func.random()).first()
 
             # Check if the plant name is unique and not the same as the previous plant
