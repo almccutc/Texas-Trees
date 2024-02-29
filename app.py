@@ -107,6 +107,16 @@ def render_webpage():
 
     return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source, unique_species = unique_species, plant_options=plant_options)
 
+@app.route('/plantInfo')
+def render_plant_info():
+    # You can add any necessary data processing here
+    return render_template('plantInfo.html')
+
+@app.route('/cropData')
+def render_crop_data():
+    # You can add any necessary data processing here
+    return render_template('cropData.html')
+
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
     plants = []
@@ -127,19 +137,18 @@ def get_plant_name_list():
     plants_per_table = 4   
     unique_plant_names = set()                     
     
-    def get_random_plants(query, unique_plant_names, plants_per_table, plants, previous_plant_name, extra_filter='None'):
+    def get_random_plants(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
         unique_plant_names = set()
+        
         while len(unique_plant_names) < plants_per_table:
             # Execute the query to retrieve a random plant
             if extra_filter != 'None':
-                print("yes")
                 random_plant = query.filter(extra_filter).order_by(db.func.random()).first()
             else:
-                print("no")
                 random_plant = query.order_by(db.func.random()).first()
 
             # Check if the plant name is unique and not the same as the previous plant
-            if random_plant and random_plant.plant_name not in unique_plant_names and random_plant.plant_name not in previous_plant_name:
+            if random_plant and random_plant.plant_name not in unique_plant_names and random_plant.plant_name not in previousPlantName:
                 # Append the unique plant to the list
                 plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
                 # Add the plant name to the set of unique names
