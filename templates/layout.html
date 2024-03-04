@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- <meta name="author" content="Your Name"> -->
+      <meta name="description" content="A quiz about Texas trees and plants.">
+      <meta name="keywords" content="Texas, trees, quiz, plants, nature, live oak.">
+      <title>Texas Tree Quiz</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+      <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
+      <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
+      <link rel="icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" type="image/png">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
+      
+          <!-- Load Leaflet from CDN -->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+      <!-- Load Esri Leaflet from CDN -->
+      <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
+      <script src="https://unpkg.com/esri-leaflet-vector@4.2.3/dist/esri-leaflet-vector.js"></script>    
+   </head>
+
+
+   <body>
+      <header class="hero is-light">
+         <div class="hero-body">
+            <div class="container">
+               <h1 class="title has-text-centered">
+                  Texas Tree Quiz 
+               </h1>
+               <h1 class="subtitle has-text-centered">
+                  Trees, flowers, and more!
+               </h1>
+               <nav class="navbar" role="navigation" aria-label="main navigation">
+                <ul class="menu">
+                  <a class="button is-light" id="speciesInfoButton" href="{{ url_for('render_webpage') }}">Quiz</a>
+                  <a class="button is-light" id="speciesInfoButton" href="{{ url_for('render_plant_info') }}">Species Information</a>
+                  <!-- <a class="button is-light" id="cropDataButton" href="#">Crop Data</a> -->
+                </ul>
+              </nav>
+            </div>
+         </div>
+      </header>
+      <div class="hero-foot has-background-dark py-4 is is-fullwidth is-responsive"></div>
+
+        {% block content %}
+        {% endblock %}
+
+      <div class="hero-foot has-background-dark py-4"></div>
+      <footer class="footer is-light">
+         <div class="content has-text-centered">
+            <div class="subfooter">
+               Plant Identification Learning Tool
+            </div>
+            <div class="footer">
+               <span class="website">texastreequiz.com</span>
+               <span class="date">Feb 2024. &copy;</span>
+            </div>
+         </div>
+      </footer>
+      {% if current_route == 'render_webpage' %}
+      <script src="{{ url_for('static', filename='script.js') }}"></script>
+      {% endif %}
+   </body>
+</html>
