@@ -105,9 +105,9 @@ def render_webpage():
 
     plant_options = sorted(plant_options, key=lambda x: x.split()[0][0].lower())    
 
-    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source, unique_species = unique_species, plant_options=plant_options)
+    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source, unique_species = unique_species, plant_options=plant_options, current_route='render_webpage')
 
-@app.route('/plantInfo')
+@app.route('/plantInfo/')
 def render_plant_info():
     # You can add any necessary data processing here
     return render_template('plantInfo.html')
