@@ -138,7 +138,6 @@ def get_plant_name_list():
     unique_plant_names = []             
     
     def  get_quiz_choices(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
-        unique_plant_names = set()
         
         while len(unique_plant_names) < plants_per_table:
             # Execute the query to retrieve a random plant
