@@ -135,7 +135,7 @@ def get_plant_name_list():
 
     # The number of unique plants to retrieve from each table (to prevent to duplicates)
     plants_per_table = 4   
-    unique_plant_names = []             
+    unique_plant_names = set()            
     
     def  get_quiz_choices(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
         
