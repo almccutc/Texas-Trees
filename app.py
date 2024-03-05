@@ -135,9 +135,9 @@ def get_plant_name_list():
 
     # The number of unique plants to retrieve from each table (to prevent to duplicates)
     plants_per_table = 4   
-    unique_plant_names = set()                     
+    unique_plant_names = []             
     
-    def get_random_plants(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
+    def  get_quiz_choices(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
         unique_plant_names = set()
         
         while len(unique_plant_names) < plants_per_table:
@@ -157,28 +157,28 @@ def get_plant_name_list():
         return plants
     
     if switchState_trees == 'true':
-        get_random_plants(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
+         get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
 
     if switchState_leaves == 'true':
-        get_random_plants(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'leaf'))    
+         get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'leaf'))    
     
     if switchState_barks == 'true':
-        get_random_plants(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'bark'))
+         get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'bark'))
 
     if switchState_wildflowers == 'true':
-        get_random_plants(Flowers.query, unique_plant_names, plants_per_table, plants, previousPlantName)
+         get_quiz_choices(Flowers.query, unique_plant_names, plants_per_table, plants, previousPlantName)
 
     if switchState_vines == 'true':
-        get_random_plants(Vines.query, unique_plant_names, plants_per_table, plants, previousPlantName)
+         get_quiz_choices(Vines.query, unique_plant_names, plants_per_table, plants, previousPlantName)
 
     if switchState_cacti == 'true':
-        get_random_plants(Cacti.query, unique_plant_names, plants_per_table, plants, previousPlantName)                
+         get_quiz_choices(Cacti.query, unique_plant_names, plants_per_table, plants, previousPlantName)                
 
     if switchState_grasses == 'true':
-        get_random_plants(Grasses.query, unique_plant_names, plants_per_table, plants, previousPlantName)           
+         get_quiz_choices(Grasses.query, unique_plant_names, plants_per_table, plants, previousPlantName)           
 
     if switchState_aquaticplants == 'true':
-        get_random_plants(Aquatic.query, unique_plant_names, plants_per_table, plants, previousPlantName)                                           
+         get_quiz_choices(Aquatic.query, unique_plant_names, plants_per_table, plants, previousPlantName)                                           
 
     # Selects 4 random plant choices for the quiz
     plants = random.sample(plants, 4)    
