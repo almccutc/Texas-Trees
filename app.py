@@ -139,7 +139,7 @@ def get_plant_name_list():
     
     def  get_quiz_choices(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
         
-        while len(unique_plant_names) < plants_per_table:
+        for plantName in range(plants_per_table):
             # Execute the query to retrieve a random plant
             if extra_filter != 'None':
                 random_plant = query.filter(extra_filter).order_by(db.func.random()).first()
@@ -153,7 +153,8 @@ def get_plant_name_list():
                 # Add the plant name to the set of unique names
                 unique_plant_names.add(random_plant.plant_name)
 
-        return plants
+        return plants, unique_plant_names
+    
     
     if switchState_trees == 'true':
          get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
