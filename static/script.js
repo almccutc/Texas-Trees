@@ -56,99 +56,10 @@ var correctCheck = "true";
 var previousPlantName = ["plant"];
 var map;
 var countyLayers = [];
-var selectedOption = null;
-
-// document.getElementById('quizHomeButton').addEventListener('click', function () {
-//   fetch('/')
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.text(); // Note: Use .text() to get HTML content
-//     })
-//     .then(htmlContent => {
-//       // Update a container element with the fetched HTML content
-//       document.getElementById('contentContainer').innerHTML = htmlContent;
-//     })
-//     .catch(error => {
-//       console.error('There was a problem with the fetch operation:', error);
-//     });
-// });
-
-// document.getElementById('speciesInfoButton').addEventListener('click', function () {
-//   fetch('/plantInfo')
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.text(); // Note: Use .text() to get HTML content
-//     })
-//     .then(htmlContent => {
-//       // Update a container element with the fetched HTML content
-//       document.getElementById('contentContainer').innerHTML = htmlContent;
-//     })
-//     .catch(error => {
-//       console.error('There was a problem with the fetch operation:', error);
-//     });
-// });
-
-// document.getElementById('cropDataButton').addEventListener('click', function () {
-//   fetch('/cropData')
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.text(); // Note: Use .text() to get HTML content
-//     })
-//     .then(htmlContent => {
-//       // Update a container element with the fetched HTML content
-//       document.getElementById('contentContainer').innerHTML = htmlContent;
-//     })
-//     .catch(error => {
-//       console.error('There was a problem with the fetch operation:', error);
-//     });
-// });
-
-
-
-// // Event listener for Species Information nav button
-// document.getElementById('speciesInfoButton').addEventListener('click', function () {
-//   fetch('/')
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.json();
-//     })
-//     .then(data => {
-//       console.log(data); // Do something with the response data
-//     })
-//     .catch(error => {
-//       console.error('There was a problem with the fetch operation:', error);
-//     });
-// });
-
-// // Event listener for Crop Data nav button
-// document.getElementById('cropDataButton').addEventListener('click', function () {
-//   fetch('/')
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     return response.json();
-//   })
-//   .then(data => {
-//     console.log(data); // Do something with the response data
-//   })
-//   .catch(error => {
-//     console.error('There was a problem with the fetch operation:', error);
-//   });
-// });
-  
+var selectedOption = null;  
 
 document.addEventListener("DOMContentLoaded", function() {
   map = L.map('map').setView([31.0000, -100.0000], 5.5);
-
 
   var texasBounds = L.latLngBounds(
       L.latLng(25.8371, -106.6466),
