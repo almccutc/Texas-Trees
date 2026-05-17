@@ -44,7 +44,7 @@ def seed_database():
 
             # 7. Cedar Elm
             Trees("Cedar Elm", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_71342713-min.jpeg", "Ulmus crassifolia", "Tree", "", ""),
-            Trees("Cedar Elm", "leaf", "", "Ulmus crassifolia", "Tree", "", ""),
+            Trees("Cedar Elm", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/cedar_elm_leaf1.jpeg", "Ulmus crassifolia", "Tree", "", ""),
             Trees("Cedar Elm", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", "Ulmus crassifolia", "Tree", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", ""),
 
             # 8. Southern Magnolia
@@ -134,7 +134,7 @@ def seed_database():
 
             # 25. Texas Persimmon
             Trees("Texas Persimmon", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Texas_persimmon_full_1.jpeg", "Diospyros texana", "Tree", "", ""),
-            Trees("Texas Persimmon", "leaf", "", "Diospyros texana", "Tree", "", ""),
+            Trees("Texas Persimmon", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Texas_persimmon_leaf_1.jpeg", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas_persimmon_bark_1.jpeg", "Diospyros texana", "Tree", "", ""),
 
             # 26. American Sycamore
