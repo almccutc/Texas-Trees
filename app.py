@@ -1,21 +1,22 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from secrets_manager import get_secret
-from flask import request
 import random
 from sqlalchemy import func
 from sqlalchemy import not_
+import os
 
 app = Flask(__name__, static_url_path='/static')
 
-db_config = get_secret()
+# --- SECURE DATABASE CONFIGURATION ---
+# These pull dynamically from your docker-compose.yml / .env file
+db_user = os.environ.get('POSTGRES_USER')
+db_pw = os.environ.get('POSTGRES_PW')
+db_host = os.environ.get('POSTGRES_HOST')
+db_name = os.environ.get('POSTGRES_DB')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f'postgresql+psycopg2://{db_config["POSTGRES_USER"]}:' +
-    f'{db_config["POSTGRES_PW"]}@' +
-    f'{db_config["POSTGRES_HOST"]}/' +
-    f'{db_config["POSTGRES_DB"]}'
+    f'postgresql+psycopg2://{db_user}:{db_pw}@{db_host}/{db_name}'
 )
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -73,7 +74,6 @@ def render_webpage():
     unique_plant_names = set()
 
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
-
 
     # Retrieve 4 unique plants
     while len(plants) < 4:
@@ -209,4 +209,4 @@ def get_county_names():
     return jsonify(countyNames=countyNames)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000) 
+    app.run(host='0.0.0.0', port=5000)
