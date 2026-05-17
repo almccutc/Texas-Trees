@@ -10,162 +10,307 @@ def seed_database():
 
         print("Checking for new authentic Texas Flora data to insert...")
         
-        # --- TREES (Top 30) ---
+        # --- TREES (60 Unique Species - 180 total image records) ---
         trees = [
-            # Live Oak
+            # 1. Live Oak
             Trees("Live Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/live_oak_335892366-min.jpeg", "Quercus virginiana", "Tree", "", ""),
             Trees("Live Oak", "leaf", "", "Quercus virginiana", "Tree", "", ""),
             Trees("Live Oak", "bark", "", "Quercus virginiana", "Tree", "", ""),
 
-            # Box Elder
+            # 2. Box Elder
             Trees("Box Elder", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/box_elder_full_1.jpeg", "Acer negundo", "Tree", "", ""),
             Trees("Box Elder", "leaf", "", "Acer negundo", "Tree", "", ""),
             Trees("Box Elder", "bark", "", "Acer negundo", "Tree", "", ""),
             
-            # Pecan
+            # 3. Pecan
             Trees("Pecan", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/pecan_17094154-min.jpeg", "Carya illinoinensis", "Tree", "", ""),
             Trees("Pecan", "leaf", "", "Carya illinoinensis", "Tree", "", ""),
             Trees("Pecan", "bark", "", "Carya illinoinensis", "Tree", "", ""),
 
-            # Texas Mountain Laurel
+            # 4. Texas Mountain Laurel
             Trees("Texas Mountain Laurel", "close_fullsize", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
             Trees("Texas Mountain Laurel", "leaf", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
             Trees("Texas Mountain Laurel", "bark", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
 
-            # Bald Cypress
+            # 5. Bald Cypress
             Trees("Bald Cypress", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/bald_cypress_fullsize_1.jpeg", "Taxodium distichum", "Tree", "", ""),
             Trees("Bald Cypress", "leaf", "", "Taxodium distichum", "Tree", "", ""),
             Trees("Bald Cypress", "bark", "", "Taxodium distichum", "Tree", "", ""),
 
-            # Honey Mesquite
+            # 6. Honey Mesquite
             Trees("Honey Mesquite", "close_fullsize", "", "Prosopis glandulosa", "Tree", "", ""),
             Trees("Honey Mesquite", "leaf", "", "Prosopis glandulosa", "Tree", "", ""),
             Trees("Honey Mesquite", "bark", "", "Prosopis glandulosa", "Tree", "", ""),
 
-            # Cedar Elm
+            # 7. Cedar Elm
             Trees("Cedar Elm", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_71342713-min.jpeg", "Ulmus crassifolia", "Tree", "", ""),
             Trees("Cedar Elm", "leaf", "", "Ulmus crassifolia", "Tree", "", ""),
             Trees("Cedar Elm", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", "Ulmus crassifolia", "Tree", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", ""),
 
-            # Southern Magnolia
+            # 8. Southern Magnolia
             Trees("Southern Magnolia", "close_fullsize", "", "Magnolia grandiflora", "Tree", "", ""),
             Trees("Southern Magnolia", "leaf", "", "Magnolia grandiflora", "Tree", "", ""),
             Trees("Southern Magnolia", "bark", "", "Magnolia grandiflora", "Tree", "", ""),
 
-            # Loblolly Pine
+            # 9. Loblolly Pine
             Trees("Loblolly Pine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/loblolly_pine_168861849-min.jpeg", "Pinus taeda", "Tree", "", ""),
             Trees("Loblolly Pine", "leaf", "", "Pinus taeda", "Tree", "", ""),
             Trees("Loblolly Pine", "bark", "", "Pinus taeda", "Tree", "", ""),
 
-            # Texas Redbud
+            # 10. Texas Redbud
             Trees("Texas Redbud", "close_fullsize", "", "Cercis canadensis var. texensis", "Tree", "", ""),
             Trees("Texas Redbud", "leaf", "", "Cercis canadensis var. texensis", "Tree", "", ""),
             Trees("Texas Redbud", "bark", "", "Cercis canadensis var. texensis", "Tree", "", ""),
 
-            # Crape Myrtle
+            # 11. Crape Myrtle
             Trees("Crape Myrtle", "close_fullsize", "", "Lagerstroemia indica", "Tree", "", ""),
             Trees("Crape Myrtle", "leaf", "", "Lagerstroemia indica", "Tree", "", ""),
             Trees("Crape Myrtle", "bark", "", "Lagerstroemia indica", "Tree", "", ""),
 
-            # Ashe Juniper
+            # 12. Ashe Juniper
             Trees("Ashe Juniper", "close_fullsize", "", "Juniperus ashei", "Tree", "", ""),
             Trees("Ashe Juniper", "leaf", "", "Juniperus ashei", "Tree", "", ""),
             Trees("Ashe Juniper", "bark", "", "Juniperus ashei", "Tree", "", ""),
 
-            # Post Oak
+            # 13. Post Oak
             Trees("Post Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/post_oak_69964216-min.jpeg", "Quercus stellata", "Tree", "", ""),
             Trees("Post Oak", "leaf", "", "Quercus stellata", "Tree", "", ""),
             Trees("Post Oak", "bark", "", "Quercus stellata", "Tree", "", ""),
 
-            # Bur Oak
+            # 14. Bur Oak
             Trees("Bur Oak", "close_fullsize", "", "Quercus macrocarpa", "Tree", "", ""),
             Trees("Bur Oak", "leaf", "", "Quercus macrocarpa", "Tree", "", ""),
             Trees("Bur Oak", "bark", "", "Quercus macrocarpa", "Tree", "", ""),
 
-            # Shumard Oak
+            # 15. Shumard Oak
             Trees("Shumard Oak", "close_fullsize", "", "Quercus shumardii", "Tree", "", ""),
             Trees("Shumard Oak", "leaf", "", "Quercus shumardii", "Tree", "", ""),
             Trees("Shumard Oak", "bark", "", "Quercus shumardii", "Tree", "", ""),
 
-            # Desert Willow
+            # 16. Desert Willow
             Trees("Desert Willow", "close_fullsize", "", "Chilopsis linearis", "Tree", "", ""),
             Trees("Desert Willow", "leaf", "", "Chilopsis linearis", "Tree", "", ""),
             Trees("Desert Willow", "bark", "", "Chilopsis linearis", "Tree", "", ""),
 
-            # Retama
+            # 17. Retama
             Trees("Retama", "close_fullsize", "", "Parkinsonia aculeata", "Tree", "", ""),
             Trees("Retama", "leaf", "", "Parkinsonia aculeata", "Tree", "", ""),
             Trees("Retama", "bark", "", "Parkinsonia aculeata", "Tree", "", ""),
 
-            # Texas Ash
+            # 18. Texas Ash
             Trees("Texas Ash", "close_fullsize", "", "Fraxinus texensis", "Tree", "", ""),
             Trees("Texas Ash", "leaf", "", "Fraxinus texensis", "Tree", "", ""),
             Trees("Texas Ash", "bark", "", "Fraxinus texensis", "Tree", "", ""),
 
-            # Yaupon Holly
+            # 19. Yaupon Holly
             Trees("Yaupon Holly", "close_fullsize", "", "Ilex vomitoria", "Tree", "", ""),
             Trees("Yaupon Holly", "leaf", "", "Ilex vomitoria", "Tree", "", ""),
             Trees("Yaupon Holly", "bark", "", "Ilex vomitoria", "Tree", "", ""),
 
-            # Sweetgum
+            # 20. Sweetgum
             Trees("Sweetgum", "close_fullsize", "", "Liquidambar styraciflua", "Tree", "", ""),
             Trees("Sweetgum", "leaf", "", "Liquidambar styraciflua", "Tree", "", ""),
             Trees("Sweetgum", "bark", "", "Liquidambar styraciflua", "Tree", "", ""),
 
-            # Eastern Redcedar
+            # 21. Eastern Redcedar
             Trees("Eastern Redcedar", "close_fullsize", "", "Juniperus virginiana", "Tree", "", ""),
             Trees("Eastern Redcedar", "leaf", "", "Juniperus virginiana", "Tree", "", ""),
             Trees("Eastern Redcedar", "bark", "", "Juniperus virginiana", "Tree", "", ""),
 
-            # Mexican Plum
+            # 22. Mexican Plum
             Trees("Mexican Plum", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/mexican_plum_44227239-min.jpeg", "Prunus mexicana", "Tree", "", ""),
             Trees("Mexican Plum", "leaf", "", "Prunus mexicana", "Tree", "", ""),
             Trees("Mexican Plum", "bark", "", "Prunus mexicana", "Tree", "", ""),
 
-            # Hackberry
+            # 23. Hackberry
             Trees("Hackberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/hackberry_324208578-min.jpeg", "Celtis occidentalis", "Tree", "", ""),
             Trees("Hackberry", "leaf", "", "Celtis occidentalis", "Tree", "", ""),
             Trees("Hackberry", "bark", "", "Celtis occidentalis", "Tree", "", ""),
 
-            # Sugarberry
+            # 24. Sugarberry
             Trees("Sugarberry", "close_fullsize", "", "Celtis laevigata", "Tree", "", ""),
             Trees("Sugarberry", "leaf", "", "Celtis laevigata", "Tree", "", ""),
             Trees("Sugarberry", "bark", "", "Celtis laevigata", "Tree", "", ""),
 
-            # Texas Persimmon
+            # 25. Texas Persimmon
             Trees("Texas Persimmon", "close_fullsize", "", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "leaf", "", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas_persimmon_bark_1.jpeg", "Diospyros texana", "Tree", "", ""),
 
-            # American Sycamore
+            # 26. American Sycamore
             Trees("American Sycamore", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/american_sycamore_84788584-min.jpeg", "Platanus occidentalis", "Tree", "", ""),
             Trees("American Sycamore", "leaf", "", "Platanus occidentalis", "Tree", "", ""),
             Trees("American Sycamore", "bark", "", "Platanus occidentalis", "Tree", "", ""),
 
-            # Eastern Cottonwood
+            # 27. Eastern Cottonwood
             Trees("Eastern Cottonwood", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cottonwood_68252199-min.jpeg", "Populus deltoides", "Tree", "", ""),
             Trees("Eastern Cottonwood", "leaf", "", "Populus deltoides", "Tree", "", ""),
             Trees("Eastern Cottonwood", "bark", "", "Populus deltoides", "Tree", "", ""),
 
-            # Black Walnut
+            # 28. Black Walnut
             Trees("Black Walnut", "close_fullsize", "", "Juglans nigra", "Tree", "", ""),
             Trees("Black Walnut", "leaf", "", "Juglans nigra", "Tree", "", ""),
             Trees("Black Walnut", "bark", "", "Juglans nigra", "Tree", "", ""),
 
-            # Chinquapin Oak
+            # 29. Chinquapin Oak
             Trees("Chinquapin Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/chinkapin_oak_165800321-min.jpeg", "Quercus muehlenbergii", "Tree", "", ""),
             Trees("Chinquapin Oak", "leaf", "", "Quercus muehlenbergii", "Tree", "", ""),
             Trees("Chinquapin Oak", "bark", "", "Quercus muehlenbergii", "Tree", "", ""),
 
-            # Blackjack Oak
+            # 30. Blackjack Oak
             Trees("Blackjack Oak", "close_fullsize", "", "Quercus marilandica", "Tree", "", ""),
             Trees("Blackjack Oak", "leaf", "", "Quercus marilandica", "Tree", "", ""),
             Trees("Blackjack Oak", "bark", "", "Quercus marilandica", "Tree", "", ""),
 
-            # Anacua
+            # 31. Anacua
             Trees("Anacua", "close_fullsize", "", "Ehretia anacua", "Tree", "", ""),
             Trees("Anacua", "leaf", "", "Ehretia anacua", "Tree", "", ""),
-            Trees("Anacua", "bark", "", "Ehretia anacua", "Tree", "", "")
+            Trees("Anacua", "bark", "", "Ehretia anacua", "Tree", "", ""),
+
+            # 32. Texas Pistache
+            Trees("Texas Pistache", "close_fullsize", "", "Pistacia texana", "Tree", "", ""),
+            Trees("Texas Pistache", "leaf", "", "Pistacia texana", "Tree", "", ""),
+            Trees("Texas Pistache", "bark", "", "Pistacia texana", "Tree", "", ""),
+
+            # 33. Texas Ebony
+            Trees("Texas Ebony", "close_fullsize", "", "Ebenopsis ebano", "Tree", "", ""),
+            Trees("Texas Ebony", "leaf", "", "Ebenopsis ebano", "Tree", "", ""),
+            Trees("Texas Ebony", "bark", "", "Ebenopsis ebano", "Tree", "", ""),
+
+            # 34. Huisache
+            Trees("Huisache", "close_fullsize", "", "Vachellia farnesiana", "Tree", "", ""),
+            Trees("Huisache", "leaf", "", "Vachellia farnesiana", "Tree", "", ""),
+            Trees("Huisache", "bark", "", "Vachellia farnesiana", "Tree", "", ""),
+
+            # 35. Guajillo
+            Trees("Guajillo", "close_fullsize", "", "Senegalia berlandieri", "Tree", "", ""),
+            Trees("Guajillo", "leaf", "", "Senegalia berlandieri", "Tree", "", ""),
+            Trees("Guajillo", "bark", "", "Senegalia berlandieri", "Tree", "", ""),
+
+            # 36. Goldenball Leadtree
+            Trees("Goldenball Leadtree", "close_fullsize", "", "Leucaena retusa", "Tree", "", ""),
+            Trees("Goldenball Leadtree", "leaf", "", "Leucaena retusa", "Tree", "", ""),
+            Trees("Goldenball Leadtree", "bark", "", "Leucaena retusa", "Tree", "", ""),
+
+            # 37. Texas Madrone
+            Trees("Texas Madrone", "close_fullsize", "", "Arbutus xalapensis", "Tree", "", ""),
+            Trees("Texas Madrone", "leaf", "", "Arbutus xalapensis", "Tree", "", ""),
+            Trees("Texas Madrone", "bark", "", "Arbutus xalapensis", "Tree", "", ""),
+
+            # 38. Chisos Red Oak
+            Trees("Chisos Red Oak", "close_fullsize", "", "Quercus gravesii", "Tree", "", ""),
+            Trees("Chisos Red Oak", "leaf", "", "Quercus gravesii", "Tree", "", ""),
+            Trees("Chisos Red Oak", "bark", "", "Quercus gravesii", "Tree", "", ""),
+
+            # 39. Bigtooth Maple
+            Trees("Bigtooth Maple", "close_fullsize", "", "Acer grandidentatum", "Tree", "", ""),
+            Trees("Bigtooth Maple", "leaf", "", "Acer grandidentatum", "Tree", "", ""),
+            Trees("Bigtooth Maple", "bark", "", "Acer grandidentatum", "Tree", "", ""),
+
+            # 40. Red Maple
+            Trees("Red Maple", "close_fullsize", "", "Acer rubrum", "Tree", "", ""),
+            Trees("Red Maple", "leaf", "", "Acer rubrum", "Tree", "", ""),
+            Trees("Red Maple", "bark", "", "Acer rubrum", "Tree", "", ""),
+
+            # 41. Mexican Buckeye
+            Trees("Mexican Buckeye", "close_fullsize", "", "Ungnadia speciosa", "Tree", "", ""),
+            Trees("Mexican Buckeye", "leaf", "", "Ungnadia speciosa", "Tree", "", ""),
+            Trees("Mexican Buckeye", "bark", "", "Ungnadia speciosa", "Tree", "", ""),
+
+            # 42. Carolina Basswood
+            Trees("Carolina Basswood", "close_fullsize", "", "Tilia americana var. caroliniana", "Tree", "", ""),
+            Trees("Carolina Basswood", "leaf", "", "Tilia americana var. caroliniana", "Tree", "", ""),
+            Trees("Carolina Basswood", "bark", "", "Tilia americana var. caroliniana", "Tree", "", ""),
+
+            # 43. Rusty Blackhaw
+            Trees("Rusty Blackhaw", "close_fullsize", "", "Viburnum rufidulum", "Tree", "", ""),
+            Trees("Rusty Blackhaw", "leaf", "", "Viburnum rufidulum", "Tree", "", ""),
+            Trees("Rusty Blackhaw", "bark", "", "Viburnum rufidulum", "Tree", "", ""),
+
+            # 44. Two-wing Silverbell
+            Trees("Two-wing Silverbell", "close_fullsize", "", "Halesia diptera", "Tree", "", ""),
+            Trees("Two-wing Silverbell", "leaf", "", "Halesia diptera", "Tree", "", ""),
+            Trees("Two-wing Silverbell", "bark", "", "Halesia diptera", "Tree", "", ""),
+
+            # 45. Flowering Dogwood
+            Trees("Flowering Dogwood", "close_fullsize", "", "Cornus florida", "Tree", "", ""),
+            Trees("Flowering Dogwood", "leaf", "", "Cornus florida", "Tree", "", ""),
+            Trees("Flowering Dogwood", "bark", "", "Cornus florida", "Tree", "", ""),
+
+            # 46. Longleaf Pine
+            Trees("Longleaf Pine", "close_fullsize", "", "Pinus palustris", "Tree", "", ""),
+            Trees("Longleaf Pine", "leaf", "", "Pinus palustris", "Tree", "", ""),
+            Trees("Longleaf Pine", "bark", "", "Pinus palustris", "Tree", "", ""),
+
+            # 47. Shortleaf Pine
+            Trees("Shortleaf Pine", "close_fullsize", "", "Pinus echinata", "Tree", "", ""),
+            Trees("Shortleaf Pine", "leaf", "", "Pinus echinata", "Tree", "", ""),
+            Trees("Shortleaf Pine", "bark", "", "Pinus echinata", "Tree", "", ""),
+
+            # 48. Overcup Oak
+            Trees("Overcup Oak", "close_fullsize", "", "Quercus lyrata", "Tree", "", ""),
+            Trees("Overcup Oak", "leaf", "", "Quercus lyrata", "Tree", "", ""),
+            Trees("Overcup Oak", "bark", "", "Quercus lyrata", "Tree", "", ""),
+
+            # 49. Water Oak
+            Trees("Water Oak", "close_fullsize", "", "Quercus nigra", "Tree", "", ""),
+            Trees("Water Oak", "leaf", "", "Quercus nigra", "Tree", "", ""),
+            Trees("Water Oak", "bark", "", "Quercus nigra", "Tree", "", ""),
+
+            # 50. Willow Oak
+            Trees("Willow Oak", "close_fullsize", "", "Quercus phellos", "Tree", "", ""),
+            Trees("Willow Oak", "leaf", "", "Quercus phellos", "Tree", "", ""),
+            Trees("Willow Oak", "bark", "", "Quercus phellos", "Tree", "", ""),
+
+            # 51. American Elm
+            Trees("American Elm", "close_fullsize", "", "Ulmus americana", "Tree", "", ""),
+            Trees("American Elm", "leaf", "", "Ulmus americana", "Tree", "", ""),
+            Trees("American Elm", "bark", "", "Ulmus americana", "Tree", "", ""),
+
+            # 52. Winged Elm
+            Trees("Winged Elm", "close_fullsize", "", "Ulmus alata", "Tree", "", ""),
+            Trees("Winged Elm", "leaf", "", "Ulmus alata", "Tree", "", ""),
+            Trees("Winged Elm", "bark", "", "Ulmus alata", "Tree", "", ""),
+
+            # 53. Black Cherry
+            Trees("Black Cherry", "close_fullsize", "", "Prunus serotina", "Tree", "", ""),
+            Trees("Black Cherry", "leaf", "", "Prunus serotina", "Tree", "", ""),
+            Trees("Black Cherry", "bark", "", "Prunus serotina", "Tree", "", ""),
+
+            # 54. Carolina Buckthorn
+            Trees("Carolina Buckthorn", "close_fullsize", "", "Frangula caroliniana", "Tree", "", ""),
+            Trees("Carolina Buckthorn", "leaf", "", "Frangula caroliniana", "Tree", "", ""),
+            Trees("Carolina Buckthorn", "bark", "", "Frangula caroliniana", "Tree", "", ""),
+
+            # 55. Common Buttonbush
+            Trees("Common Buttonbush", "close_fullsize", "", "Cephalanthus occidentalis", "Tree", "", ""),
+            Trees("Common Buttonbush", "leaf", "", "Cephalanthus occidentalis", "Tree", "", ""),
+            Trees("Common Buttonbush", "bark", "", "Cephalanthus occidentalis", "Tree", "", ""),
+
+            # 56. Green Ash
+            Trees("Green Ash", "close_fullsize", "", "Fraxinus pennsylvanica", "Tree", "", ""),
+            Trees("Green Ash", "leaf", "", "Fraxinus pennsylvanica", "Tree", "", ""),
+            Trees("Green Ash", "bark", "", "Fraxinus pennsylvanica", "Tree", "", ""),
+
+            # 57. White Ash
+            Trees("White Ash", "close_fullsize", "", "Fraxinus americana", "Tree", "", ""),
+            Trees("White Ash", "leaf", "", "Fraxinus americana", "Tree", "", ""),
+            Trees("White Ash", "bark", "", "Fraxinus americana", "Tree", "", ""),
+
+            # 58. Texas Mulberry
+            Trees("Texas Mulberry", "close_fullsize", "", "Morus microphylla", "Tree", "", ""),
+            Trees("Texas Mulberry", "leaf", "", "Morus microphylla", "Tree", "", ""),
+            Trees("Texas Mulberry", "bark", "", "Morus microphylla", "Tree", "", ""),
+
+            # 59. Red Mulberry
+            Trees("Red Mulberry", "close_fullsize", "", "Morus rubra", "Tree", "", ""),
+            Trees("Red Mulberry", "leaf", "", "Morus rubra", "Tree", "", ""),
+            Trees("Red Mulberry", "bark", "", "Morus rubra", "Tree", "", ""),
+
+            # 60. Sassafras
+            Trees("Sassafras", "close_fullsize", "", "Sassafras albidum", "Tree", "", ""),
+            Trees("Sassafras", "leaf", "", "Sassafras albidum", "Tree", "", ""),
+            Trees("Sassafras", "bark", "", "Sassafras albidum", "Tree", "", "")
         ]
 
         # bouncer loop for trees -- checking both plant_name AND image_type (leaf/bark/close)

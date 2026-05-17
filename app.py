@@ -70,23 +70,30 @@ tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]
 @app.route('/')
 def render_webpage():
     plants = []
-    unique_species = []
     unique_plant_names = set()
 
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
 
-    # Retrieve 4 unique plants
-    while len(plants) < 4:
-        # Execute the query to retrieve a random plant
-        random_plant = Trees.query.filter(not_(Trees.image_type == 'bark')).order_by(db.func.random()).first()
+    # Retrieve all unique trees with valid URLs (not including bark) to sample from safely
+    valid_trees = Trees.query.filter(
+        not_(Trees.image_type == 'bark'),
+        Trees.image_url != '',
+        Trees.image_url.is_not(None)
+    ).all()
 
-        # Check if the plant name is unique
-        if random_plant.plant_name not in unique_plant_names:
-            # Append the unique plant to the list
-            plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
-            
-            # Add the plant name to the set of unique names
-            unique_plant_names.add(random_plant.plant_name)
+    # Map trees to their unique names to avoid duplicates
+    unique_tree_map = {}
+    for tree in valid_trees:
+        if tree.plant_name not in unique_tree_map:
+            unique_tree_map[tree.plant_name] = tree
+
+    # Select up to 4 unique random tree plants
+    sample_size = min(4, len(unique_tree_map))
+    selected_trees = random.sample(list(unique_tree_map.values()), sample_size)
+
+    for random_plant in selected_trees:
+        plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
+        unique_plant_names.add(random_plant.plant_name)
 
     # Extract plant names and image URLs from selected data
     plant_names = [item[0] for item in plants]
@@ -99,22 +106,20 @@ def render_webpage():
 
     # Fetch unique plant names from each table that has county data
     for TableClass in tables:
-        plants = TableClass.query.filter(TableClass.location_counties != '').all()
-        for plant in plants:
+        plants_with_counties = TableClass.query.filter(TableClass.location_counties != '').all()
+        for plant in plants_with_counties:
             plant_options.add(plant.plant_name)
 
     plant_options = sorted(plant_options, key=lambda x: x.split()[0][0].lower())    
 
-    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types = plant_types, source = source, unique_species = unique_species, plant_options=plant_options, current_route='render_webpage')
+    return render_template('index.html', plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source=source, unique_species=unique_species, plant_options=plant_options, current_route='render_webpage')
 
 @app.route('/plantInfo/')
 def render_plant_info():
-    # You can add any necessary data processing here
     return render_template('plantInfo.html')
 
 @app.route('/cropData')
 def render_crop_data():
-    # You can add any necessary data processing here
     return render_template('cropData.html')
 
 @app.route('/get_plant_name_list')
@@ -133,18 +138,24 @@ def get_plant_name_list():
     randomIndex = request.args.get('randomIndex')
     previousPlantName = request.args.get('previousPlantName')
 
-    # The number of unique plants to retrieve from each table (to prevent to duplicates)
+    # The number of unique plants to retrieve from each table (to prevent duplicates)
     plants_per_table = 4   
     unique_plant_names = set()            
     
-    def  get_quiz_choices(query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter='None'):
+    # Helper function modified to accept the model class rather than query object
+    def get_quiz_choices(model_class, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=None):
+        # Always filter out plants that do not have a valid image URL
+        query = model_class.query.filter(
+            model_class.image_url != '',
+            model_class.image_url.is_not(None)
+        )
         
+        if extra_filter is not None:
+            query = query.filter(extra_filter)
+
         for plantName in range(plants_per_table):
             # Execute the query to retrieve a random plant
-            if extra_filter != 'None':
-                random_plant = query.filter(extra_filter).order_by(db.func.random()).first()
-            else:
-                random_plant = query.order_by(db.func.random()).first()
+            random_plant = query.order_by(db.func.random()).first()
 
             # Check if the plant name is unique and not the same as the previous plant
             if random_plant and random_plant.plant_name not in unique_plant_names and random_plant.plant_name not in previousPlantName:
@@ -157,31 +168,32 @@ def get_plant_name_list():
     
     
     if switchState_trees == 'true':
-         get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
+         get_quiz_choices(Trees, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
 
     if switchState_leaves == 'true':
-         get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'leaf'))    
+         get_quiz_choices(Trees, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'leaf'))    
     
     if switchState_barks == 'true':
-         get_quiz_choices(Trees.query, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'bark'))
+         get_quiz_choices(Trees, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'bark'))
 
     if switchState_wildflowers == 'true':
-         get_quiz_choices(Flowers.query, unique_plant_names, plants_per_table, plants, previousPlantName)
+         get_quiz_choices(Flowers, unique_plant_names, plants_per_table, plants, previousPlantName)
 
     if switchState_vines == 'true':
-         get_quiz_choices(Vines.query, unique_plant_names, plants_per_table, plants, previousPlantName)
+         get_quiz_choices(Vines, unique_plant_names, plants_per_table, plants, previousPlantName)
 
     if switchState_cacti == 'true':
-         get_quiz_choices(Cacti.query, unique_plant_names, plants_per_table, plants, previousPlantName)                
+         get_quiz_choices(Cacti, unique_plant_names, plants_per_table, plants, previousPlantName)                
 
     if switchState_grasses == 'true':
-         get_quiz_choices(Grasses.query, unique_plant_names, plants_per_table, plants, previousPlantName)           
+         get_quiz_choices(Grasses, unique_plant_names, plants_per_table, plants, previousPlantName)           
 
     if switchState_aquaticplants == 'true':
-         get_quiz_choices(Aquatic.query, unique_plant_names, plants_per_table, plants, previousPlantName)                                           
+         get_quiz_choices(Aquatic, unique_plant_names, plants_per_table, plants, previousPlantName)                                           
 
-    # Selects 4 random plant choices for the quiz
-    plants = random.sample(plants, 4)    
+    # Selects up to 4 random plant choices for the quiz (safeguarded against population sizes < 4)
+    sample_size = min(4, len(plants))
+    plants = random.sample(plants, sample_size)    
 
     plant_names = [item[0] for item in plants]
     plant_image_url = [item[1] for item in plants]
@@ -189,7 +201,7 @@ def get_plant_name_list():
     plant_types = [item[3] for item in plants]
     source = [item[4] for item in plants]
 
-    return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source = source, randomIndex = randomIndex)
+    return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source=source, randomIndex=randomIndex)
 
 @app.route('/get_county_names')
 def get_county_names():
@@ -197,7 +209,7 @@ def get_county_names():
     selected_plant = [selected_plant]
     countyNames = []
 
-    # Checks each plant class for the selected plant that also county data, extracts both
+    # Checks each plant class for the selected plant that also has county data, extracts both
     for table in tables:
         plants_with_counties = db.session.query(table).filter(
             table.location_counties != None, 
