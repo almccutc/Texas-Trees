@@ -65,6 +65,27 @@ class Aquatic(BasePlant):
     __tablename__ = 'aquatic_plants'  
 
 tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]       
+
+
+def get_valid_image_filters(model_class):
+    """
+    Returns a list of robust SQLAlchemy filter criteria to ensure the image_url
+    is a real, non-empty, and non-placeholder URL or file path.
+    
+    Filters out:
+      - SQL NULL values
+      - Empty strings ("")
+      - Whitespace-only strings ("   ")
+      - Case-insensitive literal words like 'none', 'null', 'nan', 'n/a', 'undefined', 'placeholder'
+      - Strings missing a dot "." (all image files require extension e.g. .jpg, .png, .webp)
+    """
+    return [
+        model_class.image_url.is_not(None),
+        model_class.image_url != '',
+        func.trim(model_class.image_url) != '',
+        not_(func.lower(func.trim(model_class.image_url)).in_(['none', 'null', 'nan', 'n/a', 'undefined', 'placeholder'])),
+        model_class.image_url.like('%.%')  # Guarantees a file extension or a domain exists
+    ]
         
 
 @app.route('/')
@@ -84,13 +105,11 @@ def render_webpage():
             # For Trees, we avoid showing 'bark' on the home page for general visual consistency
             query_results = table.query.filter(
                 not_(table.image_type == 'bark'),
-                table.image_url != '',
-                table.image_url.is_not(None)
+                *get_valid_image_filters(table)
             ).all()
         else:
             query_results = table.query.filter(
-                table.image_url != '',
-                table.image_url.is_not(None)
+                *get_valid_image_filters(table)
             ).all()
 
         for plant in query_results:
@@ -201,9 +220,8 @@ def get_plant_name_list():
     random.shuffle(categories_shuffled)
     for model_class, extra_filter in categories_shuffled:
         query = model_class.query.filter(
-            model_class.image_url != '',
-            model_class.image_url.is_not(None),
-            func.lower(model_class.plant_name) != func.lower(prev_name)
+            func.lower(model_class.plant_name) != func.lower(prev_name),
+            *get_valid_image_filters(model_class)
         )
         if extra_filter is not None:
             query = query.filter(extra_filter)
@@ -216,8 +234,7 @@ def get_plant_name_list():
     if not correct_plant:
         for table in tables:
             correct_plant = table.query.filter(
-                table.image_url != '',
-                table.image_url.is_not(None)
+                *get_valid_image_filters(table)
             ).order_by(db.func.random()).first()
             if correct_plant:
                 break
