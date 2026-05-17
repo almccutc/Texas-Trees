@@ -1,0 +1,3 @@
+texastreequiz.com, www.texastreequiz.com {
+    reverse_proxy texas-tree-quiz:5000
+}

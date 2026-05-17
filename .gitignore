@@ -4,3 +4,4 @@ venv
 ttq
 ttq.pub
 passwords
+.env
