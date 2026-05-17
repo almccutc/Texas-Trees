@@ -38,24 +38,24 @@ def seed_database():
             Trees("Bald Cypress", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/baldcypressbark.jpg", "Taxodium distichum", "Tree", "Photo 112013391, (c) Laura Clark", ""),
 
             # 6. Honey Mesquite
-            Trees("Honey Mesquite", "close_fullsize", "", "Prosopis glandulosa", "Tree", "", ""),
-            Trees("Honey Mesquite", "leaf", "", "Prosopis glandulosa", "Tree", "", ""),
-            Trees("Honey Mesquite", "bark", "", "Prosopis glandulosa", "Tree", "", ""),
+            Trees("Honey Mesquite", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/HoneyMesquitefull.jpg", "Prosopis glandulosa", "Tree", "Photo 101224092, (c) CK2AZ", ""),
+            Trees("Honey Mesquite", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/HoneyMesquiteleaf.jpg", "Prosopis glandulosa", "Tree", "Photo 302039208, (c) Catherine C. Galley", ""),
+            Trees("Honey Mesquite", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/HoneyMesquitebark.jpg", "Prosopis glandulosa", "Tree", "Photo 347954968, (c) John Rosford", ""),
 
             # 7. Cedar Elm
             Trees("Cedar Elm", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_71342713-min.jpeg", "Ulmus crassifolia", "Tree", "", ""),
             Trees("Cedar Elm", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/cedar_elm_leaf1.jpeg", "Ulmus crassifolia", "Tree", "", ""),
-            Trees("Cedar Elm", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", "Ulmus crassifolia", "Tree", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", ""),
+            Trees("Cedar Elm", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", "Ulmus crassifolia", "Tree", "", ""),
 
             # 8. Southern Magnolia
             Trees("Southern Magnolia", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/southern_magnolia_246625979-min.jpeg", "Magnolia grandiflora", "Tree", "", ""),
-            Trees("Southern Magnolia", "leaf", "", "Magnolia grandiflora", "Tree", "", ""),
-            Trees("Southern Magnolia", "bark", "", "Magnolia grandiflora", "Tree", "", ""),
+            Trees("Southern Magnolia", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/SouthernMagnolialeaf.jpg", "Magnolia grandiflora", "Tree", "Photo 551360474, (c) Lex Joy", ""),
+            Trees("Southern Magnolia", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/SouthernMagnoliabark.jpg", "Magnolia grandiflora", "Tree", "Photo 59481073, (c) Cody Stricker", ""),
 
             # 9. Loblolly Pine
             Trees("Loblolly Pine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/loblolly_pine_168861849-min.jpeg", "Pinus taeda", "Tree", "", ""),
-            Trees("Loblolly Pine", "leaf", "", "Pinus taeda", "Tree", "", ""),
-            Trees("Loblolly Pine", "bark", "", "Pinus taeda", "Tree", "", ""),
+            Trees("Loblolly Pine", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/LoblollyPineLeaf.jpg", "Pinus taeda", "Tree", "Photo 402210467, (c) LBuffum", ""),
+            Trees("Loblolly Pine", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/LoblollyPineBark.jpg", "Pinus taeda", "Tree", "Photo 109679762, (c) Sophia K", ""),
 
             # 10. Texas Redbud
             Trees("Texas Redbud", "close_fullsize", "", "Cercis canadensis var. texensis", "Tree", "", ""),
