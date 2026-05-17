@@ -28,7 +28,7 @@ def seed_database():
             Trees("Pecan", "bark", "", "Carya illinoinensis", "Tree", "", ""),
 
             # 4. Texas Mountain Laurel
-            Trees("Texas Mountain Laurel", "close_fullsize", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
+            Trees("Texas Mountain Laurel", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_mountain_laurel_266042203-min.jpeg", "Dermatophyllum secundiflorum", "Tree", "", ""),
             Trees("Texas Mountain Laurel", "leaf", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
             Trees("Texas Mountain Laurel", "bark", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
 
@@ -48,7 +48,7 @@ def seed_database():
             Trees("Cedar Elm", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", "Ulmus crassifolia", "Tree", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", ""),
 
             # 8. Southern Magnolia
-            Trees("Southern Magnolia", "close_fullsize", "", "Magnolia grandiflora", "Tree", "", ""),
+            Trees("Southern Magnolia", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/southern_magnolia_246625979-min.jpeg", "Magnolia grandiflora", "Tree", "", ""),
             Trees("Southern Magnolia", "leaf", "", "Magnolia grandiflora", "Tree", "", ""),
             Trees("Southern Magnolia", "bark", "", "Magnolia grandiflora", "Tree", "", ""),
 
@@ -98,12 +98,12 @@ def seed_database():
             Trees("Retama", "bark", "", "Parkinsonia aculeata", "Tree", "", ""),
 
             # 18. Texas Ash
-            Trees("Texas Ash", "close_fullsize", "", "Fraxinus texensis", "Tree", "", ""),
+            Trees("Texas Ash", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_ash_947070-min.jpeg", "Fraxinus texensis", "Tree", "", ""),
             Trees("Texas Ash", "leaf", "", "Fraxinus texensis", "Tree", "", ""),
             Trees("Texas Ash", "bark", "", "Fraxinus texensis", "Tree", "", ""),
 
             # 19. Yaupon Holly
-            Trees("Yaupon Holly", "close_fullsize", "", "Ilex vomitoria", "Tree", "", ""),
+            Trees("Yaupon Holly", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/yaupon_holly_5907614-min.jpeg", "Ilex vomitoria", "Tree", "", ""),
             Trees("Yaupon Holly", "leaf", "", "Ilex vomitoria", "Tree", "", ""),
             Trees("Yaupon Holly", "bark", "", "Ilex vomitoria", "Tree", "", ""),
 
@@ -133,7 +133,7 @@ def seed_database():
             Trees("Sugarberry", "bark", "", "Celtis laevigata", "Tree", "", ""),
 
             # 25. Texas Persimmon
-            Trees("Texas Persimmon", "close_fullsize", "", "Diospyros texana", "Tree", "", ""),
+            Trees("Texas Persimmon", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Texas_persimmon_full_1.jpeg", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "leaf", "", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas_persimmon_bark_1.jpeg", "Diospyros texana", "Tree", "", ""),
 
@@ -173,7 +173,7 @@ def seed_database():
             Trees("Texas Pistache", "bark", "", "Pistacia texana", "Tree", "", ""),
 
             # 33. Texas Ebony
-            Trees("Texas Ebony", "close_fullsize", "", "Ebenopsis ebano", "Tree", "", ""),
+            Trees("Texas Ebony", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_ebony_2279225-min.jpeg", "Ebenopsis ebano", "Tree", "", ""),
             Trees("Texas Ebony", "leaf", "", "Ebenopsis ebano", "Tree", "", ""),
             Trees("Texas Ebony", "bark", "", "Ebenopsis ebano", "Tree", "", ""),
 
@@ -193,12 +193,12 @@ def seed_database():
             Trees("Goldenball Leadtree", "bark", "", "Leucaena retusa", "Tree", "", ""),
 
             # 37. Texas Madrone
-            Trees("Texas Madrone", "close_fullsize", "", "Arbutus xalapensis", "Tree", "", ""),
+            Trees("Texas Madrone", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_madrone_347099237-min.jpeg", "Arbutus xalapensis", "Tree", "", ""),
             Trees("Texas Madrone", "leaf", "", "Arbutus xalapensis", "Tree", "", ""),
             Trees("Texas Madrone", "bark", "", "Arbutus xalapensis", "Tree", "", ""),
 
             # 38. Chisos Red Oak
-            Trees("Chisos Red Oak", "close_fullsize", "", "Quercus gravesii", "Tree", "", ""),
+            Trees("Chisos Red Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_red_oak_85298162-min.jpeg", "Quercus gravesii", "Tree", "", ""),
             Trees("Chisos Red Oak", "leaf", "", "Quercus gravesii", "Tree", "", ""),
             Trees("Chisos Red Oak", "bark", "", "Quercus gravesii", "Tree", "", ""),
 
@@ -253,7 +253,7 @@ def seed_database():
             Trees("Overcup Oak", "bark", "", "Quercus lyrata", "Tree", "", ""),
 
             # 49. Water Oak
-            Trees("Water Oak", "close_fullsize", "", "Quercus nigra", "Tree", "", ""),
+            Trees("Water Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/water_oak_11503888-min.jpeg", "Quercus nigra", "Tree", "", ""),
             Trees("Water Oak", "leaf", "", "Quercus nigra", "Tree", "", ""),
             Trees("Water Oak", "bark", "", "Quercus nigra", "Tree", "", ""),
 
@@ -298,7 +298,7 @@ def seed_database():
             Trees("White Ash", "bark", "", "Fraxinus americana", "Tree", "", ""),
 
             # 58. Texas Mulberry
-            Trees("Texas Mulberry", "close_fullsize", "", "Morus microphylla", "Tree", "", ""),
+            Trees("Texas Mulberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/red_mulberry_224125363-min.jpeg", "Morus microphylla", "Tree", "", ""),
             Trees("Texas Mulberry", "leaf", "", "Morus microphylla", "Tree", "", ""),
             Trees("Texas Mulberry", "bark", "", "Morus microphylla", "Tree", "", ""),
 

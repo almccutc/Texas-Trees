@@ -69,9 +69,6 @@ tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]
 
 @app.route('/')
 def render_webpage():
-    plants = []
-    unique_plant_names = set()
-
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
 
     # Retrieve all unique trees with valid URLs (not including bark) to sample from safely
@@ -87,20 +84,51 @@ def render_webpage():
         if tree.plant_name not in unique_tree_map:
             unique_tree_map[tree.plant_name] = tree
 
-    # Select up to 4 unique random tree plants
-    sample_size = min(4, len(unique_tree_map))
-    selected_trees = random.sample(list(unique_tree_map.values()), sample_size)
+    selected_trees = list(unique_tree_map.values())
+    random.shuffle(selected_trees)
 
-    for random_plant in selected_trees:
-        plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
-        unique_plant_names.add(random_plant.plant_name)
+    # We need exactly 4 unique plant options to populate the landing page safely
+    plants_for_home = []
+    seen_names = set()
+
+    # Add up to 4 unique trees that have valid image URLs
+    for tree in selected_trees:
+        if len(plants_for_home) >= 4:
+            break
+        plants_for_home.append(tree)
+        seen_names.add(tree.plant_name.lower())
+
+    # Fallback: If we have fewer than 4 trees with images, fill the remaining slots with any tree names
+    if len(plants_for_home) < 4:
+        all_trees = Trees.query.all()
+        random.shuffle(all_trees)
+        for tree in all_trees:
+            if len(plants_for_home) >= 4:
+                break
+            if tree.plant_name.lower() not in seen_names:
+                plants_for_home.append(tree)
+                seen_names.add(tree.plant_name.lower())
+
+    # Super Fallback: If we still don't have 4, pull from other plant categories
+    if len(plants_for_home) < 4:
+        for table in tables:
+            if len(plants_for_home) >= 4:
+                break
+            all_plants = table.query.all()
+            random.shuffle(all_plants)
+            for plant in all_plants:
+                if len(plants_for_home) >= 4:
+                    break
+                if plant.plant_name.lower() not in seen_names:
+                    plants_for_home.append(plant)
+                    seen_names.add(plant.plant_name.lower())
 
     # Extract plant names and image URLs from selected data
-    plant_names = [item[0] for item in plants]
-    plant_image_url = [item[1] for item in plants]
-    scientific_names = [item[2] for item in plants]
-    plant_types = [item[3] for item in plants]
-    source = [item[4] for item in plants]
+    plant_names = [item.plant_name for item in plants_for_home]
+    plant_image_url = [item.image_url for item in plants_for_home]
+    scientific_names = [item.scientific_name for item in plants_for_home]
+    plant_types = [item.plant_type for item in plants_for_home]
+    source = [item.source for item in plants_for_home]
 
     plant_options = set()
 
@@ -124,8 +152,6 @@ def render_crop_data():
 
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
-    plants = []
-   
     switchState_trees = request.args.get('switchState_trees')
     switchState_leaves = request.args.get('switchState_leaves')
     switchState_barks = request.args.get('switchState_barks')
@@ -133,75 +159,131 @@ def get_plant_name_list():
     switchState_grasses = request.args.get('switchState_grasses')
     switchState_aquaticplants = request.args.get('switchState_aquaticplants')
     switchState_vines = request.args.get('switchState_vines')
-    switchState_herbs = request.args.get('switchState_herbs')
     switchState_cacti = request.args.get('switchState_cacti')
     randomIndex = request.args.get('randomIndex')
     previousPlantName = request.args.get('previousPlantName')
 
-    # The number of unique plants to retrieve from each table (to prevent duplicates)
-    plants_per_table = 4   
-    unique_plant_names = set()            
-    
-    # Helper function modified to accept the model class rather than query object
-    def get_quiz_choices(model_class, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=None):
-        # Always filter out plants that do not have a valid image URL
+    # Parse and clamp target index to range [0, 3] safely
+    try:
+        target_idx = int(randomIndex)
+        if target_idx < 0 or target_idx > 3:
+            target_idx = 0
+    except (TypeError, ValueError):
+        target_idx = 0
+
+    # Collect active category configurations based on the switch states
+    active_categories = []
+    if switchState_trees == 'true':
+        active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
+    if switchState_leaves == 'true':
+        active_categories.append((Trees, Trees.image_type == 'leaf'))    
+    if switchState_barks == 'true':
+        active_categories.append((Trees, Trees.image_type == 'bark'))
+    if switchState_wildflowers == 'true':
+        active_categories.append((Flowers, None))
+    if switchState_vines == 'true':
+        active_categories.append((Vines, None))
+    if switchState_cacti == 'true':
+        active_categories.append((Cacti, None))                
+    if switchState_grasses == 'true':
+        active_categories.append((Grasses, None))           
+    if switchState_aquaticplants == 'true':
+        active_categories.append((Aquatic, None))
+
+    # Safely default to Trees if no switches are turned on
+    if not active_categories:
+        active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
+
+    # 1. FIND THE CORRECT PLANT (Must have a valid image URL)
+    correct_plant = None
+    prev_name = previousPlantName.strip() if previousPlantName else ""
+
+    # Try active categories first
+    categories_shuffled = list(active_categories)
+    random.shuffle(categories_shuffled)
+    for model_class, extra_filter in categories_shuffled:
         query = model_class.query.filter(
             model_class.image_url != '',
-            model_class.image_url.is_not(None)
+            model_class.image_url.is_not(None),
+            func.lower(model_class.plant_name) != func.lower(prev_name)
         )
-        
         if extra_filter is not None:
             query = query.filter(extra_filter)
+        
+        correct_plant = query.order_by(db.func.random()).first()
+        if correct_plant:
+            break
 
-        for plantName in range(plants_per_table):
-            # Execute the query to retrieve a random plant
-            random_plant = query.order_by(db.func.random()).first()
+    # If no matching plant with a valid image is found, search any plant category with an image
+    if not correct_plant:
+        for table in tables:
+            correct_plant = table.query.filter(
+                table.image_url != '',
+                table.image_url.is_not(None)
+            ).order_by(db.func.random()).first()
+            if correct_plant:
+                break
 
-            # Check if the plant name is unique and not the same as the previous plant
-            if random_plant and random_plant.plant_name not in unique_plant_names and random_plant.plant_name not in previousPlantName:
-                # Append the unique plant to the list
-                plants.append((random_plant.plant_name, random_plant.image_url, random_plant.scientific_name, random_plant.plant_type, random_plant.source))
-                # Add the plant name to the set of unique names
-                unique_plant_names.add(random_plant.plant_name)
+    # 2. SELECT 3 UNIQUE DECOY PLANTS (Do not require images, just unique names)
+    decoy_plants = []
+    seen_names = {correct_plant.plant_name.lower()} if correct_plant else set()
 
-        return plants, unique_plant_names
-    
-    
-    if switchState_trees == 'true':
-         get_quiz_choices(Trees, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'close_fullsize'))
+    # Try to extract decoys from active categories
+    categories_shuffled = list(active_categories)
+    random.shuffle(categories_shuffled)
+    for model_class, extra_filter in categories_shuffled:
+        if len(decoy_plants) >= 3:
+            break
+        query = model_class.query
+        if extra_filter is not None:
+            query = query.filter(extra_filter)
+        
+        candidates = query.order_by(db.func.random()).limit(15).all()
+        for c in candidates:
+            if c.plant_name.lower() not in seen_names:
+                decoy_plants.append(c)
+                seen_names.add(c.plant_name.lower())
+                if len(decoy_plants) >= 3:
+                    break
 
-    if switchState_leaves == 'true':
-         get_quiz_choices(Trees, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'leaf'))    
-    
-    if switchState_barks == 'true':
-         get_quiz_choices(Trees, unique_plant_names, plants_per_table, plants, previousPlantName, extra_filter=(Trees.image_type == 'bark'))
+    # If we need more decoys, search across all tables in the database
+    if len(decoy_plants) < 3:
+        for table in tables:
+            if len(decoy_plants) >= 3:
+                break
+            candidates = table.query.order_by(db.func.random()).limit(15).all()
+            for c in candidates:
+                if c.plant_name.lower() not in seen_names:
+                    decoy_plants.append(c)
+                    seen_names.add(c.plant_name.lower())
+                    if len(decoy_plants) >= 3:
+                        break
 
-    if switchState_wildflowers == 'true':
-         get_quiz_choices(Flowers, unique_plant_names, plants_per_table, plants, previousPlantName)
+    # 3. CONSTRUCT THE GUARANTEED 4-ELEMENT LIST
+    final_plants = [None] * 4
+    final_plants[target_idx] = correct_plant
 
-    if switchState_vines == 'true':
-         get_quiz_choices(Vines, unique_plant_names, plants_per_table, plants, previousPlantName)
+    decoy_idx = 0
+    for i in range(4):
+        if i != target_idx and decoy_idx < len(decoy_plants):
+            final_plants[i] = decoy_plants[decoy_idx]
+            decoy_idx += 1
 
-    if switchState_cacti == 'true':
-         get_quiz_choices(Cacti, unique_plant_names, plants_per_table, plants, previousPlantName)                
+    # Extract details safely, guarding against any missing elements
+    plant_names = [item.plant_name if item else "Unknown" for item in final_plants]
+    plant_image_url = [item.image_url if item else "" for item in final_plants]
+    scientific_names = [item.scientific_name if item else "" for item in final_plants]
+    plant_types = [item.plant_type if item else "" for item in final_plants]
+    source = [item.source if item else "" for item in final_plants]
 
-    if switchState_grasses == 'true':
-         get_quiz_choices(Grasses, unique_plant_names, plants_per_table, plants, previousPlantName)           
-
-    if switchState_aquaticplants == 'true':
-         get_quiz_choices(Aquatic, unique_plant_names, plants_per_table, plants, previousPlantName)                                           
-
-    # Selects up to 4 random plant choices for the quiz (safeguarded against population sizes < 4)
-    sample_size = min(4, len(plants))
-    plants = random.sample(plants, sample_size)    
-
-    plant_names = [item[0] for item in plants]
-    plant_image_url = [item[1] for item in plants]
-    scientific_names = [item[2] for item in plants]
-    plant_types = [item[3] for item in plants]
-    source = [item[4] for item in plants]
-
-    return jsonify(plant_names=plant_names, plant_image_url=plant_image_url, scientific_names=scientific_names, plant_types=plant_types, source=source, randomIndex=randomIndex)
+    return jsonify(
+        plant_names=plant_names, 
+        plant_image_url=plant_image_url, 
+        scientific_names=scientific_names, 
+        plant_types=plant_types, 
+        source=source, 
+        randomIndex=randomIndex
+    )
 
 @app.route('/get_county_names')
 def get_county_names():
