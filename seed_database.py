@@ -14,18 +14,18 @@ def seed_database():
         trees = [
             # 1. Live Oak
             Trees("Live Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/live_oak_335892366-min.jpeg", "Quercus virginiana", "Tree", "", ""),
-            Trees("Live Oak", "leaf", "", "Quercus virginiana", "Tree", "", ""),
-            Trees("Live Oak", "bark", "", "Quercus virginiana", "Tree", "", ""),
+            Trees("Live Oak", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/live_oak.jpeg", "Quercus virginiana", "Tree", "iNaturalist Photo 40943585, (c) Rich Sommer", ""),
+            Trees("Live Oak", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/liveoakbark.jpg", "Quercus virginiana", "Tree", "iNaturalist Photo 40943585, (c) CK2AZ", ""),
 
             # 2. Box Elder
             Trees("Box Elder", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/box_elder_full_1.jpeg", "Acer negundo", "Tree", "", ""),
-            Trees("Box Elder", "leaf", "", "Acer negundo", "Tree", "", ""),
-            Trees("Box Elder", "bark", "", "Acer negundo", "Tree", "", ""),
+            Trees("Box Elder", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/boxelderleaf.jpeg", "Acer negundo", "Tree", "iNaturalist Photo 3748489, (c) Sam Kieschnick", ""),
+            Trees("Box Elder", "bark", "", "Acer negundo", "Tree", "iNaturalist Photo 479095624, (c) ashleyrsteel", ""),
             
             # 3. Pecan
             Trees("Pecan", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/pecan_17094154-min.jpeg", "Carya illinoinensis", "Tree", "", ""),
-            Trees("Pecan", "leaf", "", "Carya illinoinensis", "Tree", "", ""),
-            Trees("Pecan", "bark", "", "Carya illinoinensis", "Tree", "", ""),
+            Trees("Pecan", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/pecanleaf.jpeg", "Carya illinoinensis", "Tree", "Photo 374616741, (c) Michelle W. ", ""),
+            Trees("Pecan", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/pecanbark.jpeg", "Carya illinoinensis", "Tree", "Photo 374616876, (c) Michelle W.", ""),
 
             # 4. Texas Mountain Laurel
             Trees("Texas Mountain Laurel", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_mountain_laurel_266042203-min.jpeg", "Dermatophyllum secundiflorum", "Tree", "", ""),
@@ -324,7 +324,7 @@ def seed_database():
                 if exists.image_url != tree.image_url:
                     exists.image_url = tree.image_url
                     print(f"Updated URL for {tree.plant_name} ({tree.image_type})")
-                    
+
         # --- FLOWERS (Top 15) ---
         flowers = [
             Flowers("Texas Bluebonnet", "close_fullsize", "", "Lupinus texensis", "Flower", "", ""),
