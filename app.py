@@ -71,47 +71,43 @@ tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]
 def render_webpage():
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
 
-    # Retrieve all unique trees with valid URLs (not including bark) to sample from safely
-    valid_trees = Trees.query.filter(
-        not_(Trees.image_type == 'bark'),
-        Trees.image_url != '',
-        Trees.image_url.is_not(None)
-    ).all()
-
-    # Map trees to their unique names to avoid duplicates
-    unique_tree_map = {}
-    for tree in valid_trees:
-        if tree.plant_name not in unique_tree_map:
-            unique_tree_map[tree.plant_name] = tree
-
-    selected_trees = list(unique_tree_map.values())
-    random.shuffle(selected_trees)
-
-    # We need exactly 4 unique plant options to populate the landing page safely
-    plants_for_home = []
+    # Accumulate all plants across all tables that have valid image URLs to show on the landing page
+    valid_plants = []
     seen_names = set()
 
-    # Add up to 4 unique trees that have valid image URLs
-    for tree in selected_trees:
-        if len(plants_for_home) >= 4:
-            break
-        plants_for_home.append(tree)
-        seen_names.add(tree.plant_name.lower())
+    # Shuffle tables to ensure a fun, dynamic layout on reload
+    shuffled_tables = list(tables)
+    random.shuffle(shuffled_tables)
 
-    # Fallback: If we have fewer than 4 trees with images, fill the remaining slots with any tree names
-    if len(plants_for_home) < 4:
-        all_trees = Trees.query.all()
-        random.shuffle(all_trees)
-        for tree in all_trees:
-            if len(plants_for_home) >= 4:
-                break
-            if tree.plant_name.lower() not in seen_names:
-                plants_for_home.append(tree)
-                seen_names.add(tree.plant_name.lower())
+    for table in shuffled_tables:
+        if table == Trees:
+            # For Trees, we avoid showing 'bark' on the home page for general visual consistency
+            query_results = table.query.filter(
+                not_(table.image_type == 'bark'),
+                table.image_url != '',
+                table.image_url.is_not(None)
+            ).all()
+        else:
+            query_results = table.query.filter(
+                table.image_url != '',
+                table.image_url.is_not(None)
+            ).all()
 
-    # Super Fallback: If we still don't have 4, pull from other plant categories
+        for plant in query_results:
+            name_lower = plant.plant_name.lower()
+            if name_lower not in seen_names:
+                valid_plants.append(plant)
+                seen_names.add(name_lower)
+
+    # Shuffle the pool of valid image-bearing plants
+    random.shuffle(valid_plants)
+
+    # Take the top 4 unique plants with valid images
+    plants_for_home = valid_plants[:4]
+
+    # Extreme fallback: if we have fewer than 4 plants with images (unlikely), fill with any plants
     if len(plants_for_home) < 4:
-        for table in tables:
+        for table in shuffled_tables:
             if len(plants_for_home) >= 4:
                 break
             all_plants = table.query.all()
@@ -119,16 +115,17 @@ def render_webpage():
             for plant in all_plants:
                 if len(plants_for_home) >= 4:
                     break
-                if plant.plant_name.lower() not in seen_names:
+                name_lower = plant.plant_name.lower()
+                if name_lower not in seen_names:
                     plants_for_home.append(plant)
-                    seen_names.add(plant.plant_name.lower())
+                    seen_names.add(name_lower)
 
-    # Extract plant names and image URLs from selected data
-    plant_names = [item.plant_name for item in plants_for_home]
-    plant_image_url = [item.image_url for item in plants_for_home]
-    scientific_names = [item.scientific_name for item in plants_for_home]
-    plant_types = [item.plant_type for item in plants_for_home]
-    source = [item.source for item in plants_for_home]
+    # Extract details safely
+    plant_names = [item.plant_name if item else "Unknown" for item in plants_for_home]
+    plant_image_url = [item.image_url if item else "" for item in plants_for_home]
+    scientific_names = [item.scientific_name if item else "" for item in plants_for_home]
+    plant_types = [item.plant_type if item else "" for item in plants_for_home]
+    source = [item.source if item else "" for item in plants_for_home]
 
     plant_options = set()
 
@@ -163,13 +160,14 @@ def get_plant_name_list():
     randomIndex = request.args.get('randomIndex')
     previousPlantName = request.args.get('previousPlantName')
 
-    # Parse and clamp target index to range [0, 3] safely
+    # Parse target index. If it is undefined, empty, or out of bounds,
+    # we generate a random index (0-3) on the backend so it shuffles naturally!
     try:
         target_idx = int(randomIndex)
         if target_idx < 0 or target_idx > 3:
-            target_idx = 0
+            target_idx = random.randint(0, 3)
     except (TypeError, ValueError):
-        target_idx = 0
+        target_idx = random.randint(0, 3)
 
     # Collect active category configurations based on the switch states
     active_categories = []
@@ -214,7 +212,7 @@ def get_plant_name_list():
         if correct_plant:
             break
 
-    # If no matching plant with a valid image is found, search any plant category with an image
+    # Fallback: if no active category has a valid image, pull any random plant with an image
     if not correct_plant:
         for table in tables:
             correct_plant = table.query.filter(
@@ -224,11 +222,11 @@ def get_plant_name_list():
             if correct_plant:
                 break
 
-    # 2. SELECT 3 UNIQUE DECOY PLANTS (Do not require images, just unique names)
+    # 2. SELECT 3 UNIQUE DECOY PLANTS (Decoys do not require images, just unique names)
     decoy_plants = []
     seen_names = {correct_plant.plant_name.lower()} if correct_plant else set()
 
-    # Try to extract decoys from active categories
+    # Try to extract decoys from active categories to keep options context-relevant
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
     for model_class, extra_filter in categories_shuffled:
@@ -282,7 +280,7 @@ def get_plant_name_list():
         scientific_names=scientific_names, 
         plant_types=plant_types, 
         source=source, 
-        randomIndex=randomIndex
+        randomIndex=target_idx  # Return target_idx back to frontend so it matches the correct image!
     )
 
 @app.route('/get_county_names')
