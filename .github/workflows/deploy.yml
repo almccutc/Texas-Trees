@@ -20,3 +20,4 @@ jobs:
             cd ~/Texas-Trees
             git pull origin main
             docker compose up -d --build
+            docker exec -t texas-tree-quiz python seed_database.py
