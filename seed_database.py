@@ -29,13 +29,13 @@ def seed_database():
 
             # 4. Texas Mountain Laurel
             Trees("Texas Mountain Laurel", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_mountain_laurel_266042203-min.jpeg", "Dermatophyllum secundiflorum", "Tree", "", ""),
-            Trees("Texas Mountain Laurel", "leaf", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
-            Trees("Texas Mountain Laurel", "bark", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
+            Trees("Texas Mountain Laurel", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/texasmountainlaurelleaf.jpg", "Dermatophyllum secundiflorum", "Tree", "Photo 353834085, (c) Nate Sabo", ""),
+            Trees("Texas Mountain Laurel", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/texasmountainlaurelbark.jpg", "Dermatophyllum secundiflorum", "Tree", "Photo 253145635, (c) Chet Burrier", ""),
 
             # 5. Bald Cypress
             Trees("Bald Cypress", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/bald_cypress_fullsize_1.jpeg", "Taxodium distichum", "Tree", "", ""),
-            Trees("Bald Cypress", "leaf", "", "Taxodium distichum", "Tree", "", ""),
-            Trees("Bald Cypress", "bark", "", "Taxodium distichum", "Tree", "", ""),
+            Trees("Bald Cypress", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/baldcypressleaf.jpeg", "Taxodium distichum", "Tree", "Photo 2795370, (c) Annika Lindqvist", ""),
+            Trees("Bald Cypress", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/baldcypressbark.jpg", "Taxodium distichum", "Tree", "Photo 112013391, (c) Laura Clark", ""),
 
             # 6. Honey Mesquite
             Trees("Honey Mesquite", "close_fullsize", "", "Prosopis glandulosa", "Tree", "", ""),
