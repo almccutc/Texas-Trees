@@ -13,12 +13,17 @@ def seed_database():
         # --- TREES (Top 30) ---
         trees = [
             # Live Oak
-            Trees("Live Oak", "close_fullsize", "", "Quercus virginiana", "Tree", "", ""),
+            Trees("Live Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/live_oak_335892366-min.jpeg", "Quercus virginiana", "Tree", "", ""),
             Trees("Live Oak", "leaf", "", "Quercus virginiana", "Tree", "", ""),
             Trees("Live Oak", "bark", "", "Quercus virginiana", "Tree", "", ""),
+
+            # Box Elder
+            Trees("Box Elder", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/box_elder_full_1.jpeg", "Acer negundo", "Tree", "", ""),
+            Trees("Box Elder", "leaf", "", "Acer negundo", "Tree", "", ""),
+            Trees("Box Elder", "bark", "", "Acer negundo", "Tree", "", ""),
             
             # Pecan
-            Trees("Pecan", "close_fullsize", "", "Carya illinoinensis", "Tree", "", ""),
+            Trees("Pecan", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/pecan_17094154-min.jpeg", "Carya illinoinensis", "Tree", "", ""),
             Trees("Pecan", "leaf", "", "Carya illinoinensis", "Tree", "", ""),
             Trees("Pecan", "bark", "", "Carya illinoinensis", "Tree", "", ""),
 
@@ -28,7 +33,7 @@ def seed_database():
             Trees("Texas Mountain Laurel", "bark", "", "Dermatophyllum secundiflorum", "Tree", "", ""),
 
             # Bald Cypress
-            Trees("Bald Cypress", "close_fullsize", "", "Taxodium distichum", "Tree", "", ""),
+            Trees("Bald Cypress", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/bald_cypress_fullsize_1.jpeg", "Taxodium distichum", "Tree", "", ""),
             Trees("Bald Cypress", "leaf", "", "Taxodium distichum", "Tree", "", ""),
             Trees("Bald Cypress", "bark", "", "Taxodium distichum", "Tree", "", ""),
 
@@ -38,9 +43,9 @@ def seed_database():
             Trees("Honey Mesquite", "bark", "", "Prosopis glandulosa", "Tree", "", ""),
 
             # Cedar Elm
-            Trees("Cedar Elm", "close_fullsize", "", "Ulmus crassifolia", "Tree", "", ""),
+            Trees("Cedar Elm", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_71342713-min.jpeg", "Ulmus crassifolia", "Tree", "", ""),
             Trees("Cedar Elm", "leaf", "", "Ulmus crassifolia", "Tree", "", ""),
-            Trees("Cedar Elm", "bark", "", "Ulmus crassifolia", "Tree", "", ""),
+            Trees("Cedar Elm", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", "Ulmus crassifolia", "Tree", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/cedar_elm_bark.jpeg", ""),
 
             # Southern Magnolia
             Trees("Southern Magnolia", "close_fullsize", "", "Magnolia grandiflora", "Tree", "", ""),
@@ -48,7 +53,7 @@ def seed_database():
             Trees("Southern Magnolia", "bark", "", "Magnolia grandiflora", "Tree", "", ""),
 
             # Loblolly Pine
-            Trees("Loblolly Pine", "close_fullsize", "", "Pinus taeda", "Tree", "", ""),
+            Trees("Loblolly Pine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/loblolly_pine_168861849-min.jpeg", "Pinus taeda", "Tree", "", ""),
             Trees("Loblolly Pine", "leaf", "", "Pinus taeda", "Tree", "", ""),
             Trees("Loblolly Pine", "bark", "", "Pinus taeda", "Tree", "", ""),
 
@@ -68,7 +73,7 @@ def seed_database():
             Trees("Ashe Juniper", "bark", "", "Juniperus ashei", "Tree", "", ""),
 
             # Post Oak
-            Trees("Post Oak", "close_fullsize", "", "Quercus stellata", "Tree", "", ""),
+            Trees("Post Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/post_oak_69964216-min.jpeg", "Quercus stellata", "Tree", "", ""),
             Trees("Post Oak", "leaf", "", "Quercus stellata", "Tree", "", ""),
             Trees("Post Oak", "bark", "", "Quercus stellata", "Tree", "", ""),
 
@@ -113,12 +118,12 @@ def seed_database():
             Trees("Eastern Redcedar", "bark", "", "Juniperus virginiana", "Tree", "", ""),
 
             # Mexican Plum
-            Trees("Mexican Plum", "close_fullsize", "", "Prunus mexicana", "Tree", "", ""),
+            Trees("Mexican Plum", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/mexican_plum_44227239-min.jpeg", "Prunus mexicana", "Tree", "", ""),
             Trees("Mexican Plum", "leaf", "", "Prunus mexicana", "Tree", "", ""),
             Trees("Mexican Plum", "bark", "", "Prunus mexicana", "Tree", "", ""),
 
             # Hackberry
-            Trees("Hackberry", "close_fullsize", "", "Celtis occidentalis", "Tree", "", ""),
+            Trees("Hackberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/hackberry_324208578-min.jpeg", "Celtis occidentalis", "Tree", "", ""),
             Trees("Hackberry", "leaf", "", "Celtis occidentalis", "Tree", "", ""),
             Trees("Hackberry", "bark", "", "Celtis occidentalis", "Tree", "", ""),
 
@@ -130,15 +135,15 @@ def seed_database():
             # Texas Persimmon
             Trees("Texas Persimmon", "close_fullsize", "", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "leaf", "", "Diospyros texana", "Tree", "", ""),
-            Trees("Texas Persimmon", "bark", "", "Diospyros texana", "Tree", "", ""),
+            Trees("Texas Persimmon", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas_persimmon_bark_1.jpeg", "Diospyros texana", "Tree", "", ""),
 
             # American Sycamore
-            Trees("American Sycamore", "close_fullsize", "", "Platanus occidentalis", "Tree", "", ""),
+            Trees("American Sycamore", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/american_sycamore_84788584-min.jpeg", "Platanus occidentalis", "Tree", "", ""),
             Trees("American Sycamore", "leaf", "", "Platanus occidentalis", "Tree", "", ""),
             Trees("American Sycamore", "bark", "", "Platanus occidentalis", "Tree", "", ""),
 
             # Eastern Cottonwood
-            Trees("Eastern Cottonwood", "close_fullsize", "", "Populus deltoides", "Tree", "", ""),
+            Trees("Eastern Cottonwood", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cottonwood_68252199-min.jpeg", "Populus deltoides", "Tree", "", ""),
             Trees("Eastern Cottonwood", "leaf", "", "Populus deltoides", "Tree", "", ""),
             Trees("Eastern Cottonwood", "bark", "", "Populus deltoides", "Tree", "", ""),
 
@@ -148,7 +153,7 @@ def seed_database():
             Trees("Black Walnut", "bark", "", "Juglans nigra", "Tree", "", ""),
 
             # Chinquapin Oak
-            Trees("Chinquapin Oak", "close_fullsize", "", "Quercus muehlenbergii", "Tree", "", ""),
+            Trees("Chinquapin Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/chinkapin_oak_165800321-min.jpeg", "Quercus muehlenbergii", "Tree", "", ""),
             Trees("Chinquapin Oak", "leaf", "", "Quercus muehlenbergii", "Tree", "", ""),
             Trees("Chinquapin Oak", "bark", "", "Quercus muehlenbergii", "Tree", "", ""),
 
