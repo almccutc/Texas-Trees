@@ -314,11 +314,17 @@ def seed_database():
         ]
 
         # bouncer loop for trees -- checking both plant_name AND image_type (leaf/bark/close)
+        # Updated bouncer loop for trees -- now updates URLs if they changed!
         for tree in trees:
             exists = Trees.query.filter_by(plant_name=tree.plant_name, image_type=tree.image_type).first()
             if not exists:
                 db.session.add(tree)
-
+            else:
+                # If the tree exists, update its image_url with your new URL
+                if exists.image_url != tree.image_url:
+                    exists.image_url = tree.image_url
+                    print(f"Updated URL for {tree.plant_name} ({tree.image_type})")
+                    
         # --- FLOWERS (Top 15) ---
         flowers = [
             Flowers("Texas Bluebonnet", "close_fullsize", "", "Lupinus texensis", "Flower", "", ""),
