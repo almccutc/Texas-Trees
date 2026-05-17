@@ -229,10 +229,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 cacti: getCheck("switchRoundedDefault_cacti")
             };
 
-            // Auto-advance to the next question after a short delay, right or wrong
+            // Auto-advance to the next question after a 0.75-second delay, right or wrong
             setTimeout(() => {
                 fetchPlantNameList(currentSwitches);
-            }, 1000);
+            }, 750);
         });
     });
 
@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 quizNextBtn.style.display = 'none';
                 quizState.totalCount++;
                 updateResultBox();
-            }, 2000);
+            }, 2000); // Leave this longer manual next-button transition intact or change if needed
         });
     }
 
@@ -349,7 +349,9 @@ async function fetchPlantNameList(switches) {
                 if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
                 if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
 
-                setTimeout(() => btn.classList.remove('is-focused'), 1000);
+                // Explicitly blur each button to remove native browser :hover and :focus styles
+                btn.blur();
+                setTimeout(() => btn.classList.remove('is-focused'), 750);
             }
         }
 
@@ -401,14 +403,15 @@ function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
             const correctButton = document.querySelector(`.button-stack button:nth-child(${correctPlantIndex + 1})`);
             if (correctButton) {
                 correctButton.classList.add("true");
-                setTimeout(() => correctButton.classList.remove("true"), 1000);
+                setTimeout(() => correctButton.classList.remove("true"), 750);
             }
         }
 
+        // Clear active classes and reset attribute after 0.75 seconds to align with question auto-advancing
         setTimeout(() => {
             selectedButton.classList.remove("true", "false");
             selectedButton.setAttribute("data-is-correct", "no-answer");
-        }, 1000);
+        }, 750);
     }
 
     updateResultBox();

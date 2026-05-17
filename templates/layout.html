@@ -9,7 +9,7 @@
       <title>Texas Tree Quiz</title>
       
       <!-- CSS Frameworks & Fonts -->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+      <link class="bulma" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
       <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
@@ -79,26 +79,51 @@
       {% endif %}
 
       <script>
-         // Script to handle toggling the map visibility
+         // Script to handle toggling the map and its control panel/search box visibility
          document.addEventListener('DOMContentLoaded', () => {
             const toggleMapBtn = document.getElementById('toggleMapButton');
             
             if (toggleMapBtn) {
                toggleMapBtn.addEventListener('click', () => {
-                  // Note: This assumes your leaflet map div has an id="map". 
-                  // Change 'map' to the actual ID of your map container if it's different!
-                  const mapElement = document.getElementById('map');
+                  // We gather the map element and any elements that represent the controls,
+                  // search boxes, or wrappers containing the species selection tools.
+                  const elementsToToggle = [
+                     document.getElementById('map'),
+                     document.getElementById('map-container'),
+                     document.getElementById('map-controls'),
+                     document.getElementById('species-select-container'),
+                     document.getElementById('search-container'),
+                     document.getElementById('species-selection')
+                  ];
                   
+                  let currentlyVisible = true;
+                  
+                  // Check the current status of the map to determine whether we are hiding or showing
+                  const mapElement = document.getElementById('map');
                   if (mapElement) {
-                     if (mapElement.style.display === 'none') {
-                        mapElement.style.display = 'block';
-                        toggleMapBtn.textContent = 'Toggle Map Off';
-                     } else {
-                        mapElement.style.display = 'none';
-                        toggleMapBtn.textContent = 'Toggle Map On';
+                     currentlyVisible = (mapElement.style.display !== 'none' && !mapElement.classList.contains('is-hidden'));
+                  }
+
+                  // Toggle all found elements
+                  elementsToToggle.forEach(el => {
+                     if (el) {
+                        if (currentlyVisible) {
+                           // Hide the elements
+                           el.style.display = 'none';
+                           el.classList.add('is-hidden');
+                        } else {
+                           // Show the elements
+                           el.style.display = '';
+                           el.classList.remove('is-hidden');
+                        }
                      }
+                  });
+
+                  // Update button label depending on the new state
+                  if (currentlyVisible) {
+                     toggleMapBtn.textContent = 'Toggle Map On';
                   } else {
-                     console.warn('Could not find the map element to toggle. Ensure your map container has id="map".');
+                     toggleMapBtn.textContent = 'Toggle Map Off';
                   }
                });
             }
