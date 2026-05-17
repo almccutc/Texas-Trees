@@ -7,22 +7,24 @@
       <meta name="description" content="A quiz about Texas trees and plants.">
       <meta name="keywords" content="Texas, trees, quiz, plants, nature, live oak.">
       <title>Texas Tree Quiz</title>
+      
+      <!-- CSS Frameworks & Fonts -->
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
       <link rel="stylesheet" href="https://wikiki.github.io/css/documentation.css?v=201911011043">
-      <link rel="shortcut icon" type="image/x-icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" />
-      <link rel="icon" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg" type="image/png">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
       
-          <!-- Load Leaflet from CDN -->
+      <!-- Favicons -->
+      <link rel="icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg">
+      <link rel="shortcut icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg">
+      
+      <!-- Leaflet & Esri Scripts/Styles -->
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-      <!-- Load Esri Leaflet from CDN -->
       <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
       <script src="https://unpkg.com/esri-leaflet-vector@4.2.3/dist/esri-leaflet-vector.js"></script>    
    </head>
-
 
    <body>
       <header class="hero is-light">
@@ -34,22 +36,31 @@
                <h1 class="subtitle has-text-centered">
                   Trees, flowers, and more!
                </h1>
-               <nav class="navbar" role="navigation" aria-label="main navigation">
-                <ul class="menu">
-                  <a class="button is-light" id="speciesInfoButton" href="{{ url_for('render_webpage') }}">Quiz</a>
-                  <a class="button is-light" id="speciesInfoButton" href="{{ url_for('render_plant_info') }}">Species Information</a>
-                  <!-- <a class="button is-light" id="cropDataButton" href="#">Crop Data</a> -->
-                </ul>
-              </nav>
+               
+               <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+                  <!-- Used Bulma's "buttons" class for better layout and fixed invalid ul > a nesting -->
+                  <div class="buttons is-centered mt-4" style="width: 100%;">
+                     <!-- Fixed duplicate IDs by giving the quiz button its own ID -->
+                     <a class="button is-light" id="quizButton" href="{{ url_for('render_webpage') }}">Quiz</a>
+                     <a class="button is-light" id="speciesInfoButton" href="{{ url_for('render_plant_info') }}">Species Information</a>
+                     <button class="button is-light" id="toggleMapButton">Toggle Map</button>
+                  </div>
+               </nav>
             </div>
          </div>
       </header>
-      <div class="hero-foot has-background-dark py-4 is is-fullwidth is-responsive"></div>
+      
+      <!-- Fixed typo 'is is-fullwidth' to 'is-fullwidth' -->
+      <div class="hero-foot has-background-dark py-4 is-fullwidth is-responsive"></div>
 
-        {% block content %}
-        {% endblock %}
+      <!-- Wrapped content in a semantic main tag for better accessibility -->
+      <main>
+         {% block content %}
+         {% endblock %}
+      </main>
 
       <div class="hero-foot has-background-dark py-4"></div>
+      
       <footer class="footer is-light">
          <div class="content has-text-centered">
             <div class="subfooter">
@@ -57,12 +68,41 @@
             </div>
             <div class="footer">
                <span class="website">texastreequiz.com</span>
-               <span class="date">Feb 2024. &copy;</span>
+               <!-- Updated date and removed copyright symbol as requested -->
+               <span class="date">May 2026</span>
             </div>
          </div>
       </footer>
+      
       {% if current_route == 'render_webpage' %}
       <script src="{{ url_for('static', filename='script.js') }}"></script>
       {% endif %}
+
+      <script>
+         // Script to handle toggling the map visibility
+         document.addEventListener('DOMContentLoaded', () => {
+            const toggleMapBtn = document.getElementById('toggleMapButton');
+            
+            if (toggleMapBtn) {
+               toggleMapBtn.addEventListener('click', () => {
+                  // Note: This assumes your leaflet map div has an id="map". 
+                  // Change 'map' to the actual ID of your map container if it's different!
+                  const mapElement = document.getElementById('map');
+                  
+                  if (mapElement) {
+                     if (mapElement.style.display === 'none') {
+                        mapElement.style.display = 'block';
+                        toggleMapBtn.textContent = 'Toggle Map Off';
+                     } else {
+                        mapElement.style.display = 'none';
+                        toggleMapBtn.textContent = 'Toggle Map On';
+                     }
+                  } else {
+                     console.warn('Could not find the map element to toggle. Ensure your map container has id="map".');
+                  }
+               });
+            }
+         });
+      </script>
    </body>
 </html>
