@@ -15,7 +15,7 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
       
       <!-- Favicons -->
-      <link rel="icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg">
+      <link class="icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg">
       <link rel="shortcut icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cedar_elm_1.jpeg">
       
       <!-- Leaflet & Esri Scripts/Styles -->
@@ -40,10 +40,9 @@
                <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
                   <!-- Used Bulma's "buttons" class for better layout and fixed invalid ul > a nesting -->
                   <div class="buttons is-centered mt-4" style="width: 100%;">
-                     <!-- Fixed duplicate IDs by giving the quiz button its own ID -->
+                     <!-- Quiz button and Species Info button - toggle map button completely removed -->
                      <a class="button is-light" id="quizButton" href="{{ url_for('render_webpage') }}">Quiz</a>
                      <a class="button is-light" id="speciesInfoButton" href="{{ url_for('render_plant_info') }}">Species Information</a>
-                     <button class="button is-light" id="toggleMapButton">Toggle Map</button>
                   </div>
                </nav>
             </div>
@@ -77,57 +76,5 @@
       {% if current_route == 'render_webpage' %}
       <script src="{{ url_for('static', filename='script.js') }}"></script>
       {% endif %}
-
-      <script>
-         // Script to handle toggling the map and its control panel/search box visibility
-         document.addEventListener('DOMContentLoaded', () => {
-            const toggleMapBtn = document.getElementById('toggleMapButton');
-            
-            if (toggleMapBtn) {
-               toggleMapBtn.addEventListener('click', () => {
-                  // We gather the map element and any elements that represent the controls,
-                  // search boxes, or wrappers containing the species selection tools.
-                  const elementsToToggle = [
-                     document.getElementById('map'),
-                     document.getElementById('map-container'),
-                     document.getElementById('map-controls'),
-                     document.getElementById('species-select-container'),
-                     document.getElementById('search-container'),
-                     document.getElementById('species-selection')
-                  ];
-                  
-                  let currentlyVisible = true;
-                  
-                  // Check the current status of the map to determine whether we are hiding or showing
-                  const mapElement = document.getElementById('map');
-                  if (mapElement) {
-                     currentlyVisible = (mapElement.style.display !== 'none' && !mapElement.classList.contains('is-hidden'));
-                  }
-
-                  // Toggle all found elements
-                  elementsToToggle.forEach(el => {
-                     if (el) {
-                        if (currentlyVisible) {
-                           // Hide the elements
-                           el.style.display = 'none';
-                           el.classList.add('is-hidden');
-                        } else {
-                           // Show the elements
-                           el.style.display = '';
-                           el.classList.remove('is-hidden');
-                        }
-                     }
-                  });
-
-                  // Update button label depending on the new state
-                  if (currentlyVisible) {
-                     toggleMapBtn.textContent = 'Toggle Map On';
-                  } else {
-                     toggleMapBtn.textContent = 'Toggle Map Off';
-                  }
-               });
-            }
-         });
-      </script>
    </body>
 </html>

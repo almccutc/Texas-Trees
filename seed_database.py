@@ -58,14 +58,14 @@ def seed_database():
             Trees("Loblolly Pine", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/LoblollyPineBark.jpg", "Pinus taeda", "Tree", "Photo 109679762, (c) Sophia K", ""),
 
             # 10. Texas Redbud
-            Trees("Texas Redbud", "close_fullsize", "", "Cercis canadensis var. texensis", "Tree", "", ""),
-            Trees("Texas Redbud", "leaf", "", "Cercis canadensis var. texensis", "Tree", "", ""),
-            Trees("Texas Redbud", "bark", "", "Cercis canadensis var. texensis", "Tree", "", ""),
+            Trees("Texas Redbud", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Texas+Redbudfull.jpeg", "Cercis canadensis var. texensis", "Tree", "Photo 477364441, (c) Reid Hardin", ""),
+            Trees("Texas Redbud", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Texas+Redbudleaf.jpeg", "Cercis canadensis var. texensis", "Tree", "Photo 479457708, (c) Michelle W.", ""),
+            Trees("Texas Redbud", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas+Redbudbark.jpg", "Cercis canadensis var. texensis", "Tree", "Photo 161207149, (c) Kane Sandoval", ""),
 
             # 11. Crape Myrtle
-            Trees("Crape Myrtle", "close_fullsize", "", "Lagerstroemia indica", "Tree", "", ""),
-            Trees("Crape Myrtle", "leaf", "", "Lagerstroemia indica", "Tree", "", ""),
-            Trees("Crape Myrtle", "bark", "", "Lagerstroemia indica", "Tree", "", ""),
+            Trees("Crape Myrtle", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Crape+Myrtlefull.jpeg", "Lagerstroemia indica", "Tree", "Photo 463065934, (c) Gonzalo Romero", ""),
+            Trees("Crape Myrtle", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Crape+MyrtleLeaf.jpg", "Lagerstroemia indica", "Tree", "Photo 144113548, (c) Michael Meiring", ""),
+            Trees("Crape Myrtle", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Crape+MyrtleBark.jpeg", "Lagerstroemia indica", "Tree", "Photo 463065959, (c) Gonzalo Romero", ""),
 
             # 12. Ashe Juniper
             Trees("Ashe Juniper", "close_fullsize", "", "Juniperus ashei", "Tree", "", ""),
