@@ -294,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.matches('#expand-button')) {
                 expandableContainer.innerHTML = `
                   <div class="box">
-                    <p style="margin-bottom: 10px;">Test your knowledge of plants by identifying them based on images. You'll see a plant image and four options; choose the correct species. Toggle switches to include specific plant categories like tree leaves or wildflowers. Click the image for photo credits. Hints coming soon. &nbsp; &nbsp;</p>
+                    <p style="margin-bottom: 10px;">Test your knowledge of plants by identifying them based on images. You'll see a plant image and four options; choose the correct species. Toggle switches to include specific plant categories like tree leaves or wildflowers. Click the image for photo credits. &nbsp; &nbsp;</p>
                     <button id="collapse-button" class="button is-light">Close</button>
                   </div>
                 `;

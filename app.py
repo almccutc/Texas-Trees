@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import random
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy import not_
 import os
 
@@ -71,21 +71,57 @@ def get_valid_image_filters(model_class):
     """
     Returns a list of robust SQLAlchemy filter criteria to ensure the image_url
     is a real, non-empty, and non-placeholder URL or file path.
-    
-    Filters out:
-      - SQL NULL values
-      - Empty strings ("")
-      - Whitespace-only strings ("   ")
-      - Case-insensitive literal words like 'none', 'null', 'nan', 'n/a', 'undefined', 'placeholder'
-      - Strings missing a dot "." (all image files require extension e.g. .jpg, .png, .webp)
     """
     return [
         model_class.image_url.is_not(None),
         model_class.image_url != '',
         func.trim(model_class.image_url) != '',
         not_(func.lower(func.trim(model_class.image_url)).in_(['none', 'null', 'nan', 'n/a', 'undefined', 'placeholder'])),
-        model_class.image_url.like('%.%')  # Guarantees a file extension or a domain exists
+        # Ensure it either starts with a web/static address, or ends with a standard image file extension
+        or_(
+            func.lower(model_class.image_url).like('http://%'),
+            func.lower(model_class.image_url).like('https://%'),
+            func.lower(model_class.image_url).like('/static/%'),
+            func.lower(model_class.image_url).like('static/%'),
+            func.lower(model_class.image_url).like('%.jpg'),
+            func.lower(model_class.image_url).like('%.jpeg'),
+            func.lower(model_class.image_url).like('%.png'),
+            func.lower(model_class.image_url).like('%.webp'),
+            func.lower(model_class.image_url).like('%.gif'),
+            func.lower(model_class.image_url).like('%.svg')
+        )
     ]
+
+
+def is_valid_local_image(url):
+    """
+    Checks if an image URL is valid and physically exists if it is a local path on disk.
+    This prevents matching images that are defined in the database but missing from your folder.
+    """
+    if not url:
+        return False
+    url_str = str(url).strip()
+    url_lower = url_str.lower()
+    
+    # Exclude placeholders and missing representations
+    if url_lower in ['', 'none', 'null', 'nan', 'n/a', 'undefined', 'placeholder']:
+        return False
+        
+    # Ensure there's a dot for file extensions/domains
+    if '.' not in url_str:
+        return False
+        
+    # If it's an external web image, we assume it's valid (cannot ping external sites synchronously without slowing down loading times)
+    if url_lower.startswith('http://') or url_lower.startswith('https://'):
+        return True
+        
+    # If it is a local static path, check if the file physically exists on disk
+    if url_lower.startswith('/static/') or url_lower.startswith('static/'):
+        # Strip leading slash to look for standard relative paths (e.g. 'static/images/...')
+        relative_path = url_str.lstrip('/')
+        return os.path.exists(relative_path)
+        
+    return True
         
 
 @app.route('/')
@@ -115,8 +151,10 @@ def render_webpage():
         for plant in query_results:
             name_lower = plant.plant_name.lower()
             if name_lower not in seen_names:
-                valid_plants.append(plant)
-                seen_names.add(name_lower)
+                # Double-check physical existence of image files on disk
+                if is_valid_local_image(plant.image_url):
+                    valid_plants.append(plant)
+                    seen_names.add(name_lower)
 
     # Shuffle the pool of valid image-bearing plants
     random.shuffle(valid_plants)
@@ -226,18 +264,32 @@ def get_plant_name_list():
         if extra_filter is not None:
             query = query.filter(extra_filter)
         
-        correct_plant = query.order_by(db.func.random()).first()
+        # Pull a few candidates to test local file existence in Python!
+        candidates = query.order_by(db.func.random()).limit(10).all()
+        for candidate in candidates:
+            if is_valid_local_image(candidate.image_url):
+                correct_plant = candidate
+                break
         if correct_plant:
             break
 
     # Fallback: if no active category has a valid image, pull any random plant with an image
     if not correct_plant:
         for table in tables:
-            correct_plant = table.query.filter(
-                *get_valid_image_filters(table)
-            ).order_by(db.func.random()).first()
+            query = table.query.filter(*get_valid_image_filters(table))
+            candidates = query.order_by(db.func.random()).limit(10).all()
+            for candidate in candidates:
+                if is_valid_local_image(candidate.image_url):
+                    correct_plant = candidate
+                    break
             if correct_plant:
                 break
+
+    # Console debug log to instantly identify what the backend chose and what its URL is!
+    if correct_plant:
+        print(f"[DEBUG] Chosen correct plant: {correct_plant.plant_name} | Class: {correct_plant.__class__.__name__} | URL: '{correct_plant.image_url}'", flush=True)
+    else:
+        print("[DEBUG] Warning: No correct plant could be found matching valid image criteria!", flush=True)
 
     # 2. SELECT 3 UNIQUE DECOY PLANTS (Decoys do not require images, just unique names)
     decoy_plants = []
