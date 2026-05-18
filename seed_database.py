@@ -93,9 +93,9 @@ def seed_database():
             Trees("Desert Willow", "bark", "", "Chilopsis linearis", "Tree", "", ""),
 
             # 17. Retama
-            Trees("Retama", "close_fullsize", "", "Parkinsonia aculeata", "Tree", "", ""),
-            Trees("Retama", "leaf", "", "Parkinsonia aculeata", "Tree", "", ""),
-            Trees("Retama", "bark", "", "Parkinsonia aculeata", "Tree", "", ""),
+            Trees("Mexican Palo Verde", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Mexican+Palo+VerdeFull.jpg", "Parkinsonia aculeata", "Tree", "Photo 590612997, (c) Clifton Ladd, C.W.B.", ""),
+            Trees("Mexican Palo Verde", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Mexican+Palo+VerdeLeaf.jpg", "Parkinsonia aculeata", "Tree", "Photo 194536754, (c) Salem De La Luna", ""),
+            Trees("Mexican Palo Verde", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Mexican+Palo+VerdeBark.jpeg", "Parkinsonia aculeata", "Tree", "Photo 467919169, (c) Nicole", ""),
 
             # 18. Texas Ash
             Trees("Texas Ash", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_ash_947070-min.jpeg", "Fraxinus texensis", "Tree", "", ""),
@@ -223,9 +223,9 @@ def seed_database():
             Trees("Carolina Basswood", "bark", "", "Tilia americana var. caroliniana", "Tree", "", ""),
 
             # 43. Rusty Blackhaw
-            Trees("Rusty Blackhaw", "close_fullsize", "", "Viburnum rufidulum", "Tree", "", ""),
-            Trees("Rusty Blackhaw", "leaf", "", "Viburnum rufidulum", "Tree", "", ""),
-            Trees("Rusty Blackhaw", "bark", "", "Viburnum rufidulum", "Tree", "", ""),
+            Trees("Rusty Blackhaw", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Rusty+BlackhawFull.jpg", "Viburnum rufidulum", "Tree", "Photo 64043896, (c) Sam Kieschnick", ""),
+            Trees("Rusty Blackhaw", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Rusty+BlackhawLeaf.jpg", "Viburnum rufidulum", "Tree", "Photo 358268337, (c) Libby Aragon", ""),
+            Trees("Rusty Blackhaw", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Rusty+BlackhawBark.jpeg", "Viburnum rufidulum", "Tree", "Photo 118435303, (c) Michelle W.", ""),
 
             # 44. Two-wing Silverbell
             Trees("Two-wing Silverbell", "close_fullsize", "", "Halesia diptera", "Tree", "", ""),
@@ -273,9 +273,9 @@ def seed_database():
             Trees("Winged Elm", "bark", "", "Ulmus alata", "Tree", "", ""),
 
             # 53. Black Cherry
-            Trees("Black Cherry", "close_fullsize", "", "Prunus serotina", "Tree", "", ""),
-            Trees("Black Cherry", "leaf", "", "Prunus serotina", "Tree", "", ""),
-            Trees("Black Cherry", "bark", "", "Prunus serotina", "Tree", "", ""),
+            Trees("Black Cherry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Black+CherryFull.jpg", "Prunus serotina", "Tree", "Photo 64562125, (c) Emily Summerbell", ""),
+            Trees("Black Cherry", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Black+CherryLeaf.jpg", "Prunus serotina", "Tree", "Photo 18479136, (c) Laura Clark", ""),
+            Trees("Black Cherry", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Black+CherryBark.jpg", "Prunus serotina", "Tree", "Photo 618804717, (c) Northcut", ""),
 
             # 54. Carolina Buckthorn
             Trees("Carolina Buckthorn", "close_fullsize", "", "Frangula caroliniana", "Tree", "", ""),
