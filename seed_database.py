@@ -68,9 +68,9 @@ def seed_database():
             Trees("Crape Myrtle", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Crape+MyrtleBark.jpeg", "Lagerstroemia indica", "Tree", "Photo 463065959, (c) Gonzalo Romero", ""),
 
             # 12. Ashe Juniper
-            Trees("Ashe Juniper", "close_fullsize", "", "Juniperus ashei", "Tree", "", ""),
-            Trees("Ashe Juniper", "leaf", "", "Juniperus ashei", "Tree", "", ""),
-            Trees("Ashe Juniper", "bark", "", "Juniperus ashei", "Tree", "", ""),
+            Trees("Ashe Juniper", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Ashe+JuniperFull.jpg", "Juniperus ashei", "Tree", "Photo 78970594, (c) Gary Rogers", ""),
+            Trees("Ashe Juniper", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Ashe+JuniperLeaf.jpg", "Juniperus ashei", "Tree", "Photo 54313324, (c) Sophia K", ""),
+            Trees("Ashe Juniper", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Ashe+JuniperBark.jpg", "Juniperus ashei", "Tree", "Photo 56893555, (c) Sophia K", ""),
 
             # 13. Post Oak
             Trees("Post Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/post_oak_69964216-min.jpeg", "Quercus stellata", "Tree", "", ""),
@@ -163,9 +163,9 @@ def seed_database():
             Trees("Blackjack Oak", "bark", "", "Quercus marilandica", "Tree", "", ""),
 
             # 31. Anacua
-            Trees("Anacua", "close_fullsize", "", "Ehretia anacua", "Tree", "", ""),
-            Trees("Anacua", "leaf", "", "Ehretia anacua", "Tree", "", ""),
-            Trees("Anacua", "bark", "", "Ehretia anacua", "Tree", "", ""),
+            Trees("Anacua", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/AnacuaFull.jpg", "Ehretia anacua", "Tree", "Photo 362884467, (c) Adam Cohen", ""),
+            Trees("Anacua", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/AnacuaLeaf.jpg", "Ehretia anacua", "Tree", "Photo 374520768, (c) Jane Weeden", ""),
+            Trees("Anacua", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/AnacuaBark.jpg", "Ehretia anacua", "Tree", "", "Photo 162295170, (c) Kane Sandoval"),
 
             # 32. Texas Pistache
             Trees("Texas Pistache", "close_fullsize", "", "Pistacia texana", "Tree", "", ""),
@@ -308,9 +308,9 @@ def seed_database():
             Trees("Red Mulberry", "bark", "", "Morus rubra", "Tree", "", ""),
 
             # 60. Sassafras
-            Trees("Sassafras", "close_fullsize", "", "Sassafras albidum", "Tree", "", ""),
-            Trees("Sassafras", "leaf", "", "Sassafras albidum", "Tree", "", ""),
-            Trees("Sassafras", "bark", "", "Sassafras albidum", "Tree", "", "")
+            Trees("Sassafras", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/SassafrasFull.jpg", "Sassafras albidum", "Tree", "Photo 167737857, (c) Northcut", ""),
+            Trees("Sassafras", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/SassafrasLeaf.jpeg", "Sassafras albidum", "Tree", "Photo 194523029, (c) Reid Hardin", ""),
+            Trees("Sassafras", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/SassafrasBark.jpg", "Sassafras albidum", "Tree", "Photo 167472690, (c) Sandy Wolkenberg", "")
         ]
 
         # bouncer loop for trees -- checking both plant_name AND image_type (leaf/bark/close)
@@ -408,16 +408,16 @@ def seed_database():
 
         # --- AQUATIC (Top 10) ---
         aquatic = [
-            Aquatic("White Water Lily", "close_fullsize", "", "Nymphaea odorata", "Aquatic", "", ""),
-            Aquatic("American Lotus", "close_fullsize", "", "Nelumbo lutea", "Aquatic", "", ""),
-            Aquatic("Pickerelweed", "close_fullsize", "", "Pontederia cordata", "Aquatic", "", ""),
-            Aquatic("Common Duckweed", "close_fullsize", "", "Lemna minor", "Aquatic", "", ""),
-            Aquatic("Coontail", "close_fullsize", "", "Ceratophyllum demersum", "Aquatic", "", ""),
-            Aquatic("Water Hyacinth", "close_fullsize", "", "Eichhornia crassipes", "Aquatic", "", ""),
-            Aquatic("Broadleaf Arrowhead", "close_fullsize", "", "Sagittaria latifolia", "Aquatic", "", ""),
-            Aquatic("Spatterdock", "close_fullsize", "", "Nuphar advena", "Aquatic", "", ""),
-            Aquatic("Water Pennywort", "close_fullsize", "", "Hydrocotyle umbellata", "Aquatic", "", ""),
-            Aquatic("Southern Naiad", "close_fullsize", "", "Najas guadalupensis", "Aquatic", "", "")
+            Aquatic("White Water Lily", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/White+Water+Lily.jpeg", "Nymphaea odorata", "Aquatic", "Photo 140306027, (c) Annika Lindqvist", ""),
+            Aquatic("American Lotus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/American+Lotus.jpg", "Nelumbo lutea", "Aquatic", "Photo 47140810, (c) Laura Clark", ""),
+            Aquatic("Pickerelweed", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Pickerelweed.jpg", "Pontederia cordata", "Aquatic", "Photo 28931819, (c) Rich Sommer", ""),
+            Aquatic("Common Duckweed", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Common+Duckweed.jpg", "Lemna minor", "Aquatic", "Photo 49914507, (c) Attila Oláh", ""),
+            Aquatic("Coontail", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Coontail.jpeg", "Ceratophyllum demersum", "Aquatic", "Photo 193786804, (c) chiuluan", ""),
+            Aquatic("Water Hyacinth", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Water+Hyacinth.jpg", "Eichhornia crassipes", "Aquatic", "Photo 366398988, (c) Terry Woodward", ""),
+            Aquatic("Broadleaf Arrowhead", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Broadleaf+Arrowhead.jpeg", "Sagittaria latifolia", "Aquatic", "Photo 30424581, (c) eamonccorbett", ""),
+            Aquatic("Spatterdock", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Spatterdock.jpeg", "Nuphar advena", "Aquatic", "Photo 182355520, (c) gpete", ""),
+            Aquatic("Water Pennywort", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Water+Pennywort.jpeg", "Hydrocotyle umbellata", "Aquatic", "Photo 299878899, (c) Michelle W.", ""),
+            Aquatic("Southern Waternymph", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/aquatic/Southern+Waternymph.jpeg", "Najas guadalupensis", "Aquatic", "Photo 287296223, (c) Michael J. Papay", "")
         ]
         
         for aqua in aquatic:
