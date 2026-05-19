@@ -390,8 +390,8 @@ def seed_database():
         # --- GRASSES (Top 10) ---
         grasses = [
             Grasses("Buffalo Grass", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Buffalo+Grass.jpeg", "Bouteloua dactyloides", "Grass", "Photo 123265962, (c) saltyhiker", ""),
-            Grasses("Little Bluestem", "close_fullsize", "", "Schizachyrium scoparium", "Grass", "", ""),
-            Grasses("Big Bluestem", "close_fullsize", "", "Andropogon gerardii", "Grass", "", ""),
+            Grasses("Little Bluestem", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Little+Bluestem.jpg", "Schizachyrium scoparium", "Grass", "Photo 344718541, (c) Lauren McLaurin", ""),
+            Grasses("Big Bluestem", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Big+Bluestem.jpeg", "Andropogon gerardii", "Grass", "Photo 230582693, (c) Catherine C. Galley", ""),
             Grasses("Indiangrass", "close_fullsize", "", "Sorghastrum nutans", "Grass", "", ""),
             Grasses("Switchgrass", "close_fullsize", "", "Panicum virgatum", "Grass", "", ""),
             Grasses("Sideoats Grama", "close_fullsize", "", "Bouteloua curtipendula", "Grass", "", ""),

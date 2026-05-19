@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import random
-from sqlalchemy import func, or_
+from sqlalchemy import func
 from sqlalchemy import not_
 import os
 
@@ -67,68 +67,10 @@ class Aquatic(BasePlant):
 tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]       
 
 
-def get_valid_image_filters(model_class):
-    """
-    Returns a list of robust SQLAlchemy filter criteria to ensure the image_url
-    is a real, non-empty, and non-placeholder URL or file path.
-    """
-    return [
-        model_class.image_url.is_not(None),
-        model_class.image_url != '',
-        func.trim(model_class.image_url) != '',
-        not_(func.lower(func.trim(model_class.image_url)).in_(['none', 'null', 'nan', 'n/a', 'undefined', 'placeholder'])),
-        # Ensure it either starts with a web/static address, or ends with a standard image file extension
-        or_(
-            func.lower(model_class.image_url).like('http://%'),
-            func.lower(model_class.image_url).like('https://%'),
-            func.lower(model_class.image_url).like('/static/%'),
-            func.lower(model_class.image_url).like('static/%'),
-            func.lower(model_class.image_url).like('%.jpg'),
-            func.lower(model_class.image_url).like('%.jpeg'),
-            func.lower(model_class.image_url).like('%.png'),
-            func.lower(model_class.image_url).like('%.webp'),
-            func.lower(model_class.image_url).like('%.gif'),
-            func.lower(model_class.image_url).like('%.svg')
-        )
-    ]
-
-
-def is_valid_local_image(url):
-    """
-    Checks if an image URL is valid and physically exists if it is a local path on disk.
-    This prevents matching images that are defined in the database but missing from your folder.
-    """
-    if not url:
-        return False
-    url_str = str(url).strip()
-    url_lower = url_str.lower()
-    
-    # Exclude placeholders and missing representations
-    if url_lower in ['', 'none', 'null', 'nan', 'n/a', 'undefined', 'placeholder']:
-        return False
-        
-    # Ensure there's a dot for file extensions/domains
-    if '.' not in url_str:
-        return False
-        
-    # If it's an external web image, we assume it's valid (cannot ping external sites synchronously without slowing down loading times)
-    if url_lower.startswith('http://') or url_lower.startswith('https://'):
-        return True
-        
-    # If it is a local static path, check if the file physically exists on disk
-    if url_lower.startswith('/static/') or url_lower.startswith('static/'):
-        # Strip leading slash to look for standard relative paths (e.g. 'static/images/...')
-        relative_path = url_str.lstrip('/')
-        return os.path.exists(relative_path)
-        
-    return True
-        
-
 @app.route('/')
 def render_webpage():
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
 
-    # Accumulate all plants across all tables that have valid image URLs to show on the landing page
     valid_plants = []
     seen_names = set()
 
@@ -136,40 +78,33 @@ def render_webpage():
     shuffled_tables = list(tables)
     random.shuffle(shuffled_tables)
 
+    # Fetch a small random sample directly from DB to avoid memory overhead
     for table in shuffled_tables:
+        query = table.query
         if table == Trees:
             # For Trees, we avoid showing 'bark' on the home page for general visual consistency
-            query_results = table.query.filter(
-                not_(table.image_type == 'bark'),
-                *get_valid_image_filters(table)
-            ).all()
-        else:
-            query_results = table.query.filter(
-                *get_valid_image_filters(table)
-            ).all()
+            query = query.filter(not_(table.image_type == 'bark'))
+        
+        # Only pull a few random candidates per table
+        query_results = query.order_by(func.random()).limit(5).all()
 
         for plant in query_results:
             name_lower = plant.plant_name.lower()
             if name_lower not in seen_names:
-                # Double-check physical existence of image files on disk
-                if is_valid_local_image(plant.image_url):
-                    valid_plants.append(plant)
-                    seen_names.add(name_lower)
+                valid_plants.append(plant)
+                seen_names.add(name_lower)
 
-    # Shuffle the pool of valid image-bearing plants
+    # Shuffle the pool and take the top 4
     random.shuffle(valid_plants)
-
-    # Take the top 4 unique plants with valid images
     plants_for_home = valid_plants[:4]
 
-    # Extreme fallback: if we have fewer than 4 plants with images (unlikely), fill with any plants
+    # Extreme fallback
     if len(plants_for_home) < 4:
         for table in shuffled_tables:
             if len(plants_for_home) >= 4:
                 break
-            all_plants = table.query.all()
-            random.shuffle(all_plants)
-            for plant in all_plants:
+            fallback_plants = table.query.order_by(func.random()).limit(4).all()
+            for plant in fallback_plants:
                 if len(plants_for_home) >= 4:
                     break
                 name_lower = plant.plant_name.lower()
@@ -186,11 +121,14 @@ def render_webpage():
 
     plant_options = set()
 
-    # Fetch unique plant names from each table that has county data
+    # Fetch unique plant names directly using column queries (much faster than pulling full rows)
     for TableClass in tables:
-        plants_with_counties = TableClass.query.filter(TableClass.location_counties != '').all()
-        for plant in plants_with_counties:
-            plant_options.add(plant.plant_name)
+        names = db.session.query(TableClass.plant_name).filter(
+            TableClass.location_counties != None,
+            TableClass.location_counties != ''
+        ).distinct().all()
+        for row in names:
+            plant_options.add(row[0])
 
     plant_options = sorted(plant_options, key=lambda x: x.split()[0][0].lower())    
 
@@ -217,8 +155,6 @@ def get_plant_name_list():
     randomIndex = request.args.get('randomIndex')
     previousPlantName = request.args.get('previousPlantName')
 
-    # Parse target index. If it is undefined, empty, or out of bounds,
-    # we generate a random index (0-3) on the backend so it shuffles naturally!
     try:
         target_idx = int(randomIndex)
         if target_idx < 0 or target_idx > 3:
@@ -226,7 +162,6 @@ def get_plant_name_list():
     except (TypeError, ValueError):
         target_idx = random.randint(0, 3)
 
-    # Collect active category configurations based on the switch states
     active_categories = []
     if switchState_trees == 'true':
         active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
@@ -245,67 +180,50 @@ def get_plant_name_list():
     if switchState_aquaticplants == 'true':
         active_categories.append((Aquatic, None))
 
-    # Safely default to Trees if no switches are turned on
     if not active_categories:
         active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
 
-    # 1. FIND THE CORRECT PLANT (Must have a valid image URL)
     correct_plant = None
     prev_name = previousPlantName.strip() if previousPlantName else ""
 
-    # Try active categories first
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
+    
+    # Get 1 random correct plant utilizing SQL order by random()
     for model_class, extra_filter in categories_shuffled:
-        query = model_class.query.filter(
-            func.lower(model_class.plant_name) != func.lower(prev_name),
-            *get_valid_image_filters(model_class)
-        )
+        query = model_class.query.filter(func.lower(model_class.plant_name) != func.lower(prev_name))
         if extra_filter is not None:
             query = query.filter(extra_filter)
         
-        # Pull a few candidates to test local file existence in Python!
-        candidates = query.order_by(db.func.random()).limit(10).all()
-        for candidate in candidates:
-            if is_valid_local_image(candidate.image_url):
-                correct_plant = candidate
-                break
+        correct_plant = query.order_by(func.random()).first()
         if correct_plant:
             break
 
-    # Fallback: if no active category has a valid image, pull any random plant with an image
     if not correct_plant:
         for table in tables:
-            query = table.query.filter(*get_valid_image_filters(table))
-            candidates = query.order_by(db.func.random()).limit(10).all()
-            for candidate in candidates:
-                if is_valid_local_image(candidate.image_url):
-                    correct_plant = candidate
-                    break
+            correct_plant = table.query.order_by(func.random()).first()
             if correct_plant:
                 break
 
-    # Console debug log to instantly identify what the backend chose and what its URL is!
     if correct_plant:
         print(f"[DEBUG] Chosen correct plant: {correct_plant.plant_name} | Class: {correct_plant.__class__.__name__} | URL: '{correct_plant.image_url}'", flush=True)
-    else:
-        print("[DEBUG] Warning: No correct plant could be found matching valid image criteria!", flush=True)
 
-    # 2. SELECT 3 UNIQUE DECOY PLANTS (Decoys do not require images, just unique names)
     decoy_plants = []
     seen_names = {correct_plant.plant_name.lower()} if correct_plant else set()
 
-    # Try to extract decoys from active categories to keep options context-relevant
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
+    
+    # Get random decoy plants utilizing SQL limit
     for model_class, extra_filter in categories_shuffled:
         if len(decoy_plants) >= 3:
             break
+            
         query = model_class.query
         if extra_filter is not None:
             query = query.filter(extra_filter)
         
-        candidates = query.order_by(db.func.random()).limit(15).all()
+        candidates = query.order_by(func.random()).limit(10).all()
         for c in candidates:
             if c.plant_name.lower() not in seen_names:
                 decoy_plants.append(c)
@@ -313,12 +231,11 @@ def get_plant_name_list():
                 if len(decoy_plants) >= 3:
                     break
 
-    # If we need more decoys, search across all tables in the database
     if len(decoy_plants) < 3:
         for table in tables:
             if len(decoy_plants) >= 3:
                 break
-            candidates = table.query.order_by(db.func.random()).limit(15).all()
+            candidates = table.query.order_by(func.random()).limit(10).all()
             for c in candidates:
                 if c.plant_name.lower() not in seen_names:
                     decoy_plants.append(c)
@@ -326,7 +243,6 @@ def get_plant_name_list():
                     if len(decoy_plants) >= 3:
                         break
 
-    # 3. CONSTRUCT THE GUARANTEED 4-ELEMENT LIST
     final_plants = [None] * 4
     final_plants[target_idx] = correct_plant
 
@@ -336,7 +252,6 @@ def get_plant_name_list():
             final_plants[i] = decoy_plants[decoy_idx]
             decoy_idx += 1
 
-    # Extract details safely, guarding against any missing elements
     plant_names = [item.plant_name if item else "Unknown" for item in final_plants]
     plant_image_url = [item.image_url if item else "" for item in final_plants]
     scientific_names = [item.scientific_name if item else "" for item in final_plants]
@@ -349,22 +264,22 @@ def get_plant_name_list():
         scientific_names=scientific_names, 
         plant_types=plant_types, 
         source=source, 
-        randomIndex=target_idx  # Return target_idx back to frontend so it matches the correct image!
+        randomIndex=target_idx
     )
 
 @app.route('/get_county_names')
 def get_county_names():
     selected_plant = request.args.get('selected_plant')
-    selected_plant = [selected_plant]
     countyNames = []
 
-    # Checks each plant class for the selected plant that also has county data, extracts both
+    # Query only the location_counties column instead of returning full objects
     for table in tables:
-        plants_with_counties = db.session.query(table).filter(
+        plants_with_counties = db.session.query(table.location_counties).filter(
             table.location_counties != None, 
-            table.plant_name.in_(selected_plant)
+            table.plant_name == selected_plant
         ).all()
-        countyNames.extend([(plant.location_counties) for plant in plants_with_counties])
+        countyNames.extend([row[0] for row in plants_with_counties if row[0]])
+        
     countyNames = [county.strip() for counties in countyNames for county in counties.split(',')]
 
     return jsonify(countyNames=countyNames)
