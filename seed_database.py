@@ -389,7 +389,7 @@ def seed_database():
 
         # --- GRASSES (Top 10) ---
         grasses = [
-            Grasses("Buffalo Grass", "close_fullsize", "", "Bouteloua dactyloides", "Grass", "", ""),
+            Grasses("Buffalo Grass", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Buffalo+Grass.jpeg", "Bouteloua dactyloides", "Grass", "Photo 123265962, (c) saltyhiker", ""),
             Grasses("Little Bluestem", "close_fullsize", "", "Schizachyrium scoparium", "Grass", "", ""),
             Grasses("Big Bluestem", "close_fullsize", "", "Andropogon gerardii", "Grass", "", ""),
             Grasses("Indiangrass", "close_fullsize", "", "Sorghastrum nutans", "Grass", "", ""),
