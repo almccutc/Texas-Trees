@@ -67,6 +67,28 @@ class Aquatic(BasePlant):
 tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]       
 
 
+def get_random_records(model_class, query, limit=1):
+    """
+    Fetches random records by sampling IDs in memory. 
+    This is massively faster than ORDER BY random() because it avoids 
+    forcing the database to sort the entire table.
+    """
+    # 1. Quickly fetch just the IDs that match the query
+    ids = [row[0] for row in query.with_entities(model_class.plant_id).all()]
+    if not ids:
+        return []
+        
+    # 2. Pick a random sample of IDs using Python (instantaneous)
+    selected_ids = random.sample(ids, min(len(ids), limit))
+    
+    # 3. Fetch only the specifically chosen rows from the database
+    records = model_class.query.filter(model_class.plant_id.in_(selected_ids)).all()
+    
+    # Shuffle to ensure the resulting list order is also random
+    random.shuffle(records) 
+    return records
+
+
 @app.route('/')
 def render_webpage():
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
@@ -78,15 +100,15 @@ def render_webpage():
     shuffled_tables = list(tables)
     random.shuffle(shuffled_tables)
 
-    # Fetch a small random sample directly from DB to avoid memory overhead
+    # Fetch a small random sample directly from DB using the fast ID sampling
     for table in shuffled_tables:
         query = table.query
         if table == Trees:
             # For Trees, we avoid showing 'bark' on the home page for general visual consistency
             query = query.filter(not_(table.image_type == 'bark'))
         
-        # Only pull a few random candidates per table
-        query_results = query.order_by(func.random()).limit(5).all()
+        # Only pull a few random candidates per table instantly
+        query_results = get_random_records(table, query, limit=5)
 
         for plant in query_results:
             name_lower = plant.plant_name.lower()
@@ -103,7 +125,7 @@ def render_webpage():
         for table in shuffled_tables:
             if len(plants_for_home) >= 4:
                 break
-            fallback_plants = table.query.order_by(func.random()).limit(4).all()
+            fallback_plants = get_random_records(table, table.query, limit=4)
             for plant in fallback_plants:
                 if len(plants_for_home) >= 4:
                     break
@@ -189,20 +211,23 @@ def get_plant_name_list():
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
     
-    # Get 1 random correct plant utilizing SQL order by random()
+    # Get 1 random correct plant utilizing the fast ID sampling function
     for model_class, extra_filter in categories_shuffled:
         query = model_class.query.filter(func.lower(model_class.plant_name) != func.lower(prev_name))
         if extra_filter is not None:
             query = query.filter(extra_filter)
         
-        correct_plant = query.order_by(func.random()).first()
-        if correct_plant:
+        records = get_random_records(model_class, query, limit=1)
+        if records:
+            correct_plant = records[0]
             break
 
+    # Fallback correct plant search
     if not correct_plant:
         for table in tables:
-            correct_plant = table.query.order_by(func.random()).first()
-            if correct_plant:
+            records = get_random_records(table, table.query, limit=1)
+            if records:
+                correct_plant = records[0]
                 break
 
     if correct_plant:
@@ -214,7 +239,7 @@ def get_plant_name_list():
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
     
-    # Get random decoy plants utilizing SQL limit
+    # Get random decoy plants utilizing the fast ID sampling function
     for model_class, extra_filter in categories_shuffled:
         if len(decoy_plants) >= 3:
             break
@@ -223,7 +248,7 @@ def get_plant_name_list():
         if extra_filter is not None:
             query = query.filter(extra_filter)
         
-        candidates = query.order_by(func.random()).limit(10).all()
+        candidates = get_random_records(model_class, query, limit=10)
         for c in candidates:
             if c.plant_name.lower() not in seen_names:
                 decoy_plants.append(c)
@@ -231,11 +256,12 @@ def get_plant_name_list():
                 if len(decoy_plants) >= 3:
                     break
 
+    # Fallback decoy search
     if len(decoy_plants) < 3:
         for table in tables:
             if len(decoy_plants) >= 3:
                 break
-            candidates = table.query.order_by(func.random()).limit(10).all()
+            candidates = get_random_records(table, table.query, limit=10)
             for c in candidates:
                 if c.plant_name.lower() not in seen_names:
                     decoy_plants.append(c)

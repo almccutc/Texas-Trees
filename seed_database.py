@@ -298,14 +298,14 @@ def seed_database():
             Trees("White Ash", "bark", "", "Fraxinus americana", "Tree", "", ""),
 
             # 58. Texas Mulberry
-            Trees("Texas Mulberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/red_mulberry_224125363-min.jpeg", "Morus microphylla", "Tree", "", ""),
+            Trees("Texas Mulberry", "close_fullsize", "", "Morus microphylla", "Tree", "", ""),
             Trees("Texas Mulberry", "leaf", "", "Morus microphylla", "Tree", "", ""),
             Trees("Texas Mulberry", "bark", "", "Morus microphylla", "Tree", "", ""),
 
             # 59. Red Mulberry
-            Trees("Red Mulberry", "close_fullsize", "", "Morus rubra", "Tree", "", ""),
-            Trees("Red Mulberry", "leaf", "", "Morus rubra", "Tree", "", ""),
-            Trees("Red Mulberry", "bark", "", "Morus rubra", "Tree", "", ""),
+            Trees("Red Mulberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Red+MulberryFull.jpg", "Morus rubra", "Tree", "Photo 186577373, (c) Sam Kieschnick", ""),
+            Trees("Red Mulberry", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Red+MulberryLeaf.jpeg", "Morus rubra", "Tree", "Photo 371438844, (c) Mike Tilley", ""),
+            Trees("Red Mulberry", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Red+MulberryBark.jpg", "Morus rubra", "Tree", "Photo 93803054, (c) Brand R", ""),
 
             # 60. Sassafras
             Trees("Sassafras", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/SassafrasFull.jpg", "Sassafras albidum", "Tree", "Photo 167737857, (c) Northcut", ""),
