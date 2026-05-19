@@ -392,13 +392,13 @@ def seed_database():
             Grasses("Buffalo Grass", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Buffalo+Grass.jpeg", "Bouteloua dactyloides", "Grass", "Photo 123265962, (c) saltyhiker", ""),
             Grasses("Little Bluestem", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Little+Bluestem.jpg", "Schizachyrium scoparium", "Grass", "Photo 344718541, (c) Lauren McLaurin", ""),
             Grasses("Big Bluestem", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Big+Bluestem.jpeg", "Andropogon gerardii", "Grass", "Photo 230582693, (c) Catherine C. Galley", ""),
-            Grasses("Indiangrass", "close_fullsize", "", "Sorghastrum nutans", "Grass", "", ""),
-            Grasses("Switchgrass", "close_fullsize", "", "Panicum virgatum", "Grass", "", ""),
-            Grasses("Sideoats Grama", "close_fullsize", "", "Bouteloua curtipendula", "Grass", "", ""),
-            Grasses("Blue Grama", "close_fullsize", "", "Bouteloua gracilis", "Grass", "", ""),
-            Grasses("Texas Wintergrass", "close_fullsize", "", "Nassella leucotricha", "Grass", "", ""),
-            Grasses("Inland Sea Oats", "close_fullsize", "", "Chasmanthium latifolium", "Grass", "", ""),
-            Grasses("Gulf Muhly", "close_fullsize", "", "Muhlenbergia capillaris", "Grass", "", "")
+            Grasses("Indiangrass", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Indiangrass.jpeg", "Sorghastrum nutans", "Grass", "Photo 10860598, (c) Annika Lindqvist", ""),
+            Grasses("Switchgrass", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Switchgrass.jpg", "Panicum virgatum", "Grass", "Photo 590555846, (c) Dustin Snider", ""),
+            Grasses("Sideoats Grama", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Sideoats+Grama.jpeg", "Bouteloua curtipendula", "Grass", "Photo 426529007, (c) Anders Hastings", ""),
+            Grasses("Blue Grama", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Blue+Grama.jpg", "Bouteloua gracilis", "Grass", "Photo 432159307, (c) Dominic Gentilcore", ""),
+            Grasses("Texas Wintergrass", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Texas+Wintergrass.jpeg", "Nassella leucotricha", "Grass", "Photo 37419762, (c) Annika Lindqvist", ""),
+            Grasses("River Oats", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/River+Oats.jpg", "Chasmanthium latifolium", "Grass", "Photo 610161286, (c) Texas Bird Family", ""),
+            Grasses("Hairawn Muhly", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/grasses/Hairawn+Muhly.jpeg", "Muhlenbergia capillaris", "Grass", "Photo 102657833, (c) Dan Johnson", "")
         ]
         
         for grass in grasses:
