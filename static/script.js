@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Auto-advance to the next question after a 0.75-second delay, right or wrong
             setTimeout(() => {
                 fetchPlantNameList(currentSwitches);
-            }, 750);
+            }, 200);
         });
     });
 
