@@ -74,13 +74,13 @@ def seed_database():
 
             # 13. Post Oak
             Trees("Post Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/post_oak_69964216-min.jpeg", "Quercus stellata", "Tree", "", ""),
-            Trees("Post Oak", "leaf", "", "Quercus stellata", "Tree", "", ""),
-            Trees("Post Oak", "bark", "", "Quercus stellata", "Tree", "", ""),
+            Trees("Post Oak", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Post+OakLeaf.jpeg", "Quercus stellata", "Tree", "Photo 236627108, (c) Jo Roberts", ""),
+            Trees("Post Oak", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Post+OakBark.jpg", "Quercus stellata", "Tree", "Photo 171628620, (c) CK2AZ", ""),
 
             # 14. Bur Oak
-            Trees("Bur Oak", "close_fullsize", "", "Quercus macrocarpa", "Tree", "", ""),
-            Trees("Bur Oak", "leaf", "", "Quercus macrocarpa", "Tree", "", ""),
-            Trees("Bur Oak", "bark", "", "Quercus macrocarpa", "Tree", "", ""),
+            Trees("Bur Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Bur+OakFull.jpg", "Quercus macrocarpa", "Tree", "Photo 325917393, (c) ashleyrsteel", ""),
+            Trees("Bur Oak", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Bur+OakLeaf.jpeg", "Quercus macrocarpa", "Tree", "Photo 52557659, (c) Lauren McLaurin", ""),
+            Trees("Bur Oak", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Bur+OakBark.jpeg", "Quercus macrocarpa", "Tree", "Photo 431246298, (c) Nikokin", ""),
 
             # 15. Shumard Oak
             Trees("Shumard Oak", "close_fullsize", "", "Quercus shumardii", "Tree", "", ""),
@@ -370,12 +370,12 @@ def seed_database():
 
         # --- CACTI (Top 10) ---
         cacti = [
-            Cacti("Texas Prickly Pear", "close_fullsize", "", "Opuntia engelmannii", "Cactus", "", ""),
-            Cacti("Lace Cactus", "close_fullsize", "", "Echinocereus reichenbachii", "Cactus", "", ""),
-            Cacti("Horse Crippler", "close_fullsize", "", "Echinocactus texensis", "Cactus", "", ""),
-            Cacti("Claret Cup Cactus", "close_fullsize", "", "Echinocereus triglochidiatus", "Cactus", "", ""),
-            Cacti("Nipple Cactus", "close_fullsize", "", "Mammillaria heyderi", "Cactus", "", ""),
-            Cacti("Tasajillo", "close_fullsize", "", "Cylindropuntia leptocaulis", "Cactus", "", ""),
+            Cacti("Prickly Pear", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Prickly+Pear.jpeg", "Opuntia engelmannii", "Cactus", "Photo 373090621, (c) Suanne Pyle", ""),
+            Cacti("Lace Hedgehog", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Lace+Hedgehog.jpeg", "Echinocereus reichenbachii", "Cactus", "Photo 366998561, (c) Reid Hardin", ""),
+            Cacti("Horse Crippler", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Horse+Crippler.jpeg", "Echinocactus texensis", "Cactus", "Photo 284772979, (c) Charlie Meador", ""),
+            Cacti("Kingcup Cactus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Kingcup+Cactus.jpeg", "Echinocereus triglochidiatus", "Cactus", "Photo 7993799, (c) Annika Lindqvist", ""),
+            Cacti("Nipple Cactus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Nipple+Cactus.jpeg", "Mammillaria heyderi", "Cactus", "Photo 268259456, (c) Michelle W. ", ""),
+            Cacti("Tasajillo", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Tasajillo.jpg", "Cylindropuntia leptocaulis", "Cactus", "Photo 646641075, (c) Nathan Aaron", ""),
             Cacti("Blind Prickly Pear", "close_fullsize", "", "Opuntia rufida", "Cactus", "", ""),
             Cacti("Eagle Claws", "close_fullsize", "", "Echinocactus horizonthalonius", "Cactus", "", ""),
             Cacti("Strawberry Cactus", "close_fullsize", "", "Echinocereus stramineus", "Cactus", "", ""),
