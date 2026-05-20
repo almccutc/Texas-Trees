@@ -14,9 +14,8 @@ const quizState = {
     correctPlantIndex: 0,
     correctCount: 0,
     totalCount: 0,
-    uniquePlantCount: 0,
     correctCheck: true,
-    previousPlantNames: ["plant"],
+    previousPlantName: "", // Fixed: Changed to a single string
     isAnsweringAllowed: true
 };
 
@@ -229,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cacti: getCheck("switchRoundedDefault_cacti")
             };
 
-            // Auto-advance to the next question after a 0.75-second delay, right or wrong
+            // Auto-advance to the next question after a 0.2-second delay, right or wrong
             setTimeout(() => {
                 fetchPlantNameList(currentSwitches);
             }, 200);
@@ -310,8 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 
 async function fetchPlantNameList(switches) {
-    const randomIndex = Math.floor(Math.random() * 4);
-    
     // Construct Query String safely
     const queryParams = new URLSearchParams({
         switchState_trees: switches.trees,
@@ -322,7 +319,7 @@ async function fetchPlantNameList(switches) {
         switchState_aquaticplants: switches.aquaticplants,
         switchState_vines: switches.vines,
         switchState_cacti: switches.cacti,
-        previousPlantName: quizState.previousPlantNames.join(',')
+        previousPlantName: quizState.previousPlantName // Fixed: Send the single string
     });
 
     try {
@@ -331,6 +328,10 @@ async function fetchPlantNameList(switches) {
 
         quizState.plantNames = data.plant_names;
         quizState.plantImageUrls = data.plant_image_url;
+        
+        // Fixed: Grab the backend's random index so the frontend knows the right answer!
+        const randomIndex = data.randomIndex; 
+        
         const scientificNames = data.scientific_names;
         const plantTypes = data.plant_types;
         const source = data.source;
@@ -363,14 +364,10 @@ async function fetchPlantNameList(switches) {
         if (textElement) textElement.textContent = source[randomIndex];
 
         // Update State variables
-        quizState.correctPlantIndex = indices.indexOf(randomIndex);
-        const currentPlant = quizState.plantNames[randomIndex];
-        quizState.previousPlantNames.push(currentPlant);
+        quizState.correctPlantIndex = randomIndex; // Fixed: Use the backend's index
         
-        quizState.uniquePlantCount++;
-        if (quizState.uniquePlantCount > 1) {
-            quizState.previousPlantNames.shift();
-        }
+        // Fixed: Save the correct plant name so we don't get it twice in a row next time
+        quizState.previousPlantName = quizState.plantNames[randomIndex]; 
 
         collapseBox();
         quizState.isAnsweringAllowed = true;

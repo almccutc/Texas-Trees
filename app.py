@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import random
@@ -213,7 +213,12 @@ def get_plant_name_list():
     
     # Get 1 random correct plant utilizing the fast ID sampling function
     for model_class, extra_filter in categories_shuffled:
-        query = model_class.query.filter(func.lower(model_class.plant_name) != func.lower(prev_name))
+        query = model_class.query
+        
+        # FIX: Ensure we actively filter out the previous plant name
+        if prev_name:
+            query = query.filter(func.lower(model_class.plant_name) != func.lower(prev_name))
+            
         if extra_filter is not None:
             query = query.filter(extra_filter)
         
@@ -225,7 +230,12 @@ def get_plant_name_list():
     # Fallback correct plant search
     if not correct_plant:
         for table in tables:
-            records = get_random_records(table, table.query, limit=1)
+            query = table.query
+            # FIX: Ensure fallback also filters out the previous plant name
+            if prev_name:
+                query = query.filter(func.lower(table.plant_name) != func.lower(prev_name))
+                
+            records = get_random_records(table, query, limit=1)
             if records:
                 correct_plant = records[0]
                 break
@@ -284,14 +294,20 @@ def get_plant_name_list():
     plant_types = [item.plant_type if item else "" for item in final_plants]
     source = [item.source if item else "" for item in final_plants]
 
-    return jsonify(
+    # FIX: Use make_response and add Cache-Control headers to stop mobile browsers from caching the old photos/data
+    response = make_response(jsonify(
         plant_names=plant_names, 
         plant_image_url=plant_image_url, 
         scientific_names=scientific_names, 
         plant_types=plant_types, 
         source=source, 
         randomIndex=target_idx
-    )
+    ))
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    
+    return response
 
 @app.route('/get_county_names')
 def get_county_names():
