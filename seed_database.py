@@ -83,9 +83,9 @@ def seed_database():
             Trees("Bur Oak", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Bur+OakBark.jpeg", "Quercus macrocarpa", "Tree", "Photo 431246298, (c) Nikokin", ""),
 
             # 15. Shumard Oak
-            Trees("Shumard Oak", "close_fullsize", "", "Quercus shumardii", "Tree", "", ""),
-            Trees("Shumard Oak", "leaf", "", "Quercus shumardii", "Tree", "", ""),
-            Trees("Shumard Oak", "bark", "", "Quercus shumardii", "Tree", "", ""),
+            Trees("Shumard Oak", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Shumard+OakFull.jpeg", "Quercus shumardii", "Tree", "Photo 444034282, (c) hr_dragonfly", ""),
+            Trees("Shumard Oak", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Shumard+OakLeaf.jpg", "Quercus shumardii", "Tree", "Photo 326019601, (c) Jaime González", ""),
+            Trees("Shumard Oak", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Shumard+OakBark.jpg", "Quercus shumardii", "Tree", "Photo 169894479, (c) Brand R", ""),
 
             # 16. Desert Willow
             Trees("Desert Willow", "close_fullsize", "", "Chilopsis linearis", "Tree", "", ""),

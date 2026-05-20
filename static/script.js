@@ -210,6 +210,9 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("click", () => {
             if (!quizState.isAnsweringAllowed) return;
             quizState.isAnsweringAllowed = false;
+            
+            // Fix: Immediately blur the button to drop native mobile hover/focus states
+            button.blur();
 
             quizState.selectedIndex = index;
             checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
@@ -238,6 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const quizNextBtn = document.getElementById("quizNextButton");
     if (quizNextBtn) {
         quizNextBtn.addEventListener('click', () => {
+            // Fix: Clean up focus state on 'Next' button clicks too
+            quizNextBtn.blur();
+            
             const getCheck = (id) => document.getElementById(id)?.checked || false;
             fetchPlantNameList({
                 trees: getCheck("switchRoundedDefault_trees"),
@@ -352,7 +358,8 @@ async function fetchPlantNameList(switches) {
 
                 // Explicitly blur each button to remove native browser :hover and :focus styles
                 btn.blur();
-                setTimeout(() => btn.classList.remove('is-focused'), 750);
+                // Fix: Actively strip away any Bulma CSS states that could stick on mobile devices instantly
+                btn.classList.remove('is-focused', 'is-hovered', 'is-active');
             }
         }
 
