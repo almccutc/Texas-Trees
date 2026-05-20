@@ -370,16 +370,16 @@ def seed_database():
 
         # --- CACTI (Top 10) ---
         cacti = [
-            Cacti("Prickly Pear", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Prickly+Pear.jpeg", "Opuntia engelmannii", "Cactus", "Photo 373090621, (c) Suanne Pyle", ""),
+            Cacti("Texas Prickly Pear", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Prickly+Pear.jpeg", "Opuntia engelmannii", "Cactus", "Photo 373090621, (c) Suanne Pyle", ""),
             Cacti("Lace Hedgehog", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Lace+Hedgehog.jpeg", "Echinocereus reichenbachii", "Cactus", "Photo 366998561, (c) Reid Hardin", ""),
             Cacti("Horse Crippler", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Horse+Crippler.jpeg", "Echinocactus texensis", "Cactus", "Photo 284772979, (c) Charlie Meador", ""),
             Cacti("Kingcup Cactus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Kingcup+Cactus.jpeg", "Echinocereus triglochidiatus", "Cactus", "Photo 7993799, (c) Annika Lindqvist", ""),
             Cacti("Nipple Cactus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Nipple+Cactus.jpeg", "Mammillaria heyderi", "Cactus", "Photo 268259456, (c) Michelle W. ", ""),
             Cacti("Tasajillo", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Tasajillo.jpg", "Cylindropuntia leptocaulis", "Cactus", "Photo 646641075, (c) Nathan Aaron", ""),
-            Cacti("Blind Prickly Pear", "close_fullsize", "", "Opuntia rufida", "Cactus", "", ""),
-            Cacti("Eagle Claws", "close_fullsize", "", "Echinocactus horizonthalonius", "Cactus", "", ""),
-            Cacti("Strawberry Cactus", "close_fullsize", "", "Echinocereus stramineus", "Cactus", "", ""),
-            Cacti("Texas Rainbow Cactus", "close_fullsize", "", "Echinocereus dasyacanthus", "Cactus", "", "")
+            Cacti("Blind Prickly Pear", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Blind+Prickly+Pear.jpeg", "Opuntia rufida", "Cactus", "Photo 123040724, (c) Reid Hardin", ""),
+            Cacti("Strawberry Cactus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Strawberry+Cactus.jpeg", "Echinocereus stramineus", "Cactus", "Photo 284982536, (c) Michelle W.", ""),
+            Cacti("Texas Rainbow Cactus", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Rainbow+Cactus.jpg", "Echinocereus dasyacanthus", "Cactus", "Photo 410792920, (c) Nick Block", ""),
+            Cacti("Tree Cholla", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/cacti/Tree+Cholla.jpg", "Cylindropuntia imbricata", "Cactus", "Photo 106532453, (c) CK2AZ", "")
         ]
         
         for cactus in cacti:

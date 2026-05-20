@@ -358,8 +358,15 @@ async function fetchPlantNameList(switches) {
 
                 // Explicitly blur each button to remove native browser :hover and :focus styles
                 btn.blur();
-                // Fix: Actively strip away any Bulma CSS states that could stick on mobile devices instantly
-                btn.classList.remove('is-focused', 'is-hovered', 'is-active');
+                
+                // Actively strip away any Bulma CSS states AND previous validation classes to ensure a fresh slate
+                btn.classList.remove('is-focused', 'is-hovered', 'is-active', 'true', 'false');
+                btn.setAttribute("data-is-correct", "no-answer");
+
+                // DOM REFLOW HACK: Force the browser to fully redraw the button without native iOS/mobile hovers
+                btn.style.display = 'none';
+                void btn.offsetHeight; // This magic line triggers a layout recalculation
+                btn.style.display = ''; // Put it right back
             }
         }
 
