@@ -351,16 +351,23 @@ def seed_database():
 
         # --- VINES (Top 10) ---
         vines = [
-            Vines("Mustang Grape", "close_fullsize", "", "Vitis mustangensis", "Vine", "", ""),
-            Vines("Crossvine", "close_fullsize", "", "Bignonia capreolata", "Vine", "", ""),
-            Vines("Virginia Creeper", "close_fullsize", "", "Parthenocissus quinquefolia", "Vine", "", ""),
-            Vines("Coral Honeysuckle", "close_fullsize", "", "Lonicera sempervirens", "Vine", "", ""),
-            Vines("Trumpet Vine", "close_fullsize", "", "Campsis radicans", "Vine", "", ""),
-            Vines("Purple Passionflower", "close_fullsize", "", "Passiflora incarnata", "Vine", "", ""),
-            Vines("Poison Ivy", "close_fullsize", "", "Toxicodendron radicans", "Vine", "", ""),
-            Vines("Carolina Jessamine", "close_fullsize", "", "Gelsemium sempervirens", "Vine", "", ""),
-            Vines("Southern Dewberry", "close_fullsize", "", "Rubus trivialis", "Vine", "", ""),
-            Vines("Peppervine", "close_fullsize", "", "Nekemias arborea", "Vine", "", "")
+            Vines("Mustang Grape", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Mustang+Grape.jpeg", "Vitis mustangensis", "Vine", "Photo 105715542, (c) Michael D Fox", ""),
+            Vines("Crossvine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Crossvine.jpg", "Bignonia capreolata", "Vine", "Photo 117496938, (c) Victor Engel", ""),
+            Vines("Virginia Creeper", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Virginia+Creeper.jpeg", "Parthenocissus quinquefolia", "Vine", "Photo 400071639, (c) Annika Lindqvist", ""),
+            Vines("Coral Honeysuckle", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Coral+Honeysuckle.jpeg", "Lonicera sempervirens", "Vine", "Photo 32879402, (c) Cleveland Powell", ""),
+            Vines("Coral Honeysuckle", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Coral+Honeysuckle.jpg", "Lonicera sempervirens", "Vine", "Photo 64177888, (c) Luke Padon", ""),
+            Vines("Trumpet Vine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Trumpet+Vine.jpg", "Campsis radicans", "Vine", "Photo 542404490, (c) Eleanor Pate", ""),
+            Vines("Trumpet Vine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Trumpet+Vine2.jpg", "Campsis radicans", "Vine", "Photo 578614577, (c) Terry Woodward", ""),
+            Vines("Purple Passionflower", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Purple+Passionflower.jpeg", "Passiflora incarnata", "Vine", "Photo 7256352, (c) Laura Clark", ""),
+            Vines("Poison Ivy", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Poison+Ivy.jpeg", "Toxicodendron radicans", "Vine", "Photo 117669617, (c) Blake Bringhurst", ""),
+            Vines("Poison Ivy", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Poison+Ivy.jpg", "Toxicodendron radicans", "Vine", "Photo 66178058, (c) Sam Kieschnick", ""),
+            Vines("Poison Ivy", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Poison+Ivy2.jpg", "Toxicodendron radicans", "Vine", "Photo 66454547, (c) Tyler Cannon", ""),
+            Vines("Poison Ivy", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Poison+Ivy3.jpeg", "Toxicodendron radicans", "Vine", "Photo 485684538, (c) Nathan Walther", ""),
+            Vines("Yellow Jessamine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Yellow+Jessamine.jpeg", "Gelsemium sempervirens", "Vine", "Photo 3104620, (c) Laura Clark", ""),
+            Vines("Yellow Jessamine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Yellow+Jessamine.jpg", "Gelsemium sempervirens", "Vine", "Photo 260571170, (c) Mike Duran", ""),
+            Vines("Southern Dewberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Southern+Dewberry.jpeg", "Rubus trivialis", "Vine", "Photo 188175195, (c) saltyhiker", ""),
+            Vines("Southern Dewberry", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Southern+Dewberry.jpg", "Rubus trivialis", "Vine", "Photo 649072050, (c) Trey Philips", ""),
+            Vines("Peppervine", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/vines/Peppervine.jpeg", "Nekemias arborea", "Vine", "Photo 226769569, (c) Annika Lindqvist", "")
         ]
         
         for vine in vines:
