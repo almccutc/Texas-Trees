@@ -211,7 +211,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!quizState.isAnsweringAllowed) return;
             quizState.isAnsweringAllowed = false;
             
-            // Fix: Immediately blur the button to drop native mobile hover/focus states
+            // Fix: Global blur to strip mobile's simulated "mouse cursor" focus from everything
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
             button.blur();
 
             quizState.selectedIndex = index;
@@ -231,10 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 cacti: getCheck("switchRoundedDefault_cacti")
             };
 
-            // Auto-advance to the next question after a 0.2-second delay, right or wrong
+            // Auto-advance to the next question after a delay
             setTimeout(() => {
                 fetchPlantNameList(currentSwitches);
-            }, 200);
+            }, 750); // Increased slightly to prevent JS timeouts overlapping!
         });
     });
 
@@ -242,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (quizNextBtn) {
         quizNextBtn.addEventListener('click', () => {
             // Fix: Clean up focus state on 'Next' button clicks too
+            if (document.activeElement) document.activeElement.blur();
             quizNextBtn.blur();
             
             const getCheck = (id) => document.getElementById(id)?.checked || false;
@@ -260,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 quizNextBtn.style.display = 'none';
                 quizState.totalCount++;
                 updateResultBox();
-            }, 2000); // Leave this longer manual next-button transition intact or change if needed
+            }, 2000); 
         });
     }
 
@@ -325,17 +329,25 @@ async function fetchPlantNameList(switches) {
         switchState_aquaticplants: switches.aquaticplants,
         switchState_vines: switches.vines,
         switchState_cacti: switches.cacti,
-        previousPlantName: quizState.previousPlantName // Fixed: Send the single string
+        previousPlantName: quizState.previousPlantName,
+        _cb: new Date().getTime() // Cache-Buster: Forces mobile browser to treat this as a 100% new request!
     });
 
     try {
-        const response = await fetch(`/get_plant_name_list?${queryParams.toString()}`);
+        // Force the fetch request to ignore local browser caching entirely
+        const response = await fetch(`/get_plant_name_list?${queryParams.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
         const data = await response.json();
 
         quizState.plantNames = data.plant_names;
         quizState.plantImageUrls = data.plant_image_url;
         
-        // Fixed: Grab the backend's random index so the frontend knows the right answer!
         const randomIndex = data.randomIndex; 
         
         const scientificNames = data.scientific_names;
@@ -378,9 +390,7 @@ async function fetchPlantNameList(switches) {
         if (textElement) textElement.textContent = source[randomIndex];
 
         // Update State variables
-        quizState.correctPlantIndex = randomIndex; // Fixed: Use the backend's index
-        
-        // Fixed: Save the correct plant name so we don't get it twice in a row next time
+        quizState.correctPlantIndex = randomIndex; 
         quizState.previousPlantName = quizState.plantNames[randomIndex]; 
 
         collapseBox();
@@ -414,15 +424,12 @@ function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
             const correctButton = document.querySelector(`.button-stack button:nth-child(${correctPlantIndex + 1})`);
             if (correctButton) {
                 correctButton.classList.add("true");
-                setTimeout(() => correctButton.classList.remove("true"), 750);
+                // Remove the highlight so it doesn't linger into the next question
+                setTimeout(() => correctButton.classList.remove("true"), 700); 
             }
         }
-
-        // Clear active classes and reset attribute after 0.75 seconds to align with question auto-advancing
-        setTimeout(() => {
-            selectedButton.classList.remove("true", "false");
-            selectedButton.setAttribute("data-is-correct", "no-answer");
-        }, 750);
+        
+        // Removed the delayed class stripping here to prevent race conditions with the next fetch updating!
     }
 
     updateResultBox();
