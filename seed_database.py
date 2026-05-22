@@ -88,9 +88,9 @@ def seed_database():
             Trees("Shumard Oak", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Shumard+OakBark.jpg", "Quercus shumardii", "Tree", "Photo 169894479, (c) Brand R", ""),
 
             # 16. Desert Willow
-            Trees("Desert Willow", "close_fullsize", "", "Chilopsis linearis", "Tree", "", ""),
-            Trees("Desert Willow", "leaf", "", "Chilopsis linearis", "Tree", "", ""),
-            Trees("Desert Willow", "bark", "", "Chilopsis linearis", "Tree", "", ""),
+            Trees("Desert Willow", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Desert+WillowFull.jpg", "Chilopsis linearis", "Tree", "Photo 521683719, (c) Joseph Aubert", ""),
+            Trees("Desert Willow", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Desert+WillowLeaf.jpeg", "Chilopsis linearis", "Tree", "Photo 383980503, (c) William Harmon", ""),
+            Trees("Desert Willow", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Desert+WillowBark.jpeg", "Chilopsis linearis", "Tree", "Photo 2092453, (c) Laura Clark", ""),
 
             # 17. Retama
             Trees("Mexican Palo Verde", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Mexican+Palo+VerdeFull.jpg", "Parkinsonia aculeata", "Tree", "Photo 590612997, (c) Clifton Ladd, C.W.B.", ""),
@@ -99,8 +99,8 @@ def seed_database():
 
             # 18. Texas Ash
             Trees("Texas Ash", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/texas_ash_947070-min.jpeg", "Fraxinus texensis", "Tree", "", ""),
-            Trees("Texas Ash", "leaf", "", "Fraxinus texensis", "Tree", "", ""),
-            Trees("Texas Ash", "bark", "", "Fraxinus texensis", "Tree", "", ""),
+            Trees("Texas Ash", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Texas+AshLeaf.jpeg", "Fraxinus texensis", "Tree", "Photo 282523696, (c) saltyhiker", ""),
+            Trees("Texas Ash", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas+AshBark.jpg ", "Fraxinus texensis", "Tree", "Photo 20708098, (c) markluffel", ""),
 
             # 19. Yaupon Holly
             Trees("Yaupon Holly", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/yaupon_holly_5907614-min.jpeg", "Ilex vomitoria", "Tree", "", ""),

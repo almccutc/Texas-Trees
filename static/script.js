@@ -375,10 +375,11 @@ async function fetchPlantNameList(switches) {
                 btn.classList.remove('is-focused', 'is-hovered', 'is-active', 'true', 'false');
                 btn.setAttribute("data-is-correct", "no-answer");
 
-                // DOM REFLOW HACK: Force the browser to fully redraw the button without native iOS/mobile hovers
-                btn.style.display = 'none';
-                void btn.offsetHeight; // This magic line triggers a layout recalculation
-                btn.style.display = ''; // Put it right back
+                // ADVANCED MOBILE HACK: Temporarily disable pointer events so the browser is forced to drop :hover and :active states
+                btn.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    btn.style.pointerEvents = '';
+                }, 100);
             }
         }
 
