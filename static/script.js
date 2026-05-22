@@ -25,11 +25,41 @@ let countyLayers = [];
 let selectedOption = null;
 
 // ==========================================
-// GLOBAL EVENT HANDLERS
+// GLOBAL EVENT HANDLERS & HELPERS
 // ==========================================
+
+// THE ULTIMATE MOBILE FIX: The Focus Stealer
+// This forces the mobile browser's "ghost cursor" to move to an invisible off-screen element,
+// instantly killing any sticky :hover or :active states on the answer buttons.
+function resetMobileCursor() {
+    let cursorStealer = document.getElementById('mobile-cursor-stealer');
+    if (!cursorStealer) {
+        cursorStealer = document.createElement('button'); 
+        cursorStealer.id = 'mobile-cursor-stealer';
+        cursorStealer.style.position = 'fixed'; // Fixed prevents screen jumping
+        cursorStealer.style.top = '-9999px';
+        cursorStealer.style.left = '-9999px';
+        cursorStealer.style.opacity = '0';
+        document.body.appendChild(cursorStealer);
+    }
+    
+    // Steal focus to drag the mobile cursor away, then immediately drop it
+    cursorStealer.focus();
+    setTimeout(() => {
+        cursorStealer.blur();
+    }, 10);
+}
+
 function handleOptionClick(index) {
     if (!quizState.isAnsweringAllowed) return;
     quizState.isAnsweringAllowed = false;
+
+    if (document.activeElement) {
+        document.activeElement.blur();
+    }
+    
+    // Start moving the cursor away the moment the click happens
+    resetMobileCursor();
 
     quizState.selectedIndex = index;
     checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
@@ -230,20 +260,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const optionButtons = document.querySelectorAll(".button-stack button");
     
     optionButtons.forEach((button, index) => {
-        // Desktop support: standard clicks
+        // Standard, clean click event listener for both Desktop and Mobile
         button.addEventListener("click", () => handleOptionClick(index));
-        
-        // Mobile Fix: Prevent default virtual mouse cursor from being created on tap
-        button.addEventListener("touchend", (e) => {
-            if (!quizState.isAnsweringAllowed) return;
-            e.preventDefault(); // This kills the sticky mobile hover permanently!
-            handleOptionClick(index);
-        });
     });
 
     const quizNextBtn = document.getElementById("quizNextButton");
     if (quizNextBtn) {
         const handleNextClick = () => {
+            if (document.activeElement) document.activeElement.blur();
+            resetMobileCursor(); // Kill ghost cursor here too
+
             const getCheck = (id) => document.getElementById(id)?.checked || false;
             fetchPlantNameList({
                 trees: getCheck("switchRoundedDefault_trees"),
@@ -263,14 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 2000); 
         };
 
-        // Desktop Next
         quizNextBtn.addEventListener('click', handleNextClick);
-        
-        // Mobile Next Fix
-        quizNextBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            handleNextClick();
-        });
     }
 
     // ---------------------------------------------------------
@@ -359,13 +378,14 @@ async function fetchPlantNameList(switches) {
 
         const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
 
-        // Update Buttons cleanly!
+        // Update Buttons cleanly
         for (let i = 0; i < 4; i++) {
             let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
             if (btn) {
-                // Wipe our custom visual validation classes
-                btn.classList.remove('true', 'false');
+                // Wipe our custom visual validation classes AND any lingering Bulma state classes
+                btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
                 btn.setAttribute("data-is-correct", "no-answer");
+                btn.blur();
 
                 const commonEl = btn.querySelector('.common-name');
                 const scientificEl = btn.querySelector('.scientific-name');
@@ -389,10 +409,15 @@ async function fetchPlantNameList(switches) {
         quizState.previousPlantName = quizState.plantNames[randomIndex]; 
 
         collapseBox();
+        
+        // Final insurance policy against the ghost cursor right before letting the user play again
+        resetMobileCursor();
+        
         quizState.isAnsweringAllowed = true;
 
     } catch (error) {
         console.error("Error fetching plant list:", error);
+        resetMobileCursor();
         quizState.isAnsweringAllowed = true;
     }
 }
