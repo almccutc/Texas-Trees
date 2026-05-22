@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 quizNextBtn.style.display = 'none';
                 quizState.totalCount++;
                 updateResultBox();
-            }, 2000); 
+            }, 200); 
         };
 
         quizNextBtn.addEventListener('click', handleNextClick);
