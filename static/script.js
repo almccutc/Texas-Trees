@@ -24,6 +24,42 @@ let map;
 let countyLayers = [];
 let selectedOption = null;
 
+// ==========================================
+// GLOBAL EVENT HANDLERS
+// ==========================================
+// Extracted out so we can re-attach it to brand new cloned buttons
+function handleOptionClick(index) {
+    if (!quizState.isAnsweringAllowed) return;
+    quizState.isAnsweringAllowed = false;
+    
+    if (document.activeElement) {
+        document.activeElement.blur();
+    }
+
+    quizState.selectedIndex = index;
+    checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
+
+    // Gather current switch states
+    const getCheck = (id) => document.getElementById(id)?.checked || false;
+    
+    const currentSwitches = {
+        trees: getCheck("switchRoundedDefault_trees"),
+        leaves: getCheck("switchRoundedDefault_leaves"),
+        barks: getCheck("switchRoundedDefault_barks"),
+        wildflowers: getCheck("switchState_wildflowers"),
+        grasses: getCheck("switchRoundedDefault_grasses"),
+        aquaticplants: getCheck("switchRoundedDefault_aquaticplants"),
+        vines: getCheck("switchRoundedDefault_vines"),
+        cacti: getCheck("switchRoundedDefault_cacti")
+    };
+
+    // Auto-advance to the next question after a delay
+    setTimeout(() => {
+        fetchPlantNameList(currentSwitches);
+    }, 750);
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // ---------------------------------------------------------
     // 1. INITIALIZE SWITCHES
@@ -207,44 +243,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const optionButtons = document.querySelectorAll(".button-stack button");
     
     optionButtons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-            if (!quizState.isAnsweringAllowed) return;
-            quizState.isAnsweringAllowed = false;
-            
-            // Fix: Global blur to strip mobile's simulated "mouse cursor" focus from everything
-            if (document.activeElement) {
-                document.activeElement.blur();
-            }
-            button.blur();
-
-            quizState.selectedIndex = index;
-            checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
-
-            // Gather current switch states
-            const getCheck = (id) => document.getElementById(id)?.checked || false;
-            
-            const currentSwitches = {
-                trees: getCheck("switchRoundedDefault_trees"),
-                leaves: getCheck("switchRoundedDefault_leaves"),
-                barks: getCheck("switchRoundedDefault_barks"),
-                wildflowers: getCheck("switchState_wildflowers"),
-                grasses: getCheck("switchRoundedDefault_grasses"),
-                aquaticplants: getCheck("switchRoundedDefault_aquaticplants"),
-                vines: getCheck("switchRoundedDefault_vines"),
-                cacti: getCheck("switchRoundedDefault_cacti")
-            };
-
-            // Auto-advance to the next question after a delay
-            setTimeout(() => {
-                fetchPlantNameList(currentSwitches);
-            }, 750); // Increased slightly to prevent JS timeouts overlapping!
-        });
+        // Tie initial elements to our separated click handler
+        button.addEventListener("click", () => handleOptionClick(index));
     });
 
     const quizNextBtn = document.getElementById("quizNextButton");
     if (quizNextBtn) {
         quizNextBtn.addEventListener('click', () => {
-            // Fix: Clean up focus state on 'Next' button clicks too
             if (document.activeElement) document.activeElement.blur();
             quizNextBtn.blur();
             
@@ -330,11 +335,10 @@ async function fetchPlantNameList(switches) {
         switchState_vines: switches.vines,
         switchState_cacti: switches.cacti,
         previousPlantName: quizState.previousPlantName,
-        _cb: new Date().getTime() // Cache-Buster: Forces mobile browser to treat this as a 100% new request!
+        _cb: new Date().getTime() // Cache-Buster
     });
 
     try {
-        // Force the fetch request to ignore local browser caching entirely
         const response = await fetch(`/get_plant_name_list?${queryParams.toString()}`, {
             method: 'GET',
             headers: {
@@ -358,8 +362,26 @@ async function fetchPlantNameList(switches) {
 
         // Update Buttons
         for (let i = 0; i < 4; i++) {
-            const btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
+            let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
             if (btn) {
+                // ========================================================
+                // THE ULTIMATE MOBILE FIX: DOM CLONING
+                // ========================================================
+                // By cloning the node and replacing it, we forcefully destroy the HTML 
+                // element the phone's browser thought it was touching. 
+                // This 100% guarantees the native CSS :active and :hover states are destroyed.
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                btn = newBtn; // Use our fresh, untainted button going forward
+
+                // Re-attach the click listener (since cloning destroys listeners)
+                btn.addEventListener("click", () => handleOptionClick(i));
+                
+                // Clear any remaining state classes just to be safe
+                btn.classList.remove('is-focused', 'is-hovered', 'is-active', 'true', 'false');
+                btn.setAttribute("data-is-correct", "no-answer");
+
+                // Populate with new data
                 const commonEl = btn.querySelector('.common-name');
                 const scientificEl = btn.querySelector('.scientific-name');
                 const typeEl = btn.querySelector('.tree-type');
@@ -367,19 +389,6 @@ async function fetchPlantNameList(switches) {
                 if (commonEl) commonEl.innerHTML = quizState.plantNames[indices[i]];
                 if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
                 if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
-
-                // Explicitly blur each button to remove native browser :hover and :focus styles
-                btn.blur();
-                
-                // Actively strip away any Bulma CSS states AND previous validation classes to ensure a fresh slate
-                btn.classList.remove('is-focused', 'is-hovered', 'is-active', 'true', 'false');
-                btn.setAttribute("data-is-correct", "no-answer");
-
-                // ADVANCED MOBILE HACK: Temporarily disable pointer events so the browser is forced to drop :hover and :active states
-                btn.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    btn.style.pointerEvents = '';
-                }, 100);
             }
         }
 
@@ -425,12 +434,9 @@ function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
             const correctButton = document.querySelector(`.button-stack button:nth-child(${correctPlantIndex + 1})`);
             if (correctButton) {
                 correctButton.classList.add("true");
-                // Remove the highlight so it doesn't linger into the next question
                 setTimeout(() => correctButton.classList.remove("true"), 700); 
             }
         }
-        
-        // Removed the delayed class stripping here to prevent race conditions with the next fetch updating!
     }
 
     updateResultBox();

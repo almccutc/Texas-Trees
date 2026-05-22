@@ -103,9 +103,9 @@ def seed_database():
             Trees("Texas Ash", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas+AshBark.jpg ", "Fraxinus texensis", "Tree", "Photo 20708098, (c) markluffel", ""),
 
             # 19. Yaupon Holly
-            Trees("Yaupon Holly", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/yaupon_holly_5907614-min.jpeg", "Ilex vomitoria", "Tree", "", ""),
-            Trees("Yaupon Holly", "leaf", "", "Ilex vomitoria", "Tree", "", ""),
-            Trees("Yaupon Holly", "bark", "", "Ilex vomitoria", "Tree", "", ""),
+            Trees("Yaupon Holly", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/Yaupon+HollyFull.jpeg", "Ilex vomitoria", "Tree", "Photo 451918713, (c) Linda Jo Conn", ""),
+            Trees("Yaupon Holly", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Yaupon+HollyLeaf.jpg", "Ilex vomitoria", "Tree", "Photo 344718632, (c) Lauren McLaurin", ""),
+            # Trees("Yaupon Holly", "bark", "", "Ilex vomitoria", "Tree", "", ""),
 
             # 20. Sweetgum
             Trees("Sweetgum", "close_fullsize", "", "Liquidambar styraciflua", "Tree", "", ""),
