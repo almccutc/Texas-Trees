@@ -28,22 +28,33 @@ let selectedOption = null;
 // GLOBAL EVENT HANDLERS & HELPERS
 // ==========================================
 
+// Centralized switch state reader
+function getCurrentSwitches() {
+    const getCheck = (id) => document.getElementById(id)?.checked || false;
+    return {
+        trees: getCheck("switchRoundedDefault_trees"),
+        leaves: getCheck("switchRoundedDefault_leaves"),
+        barks: getCheck("switchRoundedDefault_barks"),
+        wildflowers: getCheck("switchState_wildflowers"),
+        grasses: getCheck("switchRoundedDefault_grasses"),
+        aquaticplants: getCheck("switchRoundedDefault_aquaticplants"),
+        vines: getCheck("switchRoundedDefault_vines"),
+        cacti: getCheck("switchRoundedDefault_cacti")
+    };
+}
+
 // THE ULTIMATE MOBILE FIX: The Focus Stealer
-// This forces the mobile browser's "ghost cursor" to move to an invisible off-screen element,
-// instantly killing any sticky :hover or :active states on the answer buttons.
 function resetMobileCursor() {
     let cursorStealer = document.getElementById('mobile-cursor-stealer');
     if (!cursorStealer) {
         cursorStealer = document.createElement('button'); 
         cursorStealer.id = 'mobile-cursor-stealer';
-        cursorStealer.style.position = 'fixed'; // Fixed prevents screen jumping
+        cursorStealer.style.position = 'fixed'; 
         cursorStealer.style.top = '-9999px';
         cursorStealer.style.left = '-9999px';
         cursorStealer.style.opacity = '0';
         document.body.appendChild(cursorStealer);
     }
-    
-    // Steal focus to drag the mobile cursor away, then immediately drop it
     cursorStealer.focus();
     setTimeout(() => {
         cursorStealer.blur();
@@ -58,33 +69,16 @@ function handleOptionClick(index) {
         document.activeElement.blur();
     }
     
-    // Start moving the cursor away the moment the click happens
     resetMobileCursor();
 
     quizState.selectedIndex = index;
     checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
 
-    // Gather current switch states
-    const getCheck = (id) => document.getElementById(id)?.checked || false;
-    
-    const currentSwitches = {
-        trees: getCheck("switchRoundedDefault_trees"),
-        leaves: getCheck("switchRoundedDefault_leaves"),
-        barks: getCheck("switchRoundedDefault_barks"),
-        wildflowers: getCheck("switchState_wildflowers"),
-        grasses: getCheck("switchRoundedDefault_grasses"),
-        aquaticplants: getCheck("switchRoundedDefault_aquaticplants"),
-        vines: getCheck("switchRoundedDefault_vines"),
-        cacti: getCheck("switchRoundedDefault_cacti")
-    };
-
-    // SPEED FIX 1: Auto-advance to the next question after 400ms instead of 750ms.
-    // This gives them just enough time to see the red/green answer highlight before moving on.
+    // Call for the next round after letting them see if they got it right
     setTimeout(() => {
-        fetchPlantNameList(currentSwitches);
+        fetchPlantNameList(getCurrentSwitches());
     }, 400);
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
     // ---------------------------------------------------------
@@ -261,7 +255,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const optionButtons = document.querySelectorAll(".button-stack button");
     
     optionButtons.forEach((button, index) => {
-        // Standard, clean click event listener for both Desktop and Mobile
         button.addEventListener("click", () => handleOptionClick(index));
     });
 
@@ -269,19 +262,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (quizNextBtn) {
         const handleNextClick = () => {
             if (document.activeElement) document.activeElement.blur();
-            resetMobileCursor(); // Kill ghost cursor here too
-
-            const getCheck = (id) => document.getElementById(id)?.checked || false;
-            fetchPlantNameList({
-                trees: getCheck("switchRoundedDefault_trees"),
-                leaves: getCheck("switchRoundedDefault_leaves"),
-                barks: getCheck("switchRoundedDefault_barks"),
-                wildflowers: getCheck("switchState_wildflowers"),
-                grasses: getCheck("switchRoundedDefault_grasses"),
-                aquaticplants: getCheck("switchRoundedDefault_aquaticplants"),
-                vines: getCheck("switchRoundedDefault_vines"),
-                cacti: getCheck("switchRoundedDefault_cacti")
-            });
+            resetMobileCursor(); 
+            
+            fetchPlantNameList(getCurrentSwitches());
 
             setTimeout(() => {
                 quizNextBtn.style.display = 'none';
@@ -337,13 +320,22 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // KICK OFF INITIAL PREFETCH SO ROUND 2 IS READY BEFORE THEY EVEN PLAY ROUND 1
+    prefetchNextRound(getCurrentSwitches());
 });
 
+
 // ==========================================
-// CORE FUNCTIONS
+// CORE FUNCTIONS & BACKGROUND PREFETCHING ENGINE
 // ==========================================
 
-async function fetchPlantNameList(switches) {
+let activePrefetchPromise = null;
+
+// This function silently downloads the next round's data & image in the background
+function prefetchNextRound(switches) {
+    const switchesStr = JSON.stringify(switches);
+    
     const queryParams = new URLSearchParams({
         switchState_trees: switches.trees,
         switchState_leaves: switches.leaves,
@@ -354,91 +346,151 @@ async function fetchPlantNameList(switches) {
         switchState_vines: switches.vines,
         switchState_cacti: switches.cacti,
         previousPlantName: quizState.previousPlantName,
-        _cb: new Date().getTime() // Cache-Buster
+        _cb: new Date().getTime() 
     });
 
+    activePrefetchPromise = new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`/get_plant_name_list?${queryParams.toString()}`, {
+                method: 'GET',
+                credentials: 'same-origin', 
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
+            
+            if (!response.ok) throw new Error("Network issue");
+            const data = await response.json();
+            
+            // Instantly trigger the browser to download the S3 image into cache
+            const nextImage = new Image();
+            nextImage.src = data.plant_image_url[data.randomIndex];
+            
+            // Only resolve as "ready" once the S3 download finishes
+            nextImage.onload = () => {
+                resolve({ data: data, imageSrc: nextImage.src, switchesStr: switchesStr });
+            };
+            nextImage.onerror = () => {
+                reject(new Error("Image failed to preload"));
+            };
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+// Triggers when the user actually wants to go to the next round
+async function fetchPlantNameList(switches) {
+    const switchesStr = JSON.stringify(switches);
+    
+    // Provide visual feedback if they click fast and their internet is still loading the background prefetch
+    const imageElement = document.getElementById("selectedPlantImage");
+    if (imageElement) imageElement.style.opacity = '0.5';
+
     try {
+        // FAST PATH: Wait for the background prefetch to finish!
+        if (activePrefetchPromise) {
+            try {
+                const prefetched = await activePrefetchPromise;
+                // Double check they didn't change the checkboxes while we were prefetching
+                if (prefetched && prefetched.switchesStr === switchesStr) {
+                    renderRound(prefetched.data, prefetched.imageSrc);
+                    return; // Mission accomplished, instantly loaded!
+                }
+            } catch (err) {
+                console.log("Background prefetch wasn't ready, falling back to manual fetch.");
+            }
+        }
+
+        // SLOW PATH: Backup plan if the prefetch failed or they changed checkboxes right before clicking
+        const queryParams = new URLSearchParams({
+            switchState_trees: switches.trees,
+            switchState_leaves: switches.leaves,
+            switchState_barks: switches.barks,
+            switchState_wildflowers: switches.wildflowers,
+            switchState_grasses: switches.grasses,
+            switchState_aquaticplants: switches.aquaticplants,
+            switchState_vines: switches.vines,
+            switchState_cacti: switches.cacti,
+            previousPlantName: quizState.previousPlantName,
+            _cb: new Date().getTime()
+        });
+
         const response = await fetch(`/get_plant_name_list?${queryParams.toString()}`, {
             method: 'GET',
-            // SPEED FIX 2: Added credentials to ensure the backend Flask session 
-            // remembers our pre-fetched queues and history array!
             credentials: 'same-origin', 
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
+            headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
         });
         const data = await response.json();
-
-        quizState.plantNames = data.plant_names;
-        quizState.plantImageUrls = data.plant_image_url;
         
-        const randomIndex = data.randomIndex; 
-        
-        // SPEED FIX 3: IMAGE PRELOADING MAGIC
-        // We create an invisible image in memory and force the browser to download it immediately.
         const nextImage = new Image();
-        nextImage.src = quizState.plantImageUrls[randomIndex];
-
-        // We completely freeze the UI update until this exact image is 100% finished downloading.
-        nextImage.onload = () => {
-            const scientificNames = data.scientific_names;
-            const plantTypes = data.plant_types;
-            const source = data.source;
-
-            const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
-
-            // Update Buttons cleanly
-            for (let i = 0; i < 4; i++) {
-                let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
-                if (btn) {
-                    // Wipe our custom visual validation classes AND any lingering Bulma state classes
-                    btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
-                    btn.setAttribute("data-is-correct", "no-answer");
-                    btn.blur();
-
-                    const commonEl = btn.querySelector('.common-name');
-                    const scientificEl = btn.querySelector('.scientific-name');
-                    const typeEl = btn.querySelector('.tree-type');
-
-                    if (commonEl) commonEl.innerHTML = quizState.plantNames[indices[i]];
-                    if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
-                    if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
-                }
-            }
-
-            // Update Image & Text seamlessly!
-            const imageElement = document.getElementById("selectedPlantImage");
-            if (imageElement) imageElement.src = nextImage.src; // Use the preloaded image
-
-            const textElement = document.getElementById("modal-text");
-            if (textElement) textElement.textContent = source[randomIndex];
-
-            // Update State variables
-            quizState.correctPlantIndex = randomIndex; 
-            quizState.previousPlantName = quizState.plantNames[randomIndex]; 
-
-            collapseBox();
-            
-            // Final insurance policy against the ghost cursor right before letting the user play again
-            resetMobileCursor();
-            
-            quizState.isAnsweringAllowed = true;
-        };
-
-        // Fallback: If S3 fails or there's a 404, we don't want the game to permanently freeze.
+        nextImage.src = data.plant_image_url[data.randomIndex];
+        
+        nextImage.onload = () => renderRound(data, nextImage.src);
         nextImage.onerror = () => {
-            console.error("Failed to preload S3 image.");
-            // Optional: You could show a placeholder image here if desired.
-            quizState.isAnsweringAllowed = true; 
+            console.error("Failed to preload S3 image on fallback.");
+            renderRound(data, nextImage.src); // Try to render anyway so we don't freeze the game
         };
 
     } catch (error) {
         console.error("Error fetching plant list:", error);
         resetMobileCursor();
         quizState.isAnsweringAllowed = true;
+        if (imageElement) imageElement.style.opacity = '1'; // Reset opacity if crashed
     }
+}
+
+// Separated the rendering logic to make the flow cleaner
+function renderRound(data, imageSrc) {
+    quizState.plantNames = data.plant_names;
+    quizState.plantImageUrls = data.plant_image_url;
+    
+    const randomIndex = data.randomIndex; 
+    const scientificNames = data.scientific_names;
+    const plantTypes = data.plant_types;
+    const source = data.source;
+    const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
+
+    // Wipe old classes and update buttons
+    for (let i = 0; i < 4; i++) {
+        let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
+        if (btn) {
+            btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
+            btn.setAttribute("data-is-correct", "no-answer");
+            btn.blur();
+
+            const commonEl = btn.querySelector('.common-name');
+            const scientificEl = btn.querySelector('.scientific-name');
+            const typeEl = btn.querySelector('.tree-type');
+
+            if (commonEl) commonEl.innerHTML = quizState.plantNames[indices[i]];
+            if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
+            if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
+        }
+    }
+
+    // Update Image & Text seamlessly
+    const imageElement = document.getElementById("selectedPlantImage");
+    if (imageElement) {
+        imageElement.src = imageSrc; 
+        imageElement.style.opacity = '1'; // Ensure opacity is reset from loading state
+    }
+
+    const textElement = document.getElementById("modal-text");
+    if (textElement) textElement.textContent = source[randomIndex];
+
+    // Update State variables
+    quizState.correctPlantIndex = randomIndex; 
+    quizState.previousPlantName = quizState.plantNames[randomIndex]; 
+
+    collapseBox();
+    resetMobileCursor();
+    quizState.isAnsweringAllowed = true;
+
+    // THE MOST IMPORTANT STEP: Instantly trigger the next prefetch so the next round is ready!
+    prefetchNextRound(getCurrentSwitches());
 }
 
 function checkSelectedAnswer(selectedIndex, correctPlantIndex) {
