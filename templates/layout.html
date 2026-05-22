@@ -15,12 +15,10 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap">
       
       <!-- Favicons -->
-      <!-- Added ?v=2 to force the browser to clear its cache and load the image -->
-      <link rel="icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/box_elder_icon.jpg?v=2">
-      <link rel="shortcut icon" type="image/jpeg" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/box_elder_icon.jpg?v=2">
-      
-      <!-- If you eventually convert the image to a PNG (which browsers prefer), you can swap to this: -->
-      <!-- <link rel="icon" type="image/png" href="https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/box_elder_icon.png?v=3"> -->
+      <!-- We are now pulling the icon directly from your Flask static folder -->
+      <!-- This bypasses any strict AWS S3 security policies blocking tab icons -->
+      <link rel="icon" type="image/png" href="{{ url_for('static', filename='box_elder_icon.png') }}">
+      <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='box_elder_icon.png') }}">
       
       <!-- Leaflet & Esri Scripts/Styles -->
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
