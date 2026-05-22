@@ -47,6 +47,13 @@ function handleOptionClick(index) {
     if (!quizState.isAnsweringAllowed) return;
     quizState.isAnsweringAllowed = false;
 
+    // 1. THE MOBILE HOVER FIX (Part 1): 
+    // Immediately kill pointer interactions on the entire button stack. 
+    // This acts as a circuit breaker, preventing double-taps AND forcing 
+    // the mobile browser to begin dropping its sticky :hover state.
+    const stack = document.querySelector('.button-stack');
+    if (stack) stack.style.pointerEvents = 'none';
+
     if (document.activeElement) {
         document.activeElement.blur();
     }
@@ -417,6 +424,10 @@ async function fetchPlantNameList(switches) {
         console.error("Error fetching plant list:", error);
         quizState.isAnsweringAllowed = true;
         if (imageElement) imageElement.style.opacity = '1'; // Reset opacity if crashed
+        
+        // Emergency unlock if a crash happens
+        const stack = document.querySelector('.button-stack');
+        if (stack) stack.style.pointerEvents = '';
     }
 }
 
@@ -431,22 +442,13 @@ function renderRound(data, imageSrc) {
     const source = data.source;
     const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
 
-    // Wipe old classes and update buttons
+    // Wipe old classes and update buttons normally (removed cloning hack)
     for (let i = 0; i < 4; i++) {
         let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
         if (btn) {
-            // THE NUCLEAR OPTION FOR STICKY HOVER: 
-            // Destroy the old button entirely and replace it with a perfect clone.
-            // A brand new DOM element physically cannot retain the mobile hover state!
-            let freshBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(freshBtn, btn);
-            btn = freshBtn; // Switch our reference to the new clean button
-            
-            // Re-attach the click listener since cloning strips JavaScript events
-            btn.addEventListener("click", () => handleOptionClick(i));
-
             btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
             btn.setAttribute("data-is-correct", "no-answer");
+            btn.blur();
 
             const commonEl = btn.querySelector('.common-name');
             const scientificEl = btn.querySelector('.scientific-name');
@@ -475,7 +477,16 @@ function renderRound(data, imageSrc) {
     collapseBox();
     quizState.isAnsweringAllowed = true;
 
-    // THE MOST IMPORTANT STEP: Instantly trigger the next prefetch so the next round is ready!
+    // 2. THE MOBILE HOVER FIX (Part 2):
+    // Wait a tiny fraction of a second AFTER the new answers appear before 
+    // re-enabling click interactions. This totally wipes the CSS :hover state 
+    // from the browser's memory because the element was temporarily dead.
+    setTimeout(() => {
+        const stack = document.querySelector('.button-stack');
+        if (stack) stack.style.pointerEvents = '';
+    }, 150);
+
+    // Instantly trigger the next prefetch so the next round is ready!
     prefetchNextRound(getCurrentSwitches());
 }
 
