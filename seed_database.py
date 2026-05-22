@@ -325,24 +325,24 @@ def seed_database():
                     exists.image_url = tree.image_url
                     print(f"Updated URL for {tree.plant_name} ({tree.image_type})")
 
-        # # --- FLOWERS (Top 15) ---
-        # flowers = [
-        #     Flowers("Texas Bluebonnet", "close_fullsize", "", "Lupinus texensis", "Flower", "", ""),
-        #     Flowers("Indian Blanket", "close_fullsize", "", "Gaillardia pulchella", "Flower", "", ""),
-        #     Flowers("Pink Evening Primrose", "close_fullsize", "", "Oenothera speciosa", "Flower", "", ""),
-        #     Flowers("Black-eyed Susan", "close_fullsize", "", "Rudbeckia hirta", "Flower", "", ""),
-        #     Flowers("Mexican Hat", "close_fullsize", "", "Ratibida columnifera", "Flower", "", ""),
-        #     Flowers("Texas Paintbrush", "close_fullsize", "", "Castilleja indivisa", "Flower", "", ""),
-        #     Flowers("Plains Coreopsis", "close_fullsize", "", "Coreopsis tinctoria", "Flower", "", ""),
-        #     Flowers("Drummond Phlox", "close_fullsize", "", "Phlox drummondii", "Flower", "", ""),
-        #     Flowers("Texas Bluebell", "close_fullsize", "", "Eustoma exaltatum", "Flower", "", ""),
-        #     Flowers("Purple Coneflower", "close_fullsize", "", "Echinacea purpurea", "Flower", "", ""),
-        #     Flowers("Common Sunflower", "close_fullsize", "", "Helianthus annuus", "Flower", "", ""),
-        #     Flowers("Winecup", "close_fullsize", "", "Callirhoe involuta", "Flower", "", ""),
-        #     Flowers("Texas Lantana", "close_fullsize", "", "Lantana urticoides", "Flower", "", ""),
-        #     Flowers("Standing Cypress", "close_fullsize", "", "Ipomopsis rubra", "Flower", "", ""),
-        #     Flowers("Blue-eyed Grass", "close_fullsize", "", "Sisyrinchium campestre", "Flower", "", "")
-        # ]
+        # --- FLOWERS (Top 15) ---
+        flowers = [
+            Flowers("Texas Bluebonnet", "close_fullsize", "", "Lupinus texensis", "Flower", "", ""),
+            Flowers("Indian Blanket", "close_fullsize", "", "Gaillardia pulchella", "Flower", "", ""),
+            Flowers("Pink Evening Primrose", "close_fullsize", "", "Oenothera speciosa", "Flower", "", ""),
+            Flowers("Black-eyed Susan", "close_fullsize", "", "Rudbeckia hirta", "Flower", "", ""),
+            Flowers("Mexican Hat", "close_fullsize", "", "Ratibida columnifera", "Flower", "", ""),
+            Flowers("Texas Paintbrush", "close_fullsize", "", "Castilleja indivisa", "Flower", "", ""),
+            Flowers("Plains Coreopsis", "close_fullsize", "", "Coreopsis tinctoria", "Flower", "", ""),
+            Flowers("Drummond Phlox", "close_fullsize", "", "Phlox drummondii", "Flower", "", ""),
+            Flowers("Texas Bluebell", "close_fullsize", "", "Eustoma exaltatum", "Flower", "", ""),
+            Flowers("Purple Coneflower", "close_fullsize", "", "Echinacea purpurea", "Flower", "", ""),
+            Flowers("Common Sunflower", "close_fullsize", "", "Helianthus annuus", "Flower", "", ""),
+            Flowers("Winecup", "close_fullsize", "", "Callirhoe involuta", "Flower", "", ""),
+            Flowers("Texas Lantana", "close_fullsize", "", "Lantana urticoides", "Flower", "", ""),
+            Flowers("Standing Cypress", "close_fullsize", "", "Ipomopsis rubra", "Flower", "", ""),
+            Flowers("Blue-eyed Grass", "close_fullsize", "", "Sisyrinchium campestre", "Flower", "", "")
+        ]
         
         for flower in flowers:
             exists = Flowers.query.filter_by(plant_name=flower.plant_name).first()
