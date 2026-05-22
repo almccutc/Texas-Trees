@@ -169,6 +169,7 @@ def render_crop_data():
 
 @app.route('/get_plant_name_list')
 def get_plant_name_list():
+    # 1. Gather all current switch parameters
     switchState_trees = request.args.get('switchState_trees')
     switchState_leaves = request.args.get('switchState_leaves')
     switchState_barks = request.args.get('switchState_barks')
@@ -186,147 +187,192 @@ def get_plant_name_list():
     except (TypeError, ValueError):
         target_idx = random.randint(0, 3)
 
-    # --- HISTORY / PREVIOUS 8 TRACKING ---
-    # Retrieve history tracked automatically via Flask session
+    # Create a unique string fingerprint of the current switch states to track user changes
+    current_switches = f"{switchState_trees}_{switchState_leaves}_{switchState_barks}_{switchState_wildflowers}_{switchState_grasses}_{switchState_aquaticplants}_{switchState_vines}_{switchState_cacti}"
+
+    # --- SESSION QUEUE RETRIEVAL ---
+    last_switches = session.get('last_switches')
+    pre_fetched_rounds = session.get('pre_fetched_rounds', [])
     recent_plants = session.get('recent_plants', [])
     
-    # Backup: still check the single parameter in case frontend is manually passing a single item
+    # Backup history logic
     previous_param = request.args.get('previousPlantName')
     if previous_param:
         prev_stripped = previous_param.strip().lower()
         if prev_stripped not in recent_plants:
             recent_plants.append(prev_stripped)
-
-    # Enforce a max length of 8 previous plants
     recent_plants = recent_plants[-8:]
 
-    # --- CATEGORY FILTERING ---
-    active_categories = []
-    if switchState_trees == 'true':
-        active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
-    if switchState_leaves == 'true':
-        active_categories.append((Trees, Trees.image_type == 'leaf'))    
-    if switchState_barks == 'true':
-        active_categories.append((Trees, Trees.image_type == 'bark'))
-    if switchState_wildflowers == 'true':
-        active_categories.append((Flowers, None))
-    if switchState_vines == 'true':
-        active_categories.append((Vines, None))
-    if switchState_cacti == 'true':
-        active_categories.append((Cacti, None))                
-    if switchState_grasses == 'true':
-        active_categories.append((Grasses, None))            
-    if switchState_aquaticplants == 'true':
-        active_categories.append((Aquatic, None))
+    # If the user changed their filter options, immediately dump the pre-fetched queue
+    if current_switches != last_switches:
+        pre_fetched_rounds = []
+        session['last_switches'] = current_switches
 
-    # Default to Tree + Leaf if nothing is selected (or on initial load)
-    if not active_categories:
-        active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
-        active_categories.append((Trees, Trees.image_type == 'leaf'))
-
-    # Restrict fallback tables ONLY to what is actively selected
-    active_tables = list({model_class for model_class, _ in active_categories})
-
-    correct_plant = None
-
-    categories_shuffled = list(active_categories)
-    random.shuffle(categories_shuffled)
-    
-    # 1. Primary Correct Plant Search
-    for model_class, extra_filter in categories_shuffled:
-        query = model_class.query
+    # Helper functions to save minimal DB Identifiers in the session instead of full objects
+    def serialize_plant(plant):
+        if not plant: return None
+        return {'id': plant.plant_id, 'table': plant.__tablename__}
         
-        # Actively filter out the previous 8 plant names
-        if recent_plants:
-            query = query.filter(not_(func.lower(model_class.plant_name).in_(recent_plants)))
+    def fetch_plant_from_cache(data):
+        if not data: return None
+        table_class = next((t for t in tables if t.__tablename__ == data['table']), None)
+        if table_class:
+            return table_class.query.get(data['id']) # .get() by ID is near instantaneous!
+        return None
+
+    # ==========================================
+    # SCENARIO A: WE HAVE PRE-FETCHED ROUNDS!
+    # ==========================================
+    if pre_fetched_rounds:
+        print("[DEBUG] Using instantly PRE-FETCHED round from queue!", flush=True)
+        # Pop the first cached round
+        round_data = pre_fetched_rounds.pop(0)
+        session['pre_fetched_rounds'] = pre_fetched_rounds # Save the queue back
+        
+        # Load the models using their IDs instantly
+        correct_plant = fetch_plant_from_cache(round_data['correct'])
+        decoy_plants = [fetch_plant_from_cache(d) for d in round_data['decoys']]
+
+    # ==========================================
+    # SCENARIO B: CACHE EMPTY - GENERATE A BATCH
+    # ==========================================
+    else:
+        print("[DEBUG] Queue empty. Batch generating 5 new rounds...", flush=True)
+        # Setup active categories based on switches
+        active_categories = []
+        if switchState_trees == 'true':
+            active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
+        if switchState_leaves == 'true':
+            active_categories.append((Trees, Trees.image_type == 'leaf'))    
+        if switchState_barks == 'true':
+            active_categories.append((Trees, Trees.image_type == 'bark'))
+        if switchState_wildflowers == 'true':
+            active_categories.append((Flowers, None))
+        if switchState_vines == 'true':
+            active_categories.append((Vines, None))
+        if switchState_cacti == 'true':
+            active_categories.append((Cacti, None))                
+        if switchState_grasses == 'true':
+            active_categories.append((Grasses, None))            
+        if switchState_aquaticplants == 'true':
+            active_categories.append((Aquatic, None))
+
+        # Default to Tree + Leaf if nothing is selected
+        if not active_categories:
+            active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
+            active_categories.append((Trees, Trees.image_type == 'leaf'))
+
+        active_tables = list({model_class for model_class, _ in active_categories})
+        
+        batch_size = 5
+        new_rounds = []
+        
+        # Loop and generate multiple rounds back to back to store in memory
+        for _ in range(batch_size):
+            correct_plant = None
+            categories_shuffled = list(active_categories)
+            random.shuffle(categories_shuffled)
             
-        if extra_filter is not None:
-            query = query.filter(extra_filter)
-        
-        records = get_random_records(model_class, query, limit=1)
-        if records:
-            correct_plant = records[0]
-            break
-
-    # 2. Fallback Correct Plant Search (Strictly within active_tables)
-    if not correct_plant:
-        for table in active_tables:
-            query = table.query
-            # Keep filtering out the previous 8
-            if recent_plants:
-                query = query.filter(not_(func.lower(table.plant_name).in_(recent_plants)))
+            # --- Primary Correct Plant Search ---
+            for model_class, extra_filter in categories_shuffled:
+                query = model_class.query
+                if recent_plants:
+                    query = query.filter(not_(func.lower(model_class.plant_name).in_(recent_plants)))
+                if extra_filter is not None:
+                    query = query.filter(extra_filter)
                 
-            records = get_random_records(table, query, limit=1)
-            if records:
-                correct_plant = records[0]
-                break
-                
-    # 3. Extreme Fallback Correct Plant (Ignore the previous 8 rule just to prevent a crash if DB runs out of options)
-    if not correct_plant:
-        for table in active_tables:
-            records = get_random_records(table, table.query, limit=1)
-            if records:
-                correct_plant = records[0]
-                break
-
-    if correct_plant:
-        # Save the new correctly chosen plant back to the history session
-        recent_plants.append(correct_plant.plant_name.lower())
-        session['recent_plants'] = recent_plants[-8:] # Keep the queue at 8
-        print(f"[DEBUG] Chosen correct plant: {correct_plant.plant_name} | Class: {correct_plant.__class__.__name__} | URL: '{correct_plant.image_url}'", flush=True)
-
-    # --- DECOY SELECTION ---
-    decoy_plants = []
-    seen_names = {correct_plant.plant_name.lower()} if correct_plant else set()
-    
-    # Try not to use the previous 8 plants as decoys either to keep it fully fresh
-    seen_names.update(recent_plants)
-
-    categories_shuffled = list(active_categories)
-    random.shuffle(categories_shuffled)
-    
-    # Primary Decoy Search
-    for model_class, extra_filter in categories_shuffled:
-        if len(decoy_plants) >= 3:
-            break
-            
-        query = model_class.query
-        if extra_filter is not None:
-            query = query.filter(extra_filter)
-        
-        candidates = get_random_records(model_class, query, limit=10)
-        for c in candidates:
-            if c.plant_name.lower() not in seen_names:
-                decoy_plants.append(c)
-                seen_names.add(c.plant_name.lower())
-                if len(decoy_plants) >= 3:
+                records = get_random_records(model_class, query, limit=1)
+                if records:
+                    correct_plant = records[0]
                     break
 
-    # Fallback Decoy Search (Strictly within active_tables)
-    if len(decoy_plants) < 3:
-        for table in active_tables:
-            if len(decoy_plants) >= 3:
-                break
-            candidates = get_random_records(table, table.query, limit=10)
-            for c in candidates:
-                if c.plant_name.lower() not in seen_names:
-                    decoy_plants.append(c)
-                    seen_names.add(c.plant_name.lower())
-                    if len(decoy_plants) >= 3:
+            # --- Fallback Correct Plant Search ---
+            if not correct_plant:
+                for table in active_tables:
+                    query = table.query
+                    if recent_plants:
+                        query = query.filter(not_(func.lower(table.plant_name).in_(recent_plants)))
+                    records = get_random_records(table, query, limit=1)
+                    if records:
+                        correct_plant = records[0]
                         break
                         
-    # Extreme Fallback Decoy (Ignore seen_names except the exact correct plant to prevent starvation)
-    if len(decoy_plants) < 3:
-        for table in active_tables:
-            if len(decoy_plants) >= 3:
-                break
-            candidates = get_random_records(table, table.query.filter(func.lower(table.plant_name) != func.lower(correct_plant.plant_name)), limit=10)
-            for c in candidates:
-                if c.plant_name.lower() != correct_plant.plant_name.lower() and c not in decoy_plants:
-                    decoy_plants.append(c)
-                    if len(decoy_plants) >= 3:
+            # --- Extreme Fallback Correct Plant ---
+            if not correct_plant:
+                for table in active_tables:
+                    records = get_random_records(table, table.query, limit=1)
+                    if records:
+                        correct_plant = records[0]
                         break
+                        
+            if correct_plant:
+                recent_plants.append(correct_plant.plant_name.lower())
+                recent_plants = recent_plants[-8:]
+                
+            # --- Decoy Selection ---
+            decoy_plants = []
+            seen_names = {correct_plant.plant_name.lower()} if correct_plant else set()
+            seen_names.update(recent_plants) # Avoid using recent corrects as decoys
+            
+            categories_shuffled = list(active_categories)
+            random.shuffle(categories_shuffled)
+            
+            for model_class, extra_filter in categories_shuffled:
+                if len(decoy_plants) >= 3:
+                    break
+                query = model_class.query
+                if extra_filter is not None:
+                    query = query.filter(extra_filter)
+                candidates = get_random_records(model_class, query, limit=10)
+                for c in candidates:
+                    if c.plant_name.lower() not in seen_names:
+                        decoy_plants.append(c)
+                        seen_names.add(c.plant_name.lower())
+                        if len(decoy_plants) >= 3: break
 
+            # Fallbacks Decoy Search
+            if len(decoy_plants) < 3:
+                for table in active_tables:
+                    if len(decoy_plants) >= 3: break
+                    candidates = get_random_records(table, table.query, limit=10)
+                    for c in candidates:
+                        if c.plant_name.lower() not in seen_names:
+                            decoy_plants.append(c)
+                            seen_names.add(c.plant_name.lower())
+                            if len(decoy_plants) >= 3: break
+                            
+            # Extreme Fallback Decoy
+            if len(decoy_plants) < 3:
+                for table in active_tables:
+                    if len(decoy_plants) >= 3: break
+                    candidates = get_random_records(table, table.query.filter(func.lower(table.plant_name) != func.lower(correct_plant.plant_name)), limit=10)
+                    for c in candidates:
+                        if c.plant_name.lower() != correct_plant.plant_name.lower() and c not in decoy_plants:
+                            decoy_plants.append(c)
+                            if len(decoy_plants) >= 3: break
+
+            # Append the minimal ID dicts to our batch
+            new_rounds.append({
+                'correct': serialize_plant(correct_plant),
+                'decoys': [serialize_plant(d) for d in decoy_plants]
+            })
+
+        # Save the updated history for future checks
+        session['recent_plants'] = recent_plants
+        
+        # Pop the first round out of the batch for IMMEDIATE use, and cache the remaining ones
+        round_data = new_rounds.pop(0)
+        session['pre_fetched_rounds'] = new_rounds
+        
+        # Instantly inflate the chosen immediate round models from the DB
+        correct_plant = fetch_plant_from_cache(round_data['correct'])
+        decoy_plants = [fetch_plant_from_cache(d) for d in round_data['decoys']]
+
+
+    if correct_plant:
+        print(f"[DEBUG] Setup complete for plant: {correct_plant.plant_name} | Class: {correct_plant.__class__.__name__}", flush=True)
+
+    # Assign correctly into the array based on the target_idx from the frontend
     final_plants = [None] * 4
     final_plants[target_idx] = correct_plant
 
@@ -342,7 +388,7 @@ def get_plant_name_list():
     plant_types = [item.plant_type if item else "" for item in final_plants]
     source = [item.source if item else "" for item in final_plants]
 
-    # FIX: Use make_response and add Cache-Control headers to stop mobile browsers from caching the old photos/data
+    # Use make_response to prevent mobile browser caching
     response = make_response(jsonify(
         plant_names=plant_names, 
         plant_image_url=plant_image_url, 
