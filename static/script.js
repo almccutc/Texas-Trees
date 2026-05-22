@@ -43,24 +43,6 @@ function getCurrentSwitches() {
     };
 }
 
-// THE ULTIMATE MOBILE FIX: The Focus Stealer
-function resetMobileCursor() {
-    let cursorStealer = document.getElementById('mobile-cursor-stealer');
-    if (!cursorStealer) {
-        cursorStealer = document.createElement('button'); 
-        cursorStealer.id = 'mobile-cursor-stealer';
-        cursorStealer.style.position = 'fixed'; 
-        cursorStealer.style.top = '-9999px';
-        cursorStealer.style.left = '-9999px';
-        cursorStealer.style.opacity = '0';
-        document.body.appendChild(cursorStealer);
-    }
-    cursorStealer.focus();
-    setTimeout(() => {
-        cursorStealer.blur();
-    }, 10);
-}
-
 function handleOptionClick(index) {
     if (!quizState.isAnsweringAllowed) return;
     quizState.isAnsweringAllowed = false;
@@ -68,8 +50,6 @@ function handleOptionClick(index) {
     if (document.activeElement) {
         document.activeElement.blur();
     }
-    
-    resetMobileCursor();
 
     quizState.selectedIndex = index;
     checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
@@ -262,7 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (quizNextBtn) {
         const handleNextClick = () => {
             if (document.activeElement) document.activeElement.blur();
-            resetMobileCursor(); 
             
             fetchPlantNameList(getCurrentSwitches());
 
@@ -436,7 +415,6 @@ async function fetchPlantNameList(switches) {
 
     } catch (error) {
         console.error("Error fetching plant list:", error);
-        resetMobileCursor();
         quizState.isAnsweringAllowed = true;
         if (imageElement) imageElement.style.opacity = '1'; // Reset opacity if crashed
     }
@@ -457,14 +435,18 @@ function renderRound(data, imageSrc) {
     for (let i = 0; i < 4; i++) {
         let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
         if (btn) {
+            // THE NUCLEAR OPTION FOR STICKY HOVER: 
+            // Destroy the old button entirely and replace it with a perfect clone.
+            // A brand new DOM element physically cannot retain the mobile hover state!
+            let freshBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(freshBtn, btn);
+            btn = freshBtn; // Switch our reference to the new clean button
+            
+            // Re-attach the click listener since cloning strips JavaScript events
+            btn.addEventListener("click", () => handleOptionClick(i));
+
             btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
             btn.setAttribute("data-is-correct", "no-answer");
-            btn.blur();
-
-            // MOBILE STICKY HOVER FIX: Force a quick DOM reflow to make the browser "forget" the hover state
-            btn.style.display = 'none';
-            void btn.offsetHeight; // This line forces the browser to recalculate the layout immediately
-            btn.style.display = ''; // Restore it back to normal
 
             const commonEl = btn.querySelector('.common-name');
             const scientificEl = btn.querySelector('.scientific-name');
@@ -491,7 +473,6 @@ function renderRound(data, imageSrc) {
     quizState.previousPlantName = quizState.plantNames[randomIndex]; 
 
     collapseBox();
-    resetMobileCursor();
     quizState.isAnsweringAllowed = true;
 
     // THE MOST IMPORTANT STEP: Instantly trigger the next prefetch so the next round is ready!
