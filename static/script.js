@@ -47,10 +47,8 @@ function handleOptionClick(index) {
     if (!quizState.isAnsweringAllowed) return;
     quizState.isAnsweringAllowed = false;
 
-    // 1. THE MOBILE HOVER FIX (Part 1): 
     // Immediately kill pointer interactions on the entire button stack. 
-    // This acts as a circuit breaker, preventing double-taps AND forcing 
-    // the mobile browser to begin dropping its sticky :hover state.
+    // This acts as a circuit breaker, preventing double-taps.
     const stack = document.querySelector('.button-stack');
     if (stack) stack.style.pointerEvents = 'none';
 
@@ -442,10 +440,14 @@ function renderRound(data, imageSrc) {
     const source = data.source;
     const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
 
-    // Wipe old classes and update buttons normally (removed cloning hack)
+    // Wipe old classes and update buttons
     for (let i = 0; i < 4; i++) {
         let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
         if (btn) {
+            // THE ULTIMATE HOVER KILLER: 
+            // Browsers instantly drop all :hover and :active states on disabled elements.
+            btn.disabled = true;
+
             btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
             btn.setAttribute("data-is-correct", "no-answer");
             btn.blur();
@@ -457,6 +459,11 @@ function renderRound(data, imageSrc) {
             if (commonEl) commonEl.innerHTML = quizState.plantNames[indices[i]];
             if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
             if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
+
+            // Re-enable the button after a tiny tick to ensure the hover state clears
+            setTimeout(() => {
+                btn.disabled = false;
+            }, 50);
         }
     }
 
@@ -477,10 +484,7 @@ function renderRound(data, imageSrc) {
     collapseBox();
     quizState.isAnsweringAllowed = true;
 
-    // 2. THE MOBILE HOVER FIX (Part 2):
-    // Wait a tiny fraction of a second AFTER the new answers appear before 
-    // re-enabling click interactions. This totally wipes the CSS :hover state 
-    // from the browser's memory because the element was temporarily dead.
+    // Restore pointer events
     setTimeout(() => {
         const stack = document.querySelector('.button-stack');
         if (stack) stack.style.pointerEvents = '';
