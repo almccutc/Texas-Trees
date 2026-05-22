@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, make_response
+from flask import Flask, render_template, jsonify, request, make_response, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import random
@@ -7,6 +7,9 @@ from sqlalchemy import not_
 import os
 
 app = Flask(__name__, static_url_path='/static')
+
+# Flask Secret Key is required to use 'session' to track the last 8 plants
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'plant-quiz-secret-key-1234')
 
 # --- SECURE DATABASE CONFIGURATION ---
 # These pull dynamically from your docker-compose.yml / .env file
@@ -53,18 +56,18 @@ class Flowers(BasePlant):
     __tablename__ = 'flower'
 
 class Vines(BasePlant):
-    __tablename__ = 'vines'   
+    __tablename__ = 'vines'    
 
 class Cacti(BasePlant):
-    __tablename__ = 'cacti' 
+    __tablename__ = 'cacti'  
 
 class Grasses(BasePlant):
-    __tablename__ = 'grasses' 
+    __tablename__ = 'grasses'  
 
 class Aquatic(BasePlant):
     __tablename__ = 'aquatic_plants'  
 
-tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]       
+tables = [Trees, Flowers, Vines, Cacti, Grasses, Aquatic]        
 
 
 def get_random_records(model_class, query, limit=1):
@@ -175,8 +178,7 @@ def get_plant_name_list():
     switchState_vines = request.args.get('switchState_vines')
     switchState_cacti = request.args.get('switchState_cacti')
     randomIndex = request.args.get('randomIndex')
-    previousPlantName = request.args.get('previousPlantName')
-
+    
     try:
         target_idx = int(randomIndex)
         if target_idx < 0 or target_idx > 3:
@@ -184,6 +186,21 @@ def get_plant_name_list():
     except (TypeError, ValueError):
         target_idx = random.randint(0, 3)
 
+    # --- HISTORY / PREVIOUS 8 TRACKING ---
+    # Retrieve history tracked automatically via Flask session
+    recent_plants = session.get('recent_plants', [])
+    
+    # Backup: still check the single parameter in case frontend is manually passing a single item
+    previous_param = request.args.get('previousPlantName')
+    if previous_param:
+        prev_stripped = previous_param.strip().lower()
+        if prev_stripped not in recent_plants:
+            recent_plants.append(prev_stripped)
+
+    # Enforce a max length of 8 previous plants
+    recent_plants = recent_plants[-8:]
+
+    # --- CATEGORY FILTERING ---
     active_categories = []
     if switchState_trees == 'true':
         active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
@@ -198,26 +215,30 @@ def get_plant_name_list():
     if switchState_cacti == 'true':
         active_categories.append((Cacti, None))                
     if switchState_grasses == 'true':
-        active_categories.append((Grasses, None))           
+        active_categories.append((Grasses, None))            
     if switchState_aquaticplants == 'true':
         active_categories.append((Aquatic, None))
 
+    # Default to Tree + Leaf if nothing is selected (or on initial load)
     if not active_categories:
         active_categories.append((Trees, Trees.image_type == 'close_fullsize'))
+        active_categories.append((Trees, Trees.image_type == 'leaf'))
+
+    # Restrict fallback tables ONLY to what is actively selected
+    active_tables = list({model_class for model_class, _ in active_categories})
 
     correct_plant = None
-    prev_name = previousPlantName.strip() if previousPlantName else ""
 
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
     
-    # Get 1 random correct plant utilizing the fast ID sampling function
+    # 1. Primary Correct Plant Search
     for model_class, extra_filter in categories_shuffled:
         query = model_class.query
         
-        # FIX: Ensure we actively filter out the previous plant name
-        if prev_name:
-            query = query.filter(func.lower(model_class.plant_name) != func.lower(prev_name))
+        # Actively filter out the previous 8 plant names
+        if recent_plants:
+            query = query.filter(not_(func.lower(model_class.plant_name).in_(recent_plants)))
             
         if extra_filter is not None:
             query = query.filter(extra_filter)
@@ -227,29 +248,44 @@ def get_plant_name_list():
             correct_plant = records[0]
             break
 
-    # Fallback correct plant search
+    # 2. Fallback Correct Plant Search (Strictly within active_tables)
     if not correct_plant:
-        for table in tables:
+        for table in active_tables:
             query = table.query
-            # FIX: Ensure fallback also filters out the previous plant name
-            if prev_name:
-                query = query.filter(func.lower(table.plant_name) != func.lower(prev_name))
+            # Keep filtering out the previous 8
+            if recent_plants:
+                query = query.filter(not_(func.lower(table.plant_name).in_(recent_plants)))
                 
             records = get_random_records(table, query, limit=1)
             if records:
                 correct_plant = records[0]
                 break
+                
+    # 3. Extreme Fallback Correct Plant (Ignore the previous 8 rule just to prevent a crash if DB runs out of options)
+    if not correct_plant:
+        for table in active_tables:
+            records = get_random_records(table, table.query, limit=1)
+            if records:
+                correct_plant = records[0]
+                break
 
     if correct_plant:
+        # Save the new correctly chosen plant back to the history session
+        recent_plants.append(correct_plant.plant_name.lower())
+        session['recent_plants'] = recent_plants[-8:] # Keep the queue at 8
         print(f"[DEBUG] Chosen correct plant: {correct_plant.plant_name} | Class: {correct_plant.__class__.__name__} | URL: '{correct_plant.image_url}'", flush=True)
 
+    # --- DECOY SELECTION ---
     decoy_plants = []
     seen_names = {correct_plant.plant_name.lower()} if correct_plant else set()
+    
+    # Try not to use the previous 8 plants as decoys either to keep it fully fresh
+    seen_names.update(recent_plants)
 
     categories_shuffled = list(active_categories)
     random.shuffle(categories_shuffled)
     
-    # Get random decoy plants utilizing the fast ID sampling function
+    # Primary Decoy Search
     for model_class, extra_filter in categories_shuffled:
         if len(decoy_plants) >= 3:
             break
@@ -266,9 +302,9 @@ def get_plant_name_list():
                 if len(decoy_plants) >= 3:
                     break
 
-    # Fallback decoy search
+    # Fallback Decoy Search (Strictly within active_tables)
     if len(decoy_plants) < 3:
-        for table in tables:
+        for table in active_tables:
             if len(decoy_plants) >= 3:
                 break
             candidates = get_random_records(table, table.query, limit=10)
@@ -276,6 +312,18 @@ def get_plant_name_list():
                 if c.plant_name.lower() not in seen_names:
                     decoy_plants.append(c)
                     seen_names.add(c.plant_name.lower())
+                    if len(decoy_plants) >= 3:
+                        break
+                        
+    # Extreme Fallback Decoy (Ignore seen_names except the exact correct plant to prevent starvation)
+    if len(decoy_plants) < 3:
+        for table in active_tables:
+            if len(decoy_plants) >= 3:
+                break
+            candidates = get_random_records(table, table.query.filter(func.lower(table.plant_name) != func.lower(correct_plant.plant_name)), limit=10)
+            for c in candidates:
+                if c.plant_name.lower() != correct_plant.plant_name.lower() and c not in decoy_plants:
+                    decoy_plants.append(c)
                     if len(decoy_plants) >= 3:
                         break
 
