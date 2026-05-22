@@ -78,10 +78,11 @@ function handleOptionClick(index) {
         cacti: getCheck("switchRoundedDefault_cacti")
     };
 
-    // Auto-advance to the next question after a delay
+    // SPEED FIX 1: Auto-advance to the next question after 400ms instead of 750ms.
+    // This gives them just enough time to see the red/green answer highlight before moving on.
     setTimeout(() => {
         fetchPlantNameList(currentSwitches);
-    }, 750);
+    }, 400);
 }
 
 
@@ -286,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 quizNextBtn.style.display = 'none';
                 quizState.totalCount++;
                 updateResultBox();
-            }, 200); 
+            }, 2000); 
         };
 
         quizNextBtn.addEventListener('click', handleNextClick);
@@ -359,6 +360,9 @@ async function fetchPlantNameList(switches) {
     try {
         const response = await fetch(`/get_plant_name_list?${queryParams.toString()}`, {
             method: 'GET',
+            // SPEED FIX 2: Added credentials to ensure the backend Flask session 
+            // remembers our pre-fetched queues and history array!
+            credentials: 'same-origin', 
             headers: {
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Pragma': 'no-cache',
@@ -372,48 +376,63 @@ async function fetchPlantNameList(switches) {
         
         const randomIndex = data.randomIndex; 
         
-        const scientificNames = data.scientific_names;
-        const plantTypes = data.plant_types;
-        const source = data.source;
+        // SPEED FIX 3: IMAGE PRELOADING MAGIC
+        // We create an invisible image in memory and force the browser to download it immediately.
+        const nextImage = new Image();
+        nextImage.src = quizState.plantImageUrls[randomIndex];
 
-        const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
+        // We completely freeze the UI update until this exact image is 100% finished downloading.
+        nextImage.onload = () => {
+            const scientificNames = data.scientific_names;
+            const plantTypes = data.plant_types;
+            const source = data.source;
 
-        // Update Buttons cleanly
-        for (let i = 0; i < 4; i++) {
-            let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
-            if (btn) {
-                // Wipe our custom visual validation classes AND any lingering Bulma state classes
-                btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
-                btn.setAttribute("data-is-correct", "no-answer");
-                btn.blur();
+            const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
 
-                const commonEl = btn.querySelector('.common-name');
-                const scientificEl = btn.querySelector('.scientific-name');
-                const typeEl = btn.querySelector('.tree-type');
+            // Update Buttons cleanly
+            for (let i = 0; i < 4; i++) {
+                let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
+                if (btn) {
+                    // Wipe our custom visual validation classes AND any lingering Bulma state classes
+                    btn.classList.remove('true', 'false', 'is-focused', 'is-hovered', 'is-active');
+                    btn.setAttribute("data-is-correct", "no-answer");
+                    btn.blur();
 
-                if (commonEl) commonEl.innerHTML = quizState.plantNames[indices[i]];
-                if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
-                if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
+                    const commonEl = btn.querySelector('.common-name');
+                    const scientificEl = btn.querySelector('.scientific-name');
+                    const typeEl = btn.querySelector('.tree-type');
+
+                    if (commonEl) commonEl.innerHTML = quizState.plantNames[indices[i]];
+                    if (scientificEl) scientificEl.innerHTML = scientificNames[indices[i]];
+                    if (typeEl) typeEl.innerHTML = plantTypes[indices[i]];
+                }
             }
-        }
 
-        // Update Image & Text
-        const imageElement = document.getElementById("selectedPlantImage");
-        if (imageElement) imageElement.src = quizState.plantImageUrls[randomIndex];
+            // Update Image & Text seamlessly!
+            const imageElement = document.getElementById("selectedPlantImage");
+            if (imageElement) imageElement.src = nextImage.src; // Use the preloaded image
 
-        const textElement = document.getElementById("modal-text");
-        if (textElement) textElement.textContent = source[randomIndex];
+            const textElement = document.getElementById("modal-text");
+            if (textElement) textElement.textContent = source[randomIndex];
 
-        // Update State variables
-        quizState.correctPlantIndex = randomIndex; 
-        quizState.previousPlantName = quizState.plantNames[randomIndex]; 
+            // Update State variables
+            quizState.correctPlantIndex = randomIndex; 
+            quizState.previousPlantName = quizState.plantNames[randomIndex]; 
 
-        collapseBox();
-        
-        // Final insurance policy against the ghost cursor right before letting the user play again
-        resetMobileCursor();
-        
-        quizState.isAnsweringAllowed = true;
+            collapseBox();
+            
+            // Final insurance policy against the ghost cursor right before letting the user play again
+            resetMobileCursor();
+            
+            quizState.isAnsweringAllowed = true;
+        };
+
+        // Fallback: If S3 fails or there's a 404, we don't want the game to permanently freeze.
+        nextImage.onerror = () => {
+            console.error("Failed to preload S3 image.");
+            // Optional: You could show a placeholder image here if desired.
+            quizState.isAnsweringAllowed = true; 
+        };
 
     } catch (error) {
         console.error("Error fetching plant list:", error);
