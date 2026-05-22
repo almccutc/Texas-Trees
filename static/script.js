@@ -461,6 +461,11 @@ function renderRound(data, imageSrc) {
             btn.setAttribute("data-is-correct", "no-answer");
             btn.blur();
 
+            // MOBILE STICKY HOVER FIX: Force a quick DOM reflow to make the browser "forget" the hover state
+            btn.style.display = 'none';
+            void btn.offsetHeight; // This line forces the browser to recalculate the layout immediately
+            btn.style.display = ''; // Restore it back to normal
+
             const commonEl = btn.querySelector('.common-name');
             const scientificEl = btn.querySelector('.scientific-name');
             const typeEl = btn.querySelector('.tree-type');
