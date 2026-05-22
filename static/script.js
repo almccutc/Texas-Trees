@@ -15,7 +15,7 @@ const quizState = {
     correctCount: 0,
     totalCount: 0,
     correctCheck: true,
-    previousPlantName: "", // Fixed: Changed to a single string
+    previousPlantName: "", 
     isAnsweringAllowed: true
 };
 
@@ -27,14 +27,9 @@ let selectedOption = null;
 // ==========================================
 // GLOBAL EVENT HANDLERS
 // ==========================================
-// Extracted out so we can re-attach it to brand new cloned buttons
 function handleOptionClick(index) {
     if (!quizState.isAnsweringAllowed) return;
     quizState.isAnsweringAllowed = false;
-    
-    if (document.activeElement) {
-        document.activeElement.blur();
-    }
 
     quizState.selectedIndex = index;
     checkSelectedAnswer(quizState.selectedIndex, quizState.correctPlantIndex);
@@ -72,9 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
         { id: "switchRoundedDefault_grasses", checked: false },
         { id: "switchRoundedDefault_aquaticplants", checked: false },
         { id: "switchRoundedDefault_vines", checked: false },
-        // { id: "switchRoundedDefault_herbs", checked: false },
-        // { id: "switchRoundedDefault_poisonousplants", checked: false },
-        // { id: "switchRoundedDefault_invasiveplants", checked: false },
         { id: "switchRoundedDefault_cacti", checked: false }
     ];
 
@@ -132,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
             map.setView([31.0000, -100.0000], 5.5);
         });
     } else {
-        // Cleanly hide map elements if the map is disabled
         if (mapContainer) mapContainer.style.display = 'none';
         if (resetButton) resetButton.style.display = 'none';
     }
@@ -165,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             dropdownMenu.style.display = hasVisibleItems ? 'block' : 'none';
         });
 
-        // Dropdown selection
         dropdownMenu.addEventListener('click', async (event) => {
             if (event.target.classList.contains('dropdown-item')) {
                 event.preventDefault();
@@ -180,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const selectedPlant = event.target.textContent;
 
-                // Create selected pill
                 selectedOption = document.createElement('button');
                 selectedOption.classList.add('button', 'is-success', 'is-light', 'selected-option');
                 selectedOption.style.marginLeft = '5px';
@@ -210,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error('Error fetching county names:', error);
                 }
 
-                // Delete button inside the pill
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('delete', 'is-small');
                 deleteButton.addEventListener('click', () => {
@@ -229,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Click outside to close dropdown
         document.body.addEventListener('click', (event) => {
             if (!dropdownMenu.contains(event.target) && event.target !== searchInput) {
                 dropdownMenu.style.display = 'none';
@@ -243,16 +230,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const optionButtons = document.querySelectorAll(".button-stack button");
     
     optionButtons.forEach((button, index) => {
-        // Tie initial elements to our separated click handler
+        // Desktop support: standard clicks
         button.addEventListener("click", () => handleOptionClick(index));
+        
+        // Mobile Fix: Prevent default virtual mouse cursor from being created on tap
+        button.addEventListener("touchend", (e) => {
+            if (!quizState.isAnsweringAllowed) return;
+            e.preventDefault(); // This kills the sticky mobile hover permanently!
+            handleOptionClick(index);
+        });
     });
 
     const quizNextBtn = document.getElementById("quizNextButton");
     if (quizNextBtn) {
-        quizNextBtn.addEventListener('click', () => {
-            if (document.activeElement) document.activeElement.blur();
-            quizNextBtn.blur();
-            
+        const handleNextClick = () => {
             const getCheck = (id) => document.getElementById(id)?.checked || false;
             fetchPlantNameList({
                 trees: getCheck("switchRoundedDefault_trees"),
@@ -270,6 +261,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 quizState.totalCount++;
                 updateResultBox();
             }, 2000); 
+        };
+
+        // Desktop Next
+        quizNextBtn.addEventListener('click', handleNextClick);
+        
+        // Mobile Next Fix
+        quizNextBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            handleNextClick();
         });
     }
 
@@ -324,7 +324,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 
 async function fetchPlantNameList(switches) {
-    // Construct Query String safely
     const queryParams = new URLSearchParams({
         switchState_trees: switches.trees,
         switchState_leaves: switches.leaves,
@@ -360,28 +359,14 @@ async function fetchPlantNameList(switches) {
 
         const indices = Array.from({ length: quizState.plantNames.length }, (_, index) => index);
 
-        // Update Buttons
+        // Update Buttons cleanly!
         for (let i = 0; i < 4; i++) {
             let btn = document.querySelector(`.button-stack button:nth-child(${i + 1})`);
             if (btn) {
-                // ========================================================
-                // THE ULTIMATE MOBILE FIX: DOM CLONING
-                // ========================================================
-                // By cloning the node and replacing it, we forcefully destroy the HTML 
-                // element the phone's browser thought it was touching. 
-                // This 100% guarantees the native CSS :active and :hover states are destroyed.
-                const newBtn = btn.cloneNode(true);
-                btn.parentNode.replaceChild(newBtn, btn);
-                btn = newBtn; // Use our fresh, untainted button going forward
-
-                // Re-attach the click listener (since cloning destroys listeners)
-                btn.addEventListener("click", () => handleOptionClick(i));
-                
-                // Clear any remaining state classes just to be safe
-                btn.classList.remove('is-focused', 'is-hovered', 'is-active', 'true', 'false');
+                // Wipe our custom visual validation classes
+                btn.classList.remove('true', 'false');
                 btn.setAttribute("data-is-correct", "no-answer");
 
-                // Populate with new data
                 const commonEl = btn.querySelector('.common-name');
                 const scientificEl = btn.querySelector('.scientific-name');
                 const typeEl = btn.querySelector('.tree-type');
