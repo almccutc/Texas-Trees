@@ -137,10 +137,10 @@ def seed_database():
             Trees("Texas Persimmon", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/Texas_persimmon_leaf_1.jpeg", "Diospyros texana", "Tree", "", ""),
             Trees("Texas Persimmon", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/Texas_persimmon_bark_1.jpeg", "Diospyros texana", "Tree", "", ""),
 
-            # # 26. American Sycamore
-            # Trees("American Sycamore", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/american_sycamore_84788584-min.jpeg", "Platanus occidentalis", "Tree", "", ""),
-            # Trees("American Sycamore", "leaf", "", "Platanus occidentalis", "Tree", "", ""),
-            # Trees("American Sycamore", "bark", "", "Platanus occidentalis", "Tree", "", ""),
+            # 26. American Sycamore
+            Trees("American Sycamore", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/American+SycamoreFull.jpeg", "Platanus occidentalis", "Tree", "Photo 24146205, (c) Sam Kieschnick", ""),
+            Trees("American Sycamore", "leaf", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/leaf/American+SycamoreLeaf.jpeg", "Platanus occidentalis", "Tree", "Photo 484004792, (c) saltyhiker", ""),
+            Trees("American Sycamore", "bark", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/bark/American+SycamoreBark.jpeg", "Platanus occidentalis", "Tree", "Photo 36914582, (c) Annika Lindqvist", ""),
 
             # # 27. Eastern Cottonwood
             # Trees("Eastern Cottonwood", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/texas_trees/close_fullsize/cottonwood_68252199-min.jpeg", "Populus deltoides", "Tree", "", ""),
@@ -327,21 +327,21 @@ def seed_database():
 
         # --- FLOWERS (Top 15) ---
         flowers = [
-            Flowers("Texas Bluebonnet", "close_fullsize", "", "Lupinus texensis", "Flower", "", ""),
-            Flowers("Indian Blanket", "close_fullsize", "", "Gaillardia pulchella", "Flower", "", ""),
-            Flowers("Pink Evening Primrose", "close_fullsize", "", "Oenothera speciosa", "Flower", "", ""),
-            Flowers("Black-eyed Susan", "close_fullsize", "", "Rudbeckia hirta", "Flower", "", ""),
-            Flowers("Mexican Hat", "close_fullsize", "", "Ratibida columnifera", "Flower", "", ""),
-            Flowers("Texas Paintbrush", "close_fullsize", "", "Castilleja indivisa", "Flower", "", ""),
-            Flowers("Plains Coreopsis", "close_fullsize", "", "Coreopsis tinctoria", "Flower", "", ""),
-            Flowers("Drummond Phlox", "close_fullsize", "", "Phlox drummondii", "Flower", "", ""),
-            Flowers("Texas Bluebell", "close_fullsize", "", "Eustoma exaltatum", "Flower", "", ""),
-            Flowers("Purple Coneflower", "close_fullsize", "", "Echinacea purpurea", "Flower", "", ""),
-            Flowers("Common Sunflower", "close_fullsize", "", "Helianthus annuus", "Flower", "", ""),
-            Flowers("Winecup", "close_fullsize", "", "Callirhoe involuta", "Flower", "", ""),
-            Flowers("Texas Lantana", "close_fullsize", "", "Lantana urticoides", "Flower", "", ""),
-            Flowers("Standing Cypress", "close_fullsize", "", "Ipomopsis rubra", "Flower", "", ""),
-            Flowers("Blue-eyed Grass", "close_fullsize", "", "Sisyrinchium campestre", "Flower", "", "")
+            Flowers("Texas Bluebonnet", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Texas+Bluebonnet.jpeg", "Lupinus texensis", "Flower", "Photo 264945809, (c) Wes Copas", ""),
+            Flowers("Firewheel", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Firewheel.jpg", "Gaillardia pulchella", "Flower", "Photo 288364229, (c) Jay Pruett", ""),
+            Flowers("Pinkladies", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Pinkladies.jpeg", "Oenothera speciosa", "Flower", "Photo 322034089, (c) W Rao", ""),
+            Flowers("Black-eyed Susan", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Black-eyed+Susan.jpeg", "Rudbeckia hirta", "Flower", "Photo 46212572, (c) Andrew St. Paul", ""),
+            Flowers("Prairie Coneflower", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Prairie+Coneflower.jpg", "Ratibida columnifera", "Flower", "Photo 655594917, (c) Linda Jo Conn", ""),
+            Flowers("Texas Paintbrush", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Texas+Paintbrush.jpeg", "Castilleja indivisa", "Flower", "Photo 493119223, (c) davis0117", ""),
+            Flowers("Plains Coreopsis", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Plains+Coreopsis.jpg", "Coreopsis tinctoria", "Flower", "Photo 651421381, (c) Texas Bird Family", ""),
+            Flowers("Drummond Phlox", "close_fullsize", "https://texasplants.s3.us-east-2.amazonaws.com/flowers/Drummond+Phlox.jpg", "Phlox drummondii", "Flower", "Photo 67915786, (c) Kyle M. Simpson", "")
+            # Flowers("Texas Bluebell", "close_fullsize", "", "Eustoma exaltatum", "Flower", "", ""),
+            # Flowers("Purple Coneflower", "close_fullsize", "", "Echinacea purpurea", "Flower", "", ""),
+            # Flowers("Common Sunflower", "close_fullsize", "", "Helianthus annuus", "Flower", "", ""),
+            # Flowers("Winecup", "close_fullsize", "", "Callirhoe involuta", "Flower", "", ""),
+            # Flowers("Texas Lantana", "close_fullsize", "", "Lantana urticoides", "Flower", "", ""),
+            # Flowers("Standing Cypress", "close_fullsize", "", "Ipomopsis rubra", "Flower", "", ""),
+            # Flowers("Blue-eyed Grass", "close_fullsize", "", "Sisyrinchium campestre", "Flower", "", "")
         ]
         
         for flower in flowers:
