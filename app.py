@@ -96,46 +96,26 @@ def get_random_records(model_class, query, limit=1):
 def render_webpage():
     unique_species = [db.session.query(func.count(func.distinct(func.lower(table.plant_name)))).scalar() for table in tables]
 
-    valid_plants = []
+    # The initial round must match the Trees + Leaf switches selected on load.
+    default_query = Trees.query.filter(Trees.image_type.in_(('close_fullsize', 'leaf')))
+    plants_for_home = []
     seen_names = set()
 
-    # Shuffle tables to ensure a fun, dynamic layout on reload
-    shuffled_tables = list(tables)
-    random.shuffle(shuffled_tables)
-
-    # Fetch a small random sample directly from DB using the fast ID sampling
-    for table in shuffled_tables:
-        query = table.query
-        if table == Trees:
-            # For Trees, we avoid showing 'bark' on the home page for general visual consistency
-            query = query.filter(not_(table.image_type == 'bark'))
-        
-        # Only pull a few random candidates per table instantly
-        query_results = get_random_records(table, query, limit=5)
-
-        for plant in query_results:
+    # Refill from the same eligible pool when two photos belong to one species.
+    while len(plants_for_home) < 4:
+        query = default_query
+        if seen_names:
+            query = query.filter(not_(func.lower(Trees.plant_name).in_(seen_names)))
+        candidates = get_random_records(Trees, query, limit=4 - len(plants_for_home))
+        if not candidates:
+            break
+        for plant in candidates:
             name_lower = plant.plant_name.lower()
             if name_lower not in seen_names:
-                valid_plants.append(plant)
+                plants_for_home.append(plant)
                 seen_names.add(name_lower)
 
-    # Shuffle the pool and take the top 4
-    random.shuffle(valid_plants)
-    plants_for_home = valid_plants[:4]
-
-    # Extreme fallback
-    if len(plants_for_home) < 4:
-        for table in shuffled_tables:
-            if len(plants_for_home) >= 4:
-                break
-            fallback_plants = get_random_records(table, table.query, limit=4)
-            for plant in fallback_plants:
-                if len(plants_for_home) >= 4:
-                    break
-                name_lower = plant.plant_name.lower()
-                if name_lower not in seen_names:
-                    plants_for_home.append(plant)
-                    seen_names.add(name_lower)
+    random.shuffle(plants_for_home)
 
     # Extract details safely
     plant_names = [item.plant_name if item else "Unknown" for item in plants_for_home]
