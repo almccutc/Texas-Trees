@@ -5,3 +5,7 @@ ttq
 ttq.pub
 passwords
 .env
+data/inaturalist/thumbnails/
+data/inaturalist/*_sheet_*.jpg
+data/inaturalist/images/
+data/inaturalist/*.json*

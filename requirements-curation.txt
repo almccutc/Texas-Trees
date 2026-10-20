@@ -1,0 +1,5 @@
+# Offline curation tools only; the deployed Flask app does not require these.
+requests
+Pillow
+boto3
+python-dotenv
